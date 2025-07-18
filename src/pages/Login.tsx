@@ -1,5 +1,11 @@
+import Input from "../components/Input";
+
 const Login = () => {
-  return <div>Login</div>;
+  return (
+    <>
+      <Input label="bla" name="name" />
+    </>
+  );
 };
 
 export default Login;
