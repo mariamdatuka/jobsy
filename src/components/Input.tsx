@@ -1,53 +1,36 @@
-import React from "react";
-import { TextField, InputAdornment } from "@mui/material";
-import type { TextFieldProps } from "@mui/material";
-import type { FieldError, UseFormRegisterReturn } from "react-hook-form";
+import { Stack, TextField, type TextFieldVariants } from "@mui/material";
+import { Controller, useFormContext } from "react-hook-form";
 
-interface JobsInputProps extends Omit<TextFieldProps, "name" | "error"> {
-  label?: string;
-  errorText?: string;
-  leftContent?: React.ReactNode;
-  rightContent?: React.ReactNode;
-  register?: UseFormRegisterReturn;
+interface InputProps {
+  label: string;
+  variant?: TextFieldVariants;
   name: string;
-  rhfError?: FieldError | boolean;
 }
 
-const JobsInput: React.FC<JobsInputProps> = ({
-  label,
-  errorText,
-  leftContent,
-  rightContent,
-  register,
-  name,
-  rhfError,
-  ...rest
-}) => {
+const Input = ({ label, variant = "outlined", name }: InputProps) => {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
+  const fieldError = errors[name]?.message as string;
   return (
-    <TextField
-      label={label}
-      name={name}
-      error={!!rhfError}
-      helperText={rhfError ? errorText : undefined}
-      InputProps={{
-        startAdornment: leftContent ? (
-          <InputAdornment position="start">{leftContent}</InputAdornment>
-        ) : undefined,
-        endAdornment: rightContent ? (
-          <InputAdornment position="end">{rightContent}</InputAdornment>
-        ) : undefined,
-        ...rest.InputProps,
-      }}
-      inputRef={register?.ref}
-      onChange={register?.onChange}
-      onBlur={register?.onBlur}
-      inputProps={{
-        ...(register?.name ? { name: register.name } : {}),
-        ...rest.inputProps,
-      }}
-      {...rest}
-    />
+    <Stack spacing={1}>
+      <label htmlFor={name}>{label}</label>
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            placeholder="firstName"
+            variant={variant}
+            error={!!fieldError}
+            helperText={fieldError}
+          />
+        )}
+      />
+    </Stack>
   );
 };
 
-export default JobsInput;
+export default Input;
