@@ -1,31 +1,75 @@
-import { Stack, TextField, type TextFieldVariants } from "@mui/material";
+import {
+  Stack,
+  TextField,
+  type TextFieldProps,
+  type TextFieldVariants,
+  InputAdornment,
+} from "@mui/material";
+import type { JSX } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-interface InputProps {
-  label: string;
+type InputProps = TextFieldProps & {
+  label?: string;
   variant?: TextFieldVariants;
   name: string;
-}
+  placeholder?: string;
+  sx?: any;
+  leftContent?: string | JSX.Element;
+  rightContent?: string | JSX.Element;
+};
 
-const Input = ({ label, variant = "outlined", name }: InputProps) => {
+const Input = ({
+  label,
+  variant = "outlined",
+  name,
+  placeholder,
+  sx,
+  leftContent,
+  rightContent,
+}: InputProps) => {
   const {
     control,
     formState: { errors },
   } = useFormContext();
   const fieldError = errors[name]?.message as string;
+
+  const inputSlotProps: any = {};
+  if (leftContent) {
+    inputSlotProps.startAdornment = (
+      <InputAdornment position="start">{leftContent}</InputAdornment>
+    );
+  }
+  if (rightContent) {
+    inputSlotProps.endAdornment = (
+      <InputAdornment position="end">{rightContent}</InputAdornment>
+    );
+  }
   return (
-    <Stack spacing={1}>
-      <label htmlFor={name}>{label}</label>
+    <Stack gap={0.5}>
+      <label style={{ marginLeft: "12px" }}>{label}</label>
       <Controller
         name={name}
         control={control}
         render={({ field }) => (
           <TextField
             {...field}
-            placeholder="firstName"
+            placeholder={placeholder}
             variant={variant}
             error={!!fieldError}
             helperText={fieldError}
+            slotProps={{
+              input: {
+                ...inputSlotProps,
+              },
+            }}
+            sx={{
+              "& .MuiInputBase-input": {
+                padding: "8px 14px",
+              },
+              width: "350px",
+              borderRadius: "50%",
+              ...sx,
+            }}
           />
         )}
       />

@@ -19,7 +19,8 @@ const Login = () => {
   return (
     <>
       <FormProvider {...methods}>
-        <Input label="bla" name="firstName" />
+        <Input label="Email" name="email" />
+        <Input label="Password" name="password" />
       </FormProvider>
     </>
   );
