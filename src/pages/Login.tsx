@@ -2,6 +2,7 @@ import Input from "../components/Input";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import MainButton from "../components/Button";
 
 const Login = () => {
   const schema = yup.object().shape({
@@ -16,11 +17,17 @@ const Login = () => {
     mode: "onChange",
   });
 
+  const handleClick = () => {
+    console.log("Button clicked");
+  };
+
   return (
     <>
       <FormProvider {...methods}>
-        <Input label="Email" name="email" />
-        <Input label="Password" name="password" />
+        <form onSubmit={methods.handleSubmit(handleClick)}>
+          <Input label="Email" name="email" />
+          <MainButton title="Login" type="submit" />
+        </form>
       </FormProvider>
     </>
   );
