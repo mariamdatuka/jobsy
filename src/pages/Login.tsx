@@ -5,13 +5,13 @@ import * as yup from "yup";
 
 const Login = () => {
   const schema = yup.object().shape({
-    firstName: yup.string().required("First name is required"),
+    email: yup.string().required("First name is required"),
   });
 
   const methods = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      firstName: "",
+      email: "",
     },
     mode: "onChange",
   });
