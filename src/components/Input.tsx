@@ -27,11 +27,7 @@ const Input = ({
   leftContent,
   rightContent,
 }: InputProps) => {
-  const {
-    control,
-    formState: { errors },
-  } = useFormContext();
-  const fieldError = errors[name]?.message as string;
+  const { control } = useFormContext();
 
   const inputSlotProps: any = {};
   if (leftContent) {
@@ -50,28 +46,31 @@ const Input = ({
       <Controller
         name={name}
         control={control}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            placeholder={placeholder}
-            variant={variant}
-            error={!!fieldError}
-            helperText={fieldError}
-            slotProps={{
-              input: {
-                ...inputSlotProps,
-              },
-            }}
-            sx={{
-              "& .MuiInputBase-input": {
-                padding: "8px 14px",
-              },
-              width: "350px",
-              borderRadius: "50%",
-              ...sx,
-            }}
-          />
-        )}
+        render={({ field, fieldState: { error } }) => {
+          console.log("Input error:", error);
+          return (
+            <TextField
+              {...field}
+              placeholder={placeholder}
+              variant={variant}
+              error={!!error}
+              helperText={error?.message}
+              slotProps={{
+                input: {
+                  ...inputSlotProps,
+                },
+              }}
+              sx={{
+                "& .MuiInputBase-input": {
+                  padding: "8px 14px",
+                },
+                width: "350px",
+                borderRadius: "50%",
+                ...sx,
+              }}
+            />
+          );
+        }}
       />
     </Stack>
   );

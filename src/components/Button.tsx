@@ -13,6 +13,7 @@ const MainButton = ({
   variant = "contained",
   startIcon,
   endIcon,
+  ...props
 }: MainButtonProps) => {
   return (
     <Button
@@ -20,6 +21,7 @@ const MainButton = ({
       startIcon={startIcon}
       endIcon={endIcon}
       disableElevation
+      {...props}
     >
       {title}
     </Button>
