@@ -1,19 +1,15 @@
 import Input from "../components/Input";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import MainButton from "../components/Button";
 import { Stack, styled } from "@mui/material";
 import logo from "@src/assets/images/imgLogo.png";
+import { SignInSchema } from "@src/schemas/schemas";
+import Text from "@components/Text";
 
 const Login = () => {
-  const schema = yup.object().shape({
-    email: yup.string().required("Email is required"),
-    password: yup.string().required("Password is required"),
-  });
-
   const methods = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(SignInSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -34,6 +30,11 @@ const Login = () => {
             <Input label="Email" name="email" />
             <Input label="Password" name="password" />
             <MainButton title="Login" type="submit" />
+            <Stack>
+              <Text color="error" variant="body2">
+                hi
+              </Text>
+            </Stack>
           </form>
         </FormProvider>
       </Container>

@@ -42,35 +42,35 @@ const Input = ({
   }
   return (
     <Stack gap={0.5}>
-      <label style={{ marginLeft: "12px" }}>{label}</label>
+      {label && (
+        <label style={{ marginLeft: "10px", fontSize: "14px" }}>{label}</label>
+      )}
+
       <Controller
         name={name}
         control={control}
-        render={({ field, fieldState: { error } }) => {
-          console.log("Input error:", error);
-          return (
-            <TextField
-              {...field}
-              placeholder={placeholder}
-              variant={variant}
-              error={!!error}
-              helperText={error?.message}
-              slotProps={{
-                input: {
-                  ...inputSlotProps,
-                },
-              }}
-              sx={{
-                "& .MuiInputBase-input": {
-                  padding: "8px 14px",
-                },
-                width: "350px",
-                borderRadius: "50%",
-                ...sx,
-              }}
-            />
-          );
-        }}
+        render={({ field, fieldState: { error } }) => (
+          <TextField
+            {...field}
+            placeholder={placeholder}
+            variant={variant}
+            error={!!error}
+            helperText={error?.message}
+            slotProps={{
+              input: {
+                ...inputSlotProps,
+              },
+            }}
+            sx={{
+              "& .MuiInputBase-input": {
+                padding: "8px 14px",
+              },
+              width: "350px",
+              borderRadius: "50%",
+              ...sx,
+            }}
+          />
+        )}
       />
     </Stack>
   );

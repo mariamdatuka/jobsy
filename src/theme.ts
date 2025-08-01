@@ -11,6 +11,10 @@ const theme = createTheme({
     error: {
       main: "#FB344F",
     },
+    //#240854
+  },
+  typography: {
+    fontFamily: "Manrope",
   },
 });
 
