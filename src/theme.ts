@@ -11,10 +11,16 @@ const theme = createTheme({
     error: {
       main: "#FB344F",
     },
-    //#240854
+    info: {
+      main: "#240854",
+    },
+    text: {
+      primary: "#9d6cf0",
+      secondary: "#999EA1",
+    },
   },
   typography: {
-    fontFamily: "Manrope",
+    fontFamily: '"Manrope", "Viga"',
   },
 });
 

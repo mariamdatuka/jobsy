@@ -27,8 +27,12 @@ const Input = ({
   leftContent,
   rightContent,
 }: InputProps) => {
-  const { control } = useFormContext();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
 
+  const fieldError = errors[name]?.message;
   const inputSlotProps: any = {};
   if (leftContent) {
     inputSlotProps.startAdornment = (
@@ -43,7 +47,15 @@ const Input = ({
   return (
     <Stack gap={0.5}>
       {label && (
-        <label style={{ marginLeft: "10px", fontSize: "14px" }}>{label}</label>
+        <label
+          style={{
+            marginLeft: "10px",
+            fontSize: "14px",
+            color: fieldError ? "#FB344F" : "#240854",
+          }}
+        >
+          {label}
+        </label>
       )}
 
       <Controller
