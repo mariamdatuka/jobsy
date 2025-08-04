@@ -77,7 +77,9 @@ const Login = () => {
 export default Login;
 
 export const Container = styled(Stack)({
+  flexDirection: "row",
   height: "100vh",
   alignItems: "center",
   justifyContent: "center",
+  gap: "20px",
 });
