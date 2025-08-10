@@ -6,6 +6,7 @@ import { SignUpSchema } from "@src/schemas/schemas";
 import { FormProvider, useForm } from "react-hook-form";
 import { Container } from "./Login";
 import bgImage from "@src/assets/images/Bgcrop.jpg";
+import { supabase } from "@src/supabase-client";
 
 const SignUp = () => {
   const methods = useForm({
@@ -19,12 +20,15 @@ const SignUp = () => {
     mode: "all",
   });
 
-  const handleClick = () => {
-    console.log("Button clicked");
+  const handleClick = async (user) => {
+    const { data, error } = await supabase.auth.signUp({
+      email: user.email,
+      password: user.password,
+    });
   };
   return (
     <Container>
-      <img src={bgImage} alt="bgImage" width="50%" />
+      {/* <img src={bgImage} alt="bgImage" width="50%" /> */}
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(handleClick)}>
           <Stack gap="15px">
