@@ -1,12 +1,13 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Stack } from "@mui/material";
+
 import MainButton from "@src/components/Button";
 import Input from "@src/components/Input";
 import { SignUpSchema } from "@src/schemas/schemas";
 import { FormProvider, useForm } from "react-hook-form";
 import { Container } from "./Login";
 import bgImage from "@src/assets/images/Bgcrop.jpg";
-import { supabase } from "@src/supabase-client";
+import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
+import { createUser, type CreateUserData } from "@src/services/createUser";
 
 const SignUp = () => {
   const methods = useForm({
@@ -20,24 +21,22 @@ const SignUp = () => {
     mode: "all",
   });
 
-  const handleClick = async (user) => {
-    const { data, error } = await supabase.auth.signUp({
-      email: user.email,
-      password: user.password,
-    });
+  const { mutate } = useSupabaseMutation(createUser);
+
+  const handleClick = async (userData: CreateUserData) => {
+    mutate(userData);
   };
+
   return (
     <Container>
       {/* <img src={bgImage} alt="bgImage" width="50%" /> */}
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(handleClick)}>
-          <Stack gap="15px">
-            <Input label="First Name" name="firstName" />
-            <Input label="Last Name" name="lastName" />
-            <Input label="Email" name="email" />
-            <Input label="Password" name="password" />
-            <MainButton title="sign up" type="submit" />
-          </Stack>
+          <Input label="First Name" name="firstName" />
+          <Input label="Last Name" name="lastName" />
+          <Input label="Email" name="email" />
+          <Input label="Password" name="password" />
+          <MainButton title="sign Up" type="submit" />
         </form>
       </FormProvider>
     </Container>
