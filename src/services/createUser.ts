@@ -27,14 +27,17 @@ export const createUser = async (userData: CreateUserData) => {
         },
       },
     });
-    console.log("data", data);
+    if (error) {
+      throw error;
+    }
     return {
       user: data.user,
       session: data.session,
       error: error,
     };
   } catch (error) {
-    console.error("Error creating user:", error);
+    console.log("hi");
+    console.log("Error creating user:", error);
     throw error;
   }
 };

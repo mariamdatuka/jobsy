@@ -21,9 +21,16 @@ const SignUp = () => {
     mode: "all",
   });
 
-  const { mutate } = useSupabaseMutation(createUser);
+  const { mutate, isPending } = useSupabaseMutation(createUser, {
+    onSuccess: () => {
+      methods.reset();
+    },
+    onError: (error) => {
+      console.log("gotcha", error);
+    },
+  });
 
-  const handleClick = async (userData: CreateUserData) => {
+  const onSubmit = async (userData: CreateUserData) => {
     mutate(userData);
   };
 
@@ -31,12 +38,12 @@ const SignUp = () => {
     <Container>
       {/* <img src={bgImage} alt="bgImage" width="50%" /> */}
       <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(handleClick)}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Input label="First Name" name="firstName" />
           <Input label="Last Name" name="lastName" />
           <Input label="Email" name="email" />
           <Input label="Password" name="password" />
-          <MainButton title="sign Up" type="submit" />
+          <MainButton title="sign Up" type="submit" disabled={isPending} />
         </form>
       </FormProvider>
     </Container>
