@@ -36,7 +36,6 @@ export const createUser = async (userData: CreateUserData) => {
       error: error,
     };
   } catch (error) {
-    console.log("hi");
     console.log("Error creating user:", error);
     throw error;
   }

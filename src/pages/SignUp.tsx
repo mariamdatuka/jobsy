@@ -25,9 +25,6 @@ const SignUp = () => {
     onSuccess: () => {
       methods.reset();
     },
-    onError: (error) => {
-      console.log("gotcha", error);
-    },
   });
 
   const onSubmit = async (userData: CreateUserData) => {
