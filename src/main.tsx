@@ -7,6 +7,7 @@ import { ThemeProvider } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import NiceModal from "@ebay/nice-modal-react";
+import "./modals/modals"; // Import modals to register them
 
 const client = new QueryClient();
 
