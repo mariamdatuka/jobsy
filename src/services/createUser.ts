@@ -16,27 +16,22 @@ export interface CreateUserResponse {
 }
 
 export const createUser = async (userData: CreateUserData) => {
-  try {
-    const { data, error } = await supabase.auth.signUp({
-      email: userData.email,
-      password: userData.password,
-      options: {
-        data: {
-          first_name: userData.firstName,
-          last_name: userData.lastName,
-        },
+  const { data, error } = await supabase.auth.signUp({
+    email: userData.email,
+    password: userData.password,
+    options: {
+      data: {
+        first_name: userData.firstName,
+        last_name: userData.lastName,
       },
-    });
-    if (error) {
-      throw error;
-    }
-    return {
-      user: data.user,
-      session: data.session,
-      error: error,
-    };
-  } catch (error) {
-    console.log("Error creating user:", error);
-    throw error;
+    },
+  });
+  if (error) {
+    throw error?.message;
   }
+
+  return {
+    user: data.user,
+    session: data.session,
+  };
 };

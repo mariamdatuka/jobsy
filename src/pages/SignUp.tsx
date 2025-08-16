@@ -25,6 +25,9 @@ const SignUp = () => {
     onSuccess: () => {
       methods.reset();
     },
+    onError: (error: Error) => {
+      console.error("Error creating user:", error.message);
+    },
   });
 
   const onSubmit = async (userData: CreateUserData) => {

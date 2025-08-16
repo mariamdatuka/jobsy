@@ -16,7 +16,19 @@ export function useSupabaseMutation<
   options?: Omit<UseMutationOptions<TData, TError, TVariables>, "mutationFn">
 ): UseMutationResult<TData, TError, TVariables> {
   return useMutation<TData, TError, TVariables>({
-    mutationFn,
+    mutationFn: async (variables: TVariables) => {
+      try {
+        return await mutationFn(variables);
+      } catch (error: any) {
+        console.log("catch error:", error);
+
+        if (error === "Failed to fetch") {
+          throw new Error("Lost internet connection, try again");
+        }
+
+        throw new Error("Something went wrong");
+      }
+    },
     ...options,
   });
 }
