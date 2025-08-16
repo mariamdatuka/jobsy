@@ -10,8 +10,10 @@ import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { createUser, type CreateUserData } from "@src/services/createUser";
 import NiceModal from "@ebay/nice-modal-react";
 import { SIGNUP_SUCCESS_MODAL } from "@src/modals/modal_names";
+import { useNavigate } from "react-router";
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const methods = useForm({
     resolver: yupResolver(SignUpSchema),
     defaultValues: {
@@ -26,7 +28,9 @@ const SignUp = () => {
   const { mutate, isPending } = useSupabaseMutation(createUser, {
     onSuccess: () => {
       methods.reset();
-      // NiceModal.show(SIGNUP_SUCCESS_MODAL);
+      NiceModal.show(SIGNUP_SUCCESS_MODAL, {
+        onNavigate: () => navigate("/login"),
+      });
     },
     onError: (error: Error) => {
       console.error("Error creating user:", error.message);

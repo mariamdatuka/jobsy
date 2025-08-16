@@ -11,16 +11,16 @@ export interface PopUpProps {
   onClose: () => void;
   isMobile?: boolean;
   iconType?: PopupIconTypeProps;
-  actionButtons?: {
-    success: {
-      label: string;
-      onClick: (data?: any) => void;
-    };
-    cancel: {
-      label: string;
-      onClick: (data?: any) => void;
-    };
-  };
+  // actionButtons?: {
+  //   success: {
+  //     label: string;
+  //     onClick: (data?: any) => void;
+  //   };
+  //   cancel: {
+  //     label: string;
+  //     onClick: (data?: any) => void;
+  //   };
+  // };
   sx?: SxProps;
   paperSx?: SxProps;
   showCancelBtn?: boolean;
@@ -33,8 +33,8 @@ export interface PopUpProps {
 export interface ButtonConfig {
   label: string;
   onClick: () => void;
-  variant?: "filled" | "ghost";
-  color?: "primary" | "destructive";
+  variant?: "contained" | "outlined";
+  color?: "primary" | "error";
   disabled?: boolean;
   submitType?: "cancel" | "submit";
   hidden?: boolean;
