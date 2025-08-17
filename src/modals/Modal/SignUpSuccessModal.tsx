@@ -15,7 +15,15 @@ const SignUpSuccessModal = NiceModal.create<SignUpSuccessModalProps>(
         description="check your email to verify your account"
         open={visible}
         onClose={hide}
-        buttons={[{ label: "Login", color: "primary", onClick: onNavigate }]}
+        iconType="success"
+        buttons={[
+          {
+            label: "Login",
+            color: "primary",
+            onClick: onNavigate,
+            buttonSx: { width: "100%" },
+          },
+        ]}
       />
     );
   }

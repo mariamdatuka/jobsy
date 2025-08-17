@@ -7,9 +7,6 @@ import logo from "@src/assets/images/imgLogo.png";
 import { SignInSchema } from "@src/schemas/schemas";
 import Text from "@components/Text";
 import { Link } from "react-router";
-import { SIGNUP_SUCCESS_MODAL } from "@src/modals/modal_names";
-import NiceModal from "@ebay/nice-modal-react";
-import { useNavigate } from "react-router";
 
 const Login = () => {
   const methods = useForm({
@@ -25,13 +22,6 @@ const Login = () => {
     console.log("Button clicked");
   };
 
-  const navigate = useNavigate();
-  const handleNavigation = () => {
-    navigate("/signup");
-    NiceModal.hide(SIGNUP_SUCCESS_MODAL);
-  };
-
-  NiceModal.show(SIGNUP_SUCCESS_MODAL, { onNavigate: handleNavigation });
   return (
     <>
       <Container>

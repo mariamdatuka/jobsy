@@ -7,6 +7,8 @@ import {
 import type { ButtonConfig, PopUpProps } from "@src/types/PopUpTypes";
 import Text from "@components/Text";
 import MainButton from "@src/components/Button";
+import X from "@src/assets/x-close.svg";
+import PopUpIcons from "./PopUpIcons";
 
 const PopUp = ({
   title,
@@ -16,11 +18,8 @@ const PopUp = ({
   onClose,
   isMobile,
   iconType,
-  // actionButtons:actions,
   sx,
-  paperSx,
-  showCancelBtn,
-  showCloseButton,
+  showCloseButton = true,
   showHeader = true,
   showActionSection = true,
 }: PopUpProps) => {
@@ -48,51 +47,63 @@ const PopUp = ({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       sx={{
-        "& .MuiDialogTitle-root, .MuiDialogActions-root": {
-          padding: "25px",
+        "& .MuiDialogTitle-root, .MuiDialogContent-root": {
+          padding: "12px 0px",
         },
-        // "& .MuiDialog-container": {
-        //   display: "flex",
-        //   alignItems: isMobile ? "flex-end" : "center",
-        //   justifyContent: "center",
-        // },
         ...sx,
       }}
       slotProps={{
         paper: {
           sx: {
+            padding: "30px",
             width: isMobile ? "100%" : "630px",
             maxWidth: "100%",
             borderRadius: "10px !important",
-            ...paperSx,
-          },
-        },
-        container: {
-          sx: {
             display: "flex",
-            alignItems: "center",
+            alignItems: isMobile ? "flex-end" : "center",
             justifyContent: "center",
+            overflowX: "hidden",
           },
         },
       }}
     >
+      {showCloseButton && (
+        <img
+          src={X}
+          alt="close"
+          onClick={onClose}
+          width="30px"
+          height="30px"
+          style={{ alignSelf: "end", cursor: "pointer" }}
+        />
+      )}
+      {iconType && <PopUpIcons type={iconType} />}
+
       {showHeader && (
         <DialogTitle>
-          <Text variant="h5" color="info.main">
+          <Text variant="h4" color="secondary.main" fontWeight={600}>
             {title}
           </Text>
         </DialogTitle>
       )}
       <DialogContent>
-        <Text variant="body1" color="info.main">
+        <Text variant="body1" color="text.secondary">
           {description}
         </Text>
       </DialogContent>
       {showActionSection && (
-        <DialogActions>
+        <DialogActions
+          sx={{
+            width: "100%",
+          }}
+        >
           {actionButtons.map(
-            ({ label, onClick, color, disabled, hidden, variant }, index) => {
+            (
+              { label, onClick, color, disabled, hidden, variant, buttonSx },
+              index
+            ) => {
               if (hidden) return null;
+
               return (
                 <MainButton
                   key={index}
@@ -101,6 +112,7 @@ const PopUp = ({
                   color={color}
                   disabled={disabled}
                   variant={variant}
+                  sx={buttonSx}
                 />
               );
             }

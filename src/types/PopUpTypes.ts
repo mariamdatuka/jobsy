@@ -39,4 +39,5 @@ export interface ButtonConfig {
   submitType?: "cancel" | "submit";
   hidden?: boolean;
   dataTestId?: string;
+  buttonSx?: SxProps;
 }
