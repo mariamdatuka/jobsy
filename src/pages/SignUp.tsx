@@ -11,6 +11,8 @@ import { createUser, type CreateUserData } from "@src/services/createUser";
 import NiceModal from "@ebay/nice-modal-react";
 import { SIGNUP_SUCCESS_MODAL } from "@src/modals/modal_names";
 import { useNavigate } from "react-router";
+import { Box } from "@mui/material";
+import Text from "@components/Text";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -25,17 +27,20 @@ const SignUp = () => {
     mode: "all",
   });
 
-  const { mutate, isPending } = useSupabaseMutation(createUser, {
-    onSuccess: () => {
-      methods.reset();
-      NiceModal.show(SIGNUP_SUCCESS_MODAL, {
-        onNavigate: () => navigate("/login"),
-      });
-    },
-    onError: (error: Error) => {
-      console.error("Error creating user:", error.message);
-    },
-  });
+  const { mutate, isPending, isError, error } = useSupabaseMutation(
+    createUser,
+    {
+      onSuccess: () => {
+        methods.reset();
+        NiceModal.show(SIGNUP_SUCCESS_MODAL, {
+          onNavigate: () => navigate("/login"),
+        });
+      },
+      onError: (error: Error) => {
+        console.error("Error creating user:", error.message);
+      },
+    }
+  );
 
   const onSubmit = async (userData: CreateUserData) => {
     mutate(userData);
@@ -53,6 +58,11 @@ const SignUp = () => {
           <MainButton title="sign Up" type="submit" disabled={isPending} />
         </form>
       </FormProvider>
+      {isError && (
+        <Text variant="body2" color="error" sx={{ mt: 2 }}>
+          {error.message}
+        </Text>
+      )}
     </Container>
   );
 };

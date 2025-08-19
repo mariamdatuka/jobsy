@@ -7,6 +7,9 @@ import logo from "@src/assets/images/imgLogo.png";
 import { SignInSchema } from "@src/schemas/schemas";
 import Text from "@components/Text";
 import { Link } from "react-router";
+import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
+import { loginUser, type LoginUserData } from "@src/services/login";
+import { useNavigate } from "react-router";
 
 const Login = () => {
   const methods = useForm({
@@ -18,8 +21,20 @@ const Login = () => {
     mode: "all",
   });
 
-  const handleClick = () => {
-    console.log("Button clicked");
+  const navigate = useNavigate();
+
+  const { isPending, isError, error, mutate } = useSupabaseMutation(loginUser, {
+    onSuccess: () => {
+      methods.reset();
+      navigate("/dashboard");
+    },
+    onError: (error: Error) => {
+      console.error("Login failed:", error.message);
+    },
+  });
+
+  const handleUserLogin = async (userData: LoginUserData) => {
+    mutate(userData);
   };
 
   return (
@@ -43,7 +58,7 @@ const Login = () => {
           Your Orginized Job Search
         </Text>
         <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(handleClick)}>
+          <form onSubmit={methods.handleSubmit(handleUserLogin)}>
             <Stack gap="15px">
               <Input label="Email" name="email" />
               <Input label="Password" name="password" />
@@ -65,7 +80,12 @@ const Login = () => {
                   forgot password
                 </Link>
               </Stack>
-              <MainButton title="Login" type="submit" sx={{ mt: "10px" }} />
+              <MainButton
+                title="Login"
+                type="submit"
+                sx={{ mt: "10px" }}
+                disabled={isPending}
+              />
             </Stack>
           </form>
         </FormProvider>

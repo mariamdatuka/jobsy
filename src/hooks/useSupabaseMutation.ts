@@ -23,7 +23,7 @@ export function useSupabaseMutation<
         console.log("catch error:", error);
 
         if (error === "Failed to fetch") {
-          throw new Error("Lost internet connection, try again");
+          throw new Error("Ups ! internet connection lost, try again");
         }
 
         throw new Error("Something went wrong");
