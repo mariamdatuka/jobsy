@@ -28,9 +28,6 @@ const Login = () => {
       methods.reset();
       navigate("/dashboard");
     },
-    onError: (error: Error) => {
-      console.error("Login failed:", error.message);
-    },
   });
 
   const handleUserLogin = async (userData: LoginUserData) => {
@@ -60,6 +57,7 @@ const Login = () => {
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(handleUserLogin)}>
             <Stack gap="15px">
+              {isError && <Text color="error">{error?.message}</Text>}
               <Input label="Email" name="email" />
               <Input label="Password" name="password" />
               <Stack direction="row" justifyContent="space-between">

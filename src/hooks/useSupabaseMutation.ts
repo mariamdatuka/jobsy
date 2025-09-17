@@ -10,7 +10,7 @@ import {
 export function useSupabaseMutation<
   TData = unknown,
   TVariables = void,
-  TError = unknown
+  TError = Error
 >(
   mutationFn: (variables: TVariables) => Promise<TData>,
   options?: Omit<UseMutationOptions<TData, TError, TVariables>, "mutationFn">
@@ -20,10 +20,12 @@ export function useSupabaseMutation<
       try {
         return await mutationFn(variables);
       } catch (error: any) {
-        console.log("catch error:", error);
-
         if (error === "Failed to fetch") {
           throw new Error("Ups ! internet connection lost, try again");
+        }
+
+        if (error === "Invalid login credentials") {
+          throw new Error(error);
         }
 
         throw new Error("Something went wrong");

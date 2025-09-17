@@ -15,8 +15,6 @@ export const loginUser = async (userData: LoginUserData) => {
     throw error?.message;
   }
 
-  console.log(data);
-
   return {
     user: data.user,
     session: data.session,
