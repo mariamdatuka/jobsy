@@ -3,6 +3,7 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import ErrorPage from "./pages/ErrorPage";
 import Dashboard from "./pages/Dashboard";
+import ProtectedRoutes from "./ProtectedRoutes";
 
 export const routes: RouteObject[] = [
   {
@@ -15,7 +16,12 @@ export const routes: RouteObject[] = [
     element: <SignUp />,
   },
   {
-    path: "/dashboard",
-    element: <Dashboard />,
+    element: <ProtectedRoutes />,
+    children: [
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+    ],
   },
 ];
