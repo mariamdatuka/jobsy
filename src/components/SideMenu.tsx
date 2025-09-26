@@ -1,15 +1,13 @@
 import { useUserStore } from "@src/store/userStore";
 import { Button, Drawer } from "@mui/material";
 import { useState } from "react";
+import { useSidebarStore } from "@src/store/useSidebar";
 
 const SideMenu = () => {
-  const [open, setOpen] = useState(false);
-
+  const { open } = useSidebarStore((state) => state);
+  const toggleDrawer = useSidebarStore((state) => state.toggleDrawer);
   const sidebarWidth = open ? 240 : 80;
 
-  const toggleDrawer = () => {
-    setOpen((prev) => !prev);
-  };
   return (
     <>
       <Drawer
