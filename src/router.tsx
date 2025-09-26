@@ -3,21 +3,26 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import ErrorPage from "./pages/ErrorPage";
 import Dashboard from "./pages/Dashboard";
-import ProtectedRoutes from "./ProtectedRoutes";
+import MainLayout from "./components/layouts/MainLayout";
 
 export const routes: RouteObject[] = [
   {
     path: "/",
-    element: <Login />,
+    Component: Login,
     errorElement: <ErrorPage />,
   },
   {
     path: "/signup",
-    element: <SignUp />,
+    Component: SignUp,
   },
   {
-    path: "/dashboard",
-    element: <Dashboard />,
+    Component: MainLayout,
+    children: [
+      {
+        path: "/dashboard",
+        Component: Dashboard,
+      },
+    ],
   },
 
   // {
