@@ -16,12 +16,17 @@ export const routes: RouteObject[] = [
     element: <SignUp />,
   },
   {
-    element: <ProtectedRoutes />,
-    children: [
-      {
-        path: "/dashboard",
-        element: <Dashboard />,
-      },
-    ],
+    path: "/dashboard",
+    element: <Dashboard />,
   },
+
+  // {
+  //   element: <ProtectedRoutes />,
+  //   children: [
+  //     {
+  //       path: "/dashboard",
+  //       element: <Dashboard />,
+  //     },
+  //   ],
+  // },
 ];
