@@ -1,7 +1,7 @@
 import { useUserStore } from "@src/store/userStore";
-import { Button, Drawer } from "@mui/material";
-import { useState } from "react";
+import { Box, Button, Drawer, Stack } from "@mui/material";
 import { useSidebarStore } from "@src/store/useSidebar";
+import logo from "@src/assets/images/imgLogo.png";
 
 const SideMenu = () => {
   const { open } = useSidebarStore((state) => state);
@@ -19,17 +19,23 @@ const SideMenu = () => {
           paper: {
             sx: {
               width: sidebarWidth,
-              transition: "width 0.3s",
+              transition: "width 0.3s ease",
               overflowX: "hidden",
+              padding: "16px",
             },
           },
         }}
       >
-        <button onClick={toggleDrawer}>open</button>
-        <h1>hiIII</h1>
-        <h1>hIIIIIIi</h1>
-        <h1>hIIIIIIIIi</h1>
-        <h1>hIIIIIIIIIIIIIIIIIIIi</h1>
+        <Box
+          component="img"
+          src={logo}
+          alt="Logo"
+          sx={{
+            width: 50,
+            cursor: "pointer",
+          }}
+          onClick={toggleDrawer}
+        />
       </Drawer>
     </>
   );
