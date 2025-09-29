@@ -1,5 +1,5 @@
 import type { PopupIconTypeProps } from "@src/types/PopUpTypes";
-import success from "@src/assets/IconSuccess.svg";
+import success from "@src/assets/icons/IconSuccess.svg";
 
 const PopUpIcons = ({ type }: { type: PopupIconTypeProps }) => {
   const getIcon = (type: PopupIconTypeProps) => {

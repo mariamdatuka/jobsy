@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import MainButton from "@src/components/Button";
-import Input from "@src/components/Input";
+import MainButton from "@src/components/general/Button";
+import Input from "@src/components/general/Input";
 import { SignUpSchema } from "@src/schemas/schemas";
 import { FormProvider, useForm } from "react-hook-form";
 import { Container } from "./Login";
@@ -12,7 +12,7 @@ import NiceModal from "@ebay/nice-modal-react";
 import { SIGNUP_SUCCESS_MODAL } from "@src/modals/modal_names";
 import { useNavigate } from "react-router";
 import { Box } from "@mui/material";
-import Text from "@components/Text";
+import Text from "@src/components/general/Text";
 
 const SignUp = () => {
   const navigate = useNavigate();

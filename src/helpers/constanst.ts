@@ -3,30 +3,30 @@ import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 
-interface Items {
+export interface NavItems {
   name: string;
   link?: string;
-  icon: React.ElementType;
+  Icon: React.ElementType;
 }
 
-export const navItems: Items[] = [
+export const navItems: NavItems[] = [
   {
     name: "Dashboard",
     link: "/dashboard",
-    icon: ExploreOutlinedIcon,
+    Icon: ExploreOutlinedIcon,
   },
   {
     name: "Analytics",
     link: "/analytics",
-    icon: AssessmentOutlinedIcon,
+    Icon: AssessmentOutlinedIcon,
   },
   {
     name: "Profile",
     link: "/profile",
-    icon: AccountCircleOutlinedIcon,
+    Icon: AccountCircleOutlinedIcon,
   },
   {
     name: "Logout",
-    icon: LogoutOutlinedIcon,
+    Icon: LogoutOutlinedIcon,
   },
 ];

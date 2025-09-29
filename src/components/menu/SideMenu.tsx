@@ -1,7 +1,9 @@
 import { useUserStore } from "@src/store/userStore";
-import { Box, Button, Drawer, Stack } from "@mui/material";
+import { Box, Drawer } from "@mui/material";
 import { useSidebarStore } from "@src/store/useSidebar";
 import logo from "@src/assets/images/imgLogo.png";
+import { navItems } from "@src/helpers/constanst";
+import NavItem from "./NavItem";
 
 const SideMenu = () => {
   const { open } = useSidebarStore((state) => state);
@@ -18,10 +20,13 @@ const SideMenu = () => {
         slotProps={{
           paper: {
             sx: {
+              backgroundColor: "primary.main",
               width: sidebarWidth,
               transition: "width 0.3s ease",
               overflowX: "hidden",
-              padding: "16px",
+              padding: "30px 10px",
+              alignItems: "center",
+              gap: "15px",
             },
           },
         }}
@@ -32,10 +37,16 @@ const SideMenu = () => {
           alt="Logo"
           sx={{
             width: 50,
+            padding: "5px",
             cursor: "pointer",
+            backgroundColor: "white",
+            borderRadius: "50%",
           }}
           onClick={toggleDrawer}
         />
+        {navItems.map((item) => (
+          <NavItem key={item.name} {...item} />
+        ))}
       </Drawer>
     </>
   );

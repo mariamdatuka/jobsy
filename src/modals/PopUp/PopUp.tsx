@@ -5,9 +5,9 @@ import {
   DialogContent,
 } from "@mui/material";
 import type { ButtonConfig, PopUpProps } from "@src/types/PopUpTypes";
-import Text from "@components/Text";
-import MainButton from "@src/components/Button";
-import X from "@src/assets/x-close.svg";
+import Text from "@src/components/general/Text";
+import MainButton from "@src/components/general/Button";
+import X from "@src/assets/icons/x-close.svg";
 import PopUpIcons from "./PopUpIcons";
 
 const PopUp = ({

@@ -1,11 +1,11 @@
-import Input from "../components/Input";
+import Input from "../components/general/Input";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import MainButton from "../components/Button";
+import MainButton from "../components/general/Button";
 import { Stack, styled } from "@mui/material";
 import logo from "@src/assets/images/imgLogo.png";
 import { SignInSchema } from "@src/schemas/schemas";
-import Text from "@components/Text";
+import Text from "@src/components/general/Text";
 import { Link } from "react-router";
 import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { loginUser, type LoginUserData } from "@src/services/login";
