@@ -4,6 +4,8 @@ import Login from "./pages/Login";
 import ErrorPage from "./pages/ErrorPage";
 import Dashboard from "./pages/Dashboard";
 import MainLayout from "./components/layouts/MainLayout";
+import Analytics from "./pages/Analytics";
+import Profile from "./pages/Profile";
 
 export const routes: RouteObject[] = [
   {
@@ -21,6 +23,14 @@ export const routes: RouteObject[] = [
       {
         path: "/dashboard",
         Component: Dashboard,
+      },
+      {
+        path: "/analytics",
+        Component: Analytics,
+      },
+      {
+        path: "/profile",
+        Component: Profile,
       },
     ],
   },
