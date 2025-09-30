@@ -7,7 +7,7 @@ import { useSidebarStore } from "@src/store/useSidebar";
 const NavItem = ({ link, name, Icon }: NavItems) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [openLogoutModal, setOpenLogoutModal] = useState(false);
+  const [, setOpenLogoutModal] = useState(false);
   const { open } = useSidebarStore((state) => state);
   const isActive = link && location.pathname === link;
   const handleClick = () => {
@@ -22,11 +22,14 @@ const NavItem = ({ link, name, Icon }: NavItems) => {
     <ListItemButton
       onClick={handleClick}
       sx={(theme) => ({
-        width: "100%", // full width
+        width: "100%",
         borderRadius: "50px",
-
+        minHeight: 40,
+        mb: 2,
+        px: open ? 1 : 0,
+        justifyContent: open ? "flex-start" : "center",
         backgroundColor: isActive ? theme.palette.primary.light : "transparent",
-        color: isActive ? "#fff" : theme.palette.primary.main,
+        color: "#fff",
         transition: "all 0.25s ease",
         "&:hover": {
           backgroundColor: "#fff",
@@ -36,15 +39,12 @@ const NavItem = ({ link, name, Icon }: NavItems) => {
           },
         },
         "& .MuiListItemIcon-root": {
-          color: isActive ? "#fff" : theme.palette.text.primary,
+          color: "#fff",
           transition: "color 0.25s ease",
+          minWidth: open ? 40 : 0,
+          mr: open ? 1 : 0,
+          justifyContent: "center",
         },
-        // "&.MuiListItemButton-gutters": {
-        //   paddingTop: "0",
-        //   paddingBottom: "0",
-        //   paddingLeft: "5px",
-        //   margin: "0",
-        // },
       })}
     >
       <ListItemIcon>
