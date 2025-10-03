@@ -2,7 +2,7 @@ import type { RouteObject } from "react-router";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import ErrorPage from "./pages/ErrorPage";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/Dashboard/Dashboard";
 import MainLayout from "./components/layouts/MainLayout";
 import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";

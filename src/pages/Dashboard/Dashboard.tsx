@@ -1,3 +1,5 @@
+import KanbanBoard from "./components/KanbanBoard";
+
 const Dashboard = () => {
   // const user = useUserStore((state) => state.user);
 
@@ -5,7 +7,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div>hiiiiiiiiiiiiiiiiiiiiii</div>
+      <KanbanBoard />
     </>
   );
 };
