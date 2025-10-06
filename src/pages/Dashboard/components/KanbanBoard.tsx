@@ -1,7 +1,11 @@
-import React from "react";
+import ColumnContainer from "./ColumnContainer";
 
 const KanbanBoard = () => {
-  return <div className="text-2xl">Board</div>;
+  return (
+    <>
+      <ColumnContainer />
+    </>
+  );
 };
 
 export default KanbanBoard;
