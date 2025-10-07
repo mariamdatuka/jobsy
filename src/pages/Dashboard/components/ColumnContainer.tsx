@@ -1,29 +1,40 @@
 import { Box, Stack, styled } from "@mui/material";
+import Card from "./Card";
 
-const columns = ["saved", "applied", "interviewing", "rejected", "offered"];
-
-const ColumnContainer = ({
-  title,
-  color,
-}: {
+interface Column {
   title: string;
   color: string;
-}) => {
+}
+
+const ColumnContainer = ({ column }: { column: Column }) => {
   return (
     <>
-      <Title bgcolor={"#65cdfe"}>Saved</Title>
-      <Stack bgcolor="#f5f7f9" height="60vh" padding={2} width="250px"></Stack>
+      <Box>
+        <Title bgcolor={column.color}>{column.title}</Title>
+        <ColumnBox>
+          <Card />
+        </ColumnBox>
+      </Box>
     </>
   );
 };
 
 export default ColumnContainer;
 
-const Title = styled(Box)<{ bgcolor: string }>(({ bgcolor }) => ({
+const Title = styled(Box)<{ bgcolor: string }>(({ bgcolor, theme }) => ({
   fontSize: "14px",
   backgroundColor: bgcolor,
-  color: "#333",
-  padding: "10px 12px",
+  padding: "10px 16px",
+  color: "#ffffff",
   borderTopLeftRadius: "12px",
   borderTopRightRadius: "12px",
 }));
+
+const ColumnBox = styled(Stack)({
+  height: "30vh",
+  padding: "12px",
+  width: "250px",
+  backgroundColor: "#f5f7f9",
+  overflowY: "scroll",
+  scrollbarWidth: "none",
+});
