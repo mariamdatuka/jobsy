@@ -7,13 +7,16 @@ const MainLayout = () => {
   const { open } = useSidebarStore((state) => state);
   return (
     <>
-      <Stack direction="row">
+      <Stack direction="row" height="100vh">
         <SideMenu />
         <Box
           sx={{
-            p: 1,
+            flex: 1,
+            px: 4,
+            py: 6,
             marginLeft: open ? "240px" : "80px",
             transition: "margin-left 0.3s ease",
+            border: `1px solid #000`,
           }}
         >
           <Outlet />

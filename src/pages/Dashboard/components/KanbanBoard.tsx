@@ -4,11 +4,11 @@ import ColumnContainer from "./ColumnContainer";
 const columns = [
   {
     title: "Saved",
-    color: "#65cdfe",
+    color: "#e0e0e0",
   },
   {
     title: "Applied",
-    color: "#65cdfe",
+    color: "#f8a83c ",
   },
   {
     title: "Interviewing",
@@ -16,18 +16,24 @@ const columns = [
   },
   {
     title: "Rejected",
-    color: "#65cdfe",
+    color: "#e2435b",
   },
   {
     title: "Offered",
-    color: "#65cdfe",
+    color: "#02c575",
   },
 ];
 
 const KanbanBoard = () => {
   return (
     <>
-      <Stack direction="row" spacing={2}>
+      <Stack
+        direction="row"
+        spacing={4}
+        border="1px solid #02c575"
+        alignItems="center"
+        justifyContent="center"
+      >
         {columns.map((col) => (
           <ColumnContainer column={col} key={col.title} />
         ))}
