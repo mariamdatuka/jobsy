@@ -10,7 +10,7 @@ interface Column {
 const ColumnContainer = ({ column }: { column: Column }) => {
   return (
     <>
-      <Box width="250px">
+      <Box sx={{ width: { xs: "50px", xl: "300px" } }}>
         <TitleBox bgcolor={column.color}>
           <Text variant="body2" color="#fff">
             {column.title}
