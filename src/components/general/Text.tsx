@@ -11,7 +11,12 @@ const Text = ({
   ...rest
 }: TextProps) => {
   return (
-    <Typography variant={variant} color={color} {...rest}>
+    <Typography
+      variant={variant}
+      color={color}
+      sx={{ wordBreak: "break-all" }}
+      {...rest}
+    >
       {children}{" "}
     </Typography>
   );

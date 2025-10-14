@@ -1,6 +1,9 @@
 import { Box, Stack, styled, Typography } from "@mui/material";
-import Card from "./Card";
 import Text from "@src/components/general/Text";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import JobCard from "./JobCard";
+import { tasksData } from "./KanbanBoard";
 
 interface Column {
   title: string;
@@ -8,10 +11,26 @@ interface Column {
 }
 
 const ColumnContainer = ({ column }: { column: Column }) => {
+  const { transform, transition, setNodeRef, listeners, attributes } =
+    useSortable({
+      id: column.title,
+      data: {
+        type: "column",
+        column,
+      },
+    });
+  const style = {
+    transition,
+    transform: CSS.Transform.toString(transform),
+  };
   return (
     <>
-      <Box sx={{ width: { xs: "50px", xl: "300px" } }}>
-        <TitleBox bgcolor={column.color}>
+      <Box
+        sx={{ width: { xs: "50px", md: "300px" } }}
+        ref={setNodeRef}
+        style={style}
+      >
+        <TitleBox bgcolor={column.color} {...listeners} {...attributes}>
           <Text variant="body2" color="#fff">
             {column.title}
           </Text>
@@ -21,7 +40,7 @@ const ColumnContainer = ({ column }: { column: Column }) => {
           <Text color="#fff">3</Text>
         </TitleBox>
         <ColumnBox>
-          <Card />
+          <JobCard />
         </ColumnBox>
       </Box>
     </>
@@ -43,8 +62,10 @@ const TitleBox = styled(Stack)<{ bgcolor: string }>(({ bgcolor, theme }) => ({
 const ColumnBox = styled(Stack)({
   height: "450px",
   maxHeight: "450px",
-  padding: "12px",
+  padding: "20px 12px",
   backgroundColor: "#f5f7f9",
   overflowY: "scroll",
   scrollbarWidth: "none",
+  borderBottomLeftRadius: "12px",
+  borderBottomRightRadius: "12px",
 });
