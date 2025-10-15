@@ -3,6 +3,7 @@ import ColumnContainer from "./ColumnContainer";
 import { DndContext } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 import { useState } from "react";
+import { useSidebarStore } from "@src/store/useSidebar";
 
 interface Task {
   id: number;
@@ -64,13 +65,7 @@ const KanbanBoard = () => {
   return (
     <>
       <DndContext onDragStart={onDragStart}>
-        <Stack
-          direction="row"
-          spacing={4}
-          border="1px solid #02c575"
-          alignItems="center"
-          justifyContent="center"
-        >
+        <Stack direction="row" spacing={2} border="1px solid #02c575">
           <SortableContext items={columnsId}>
             {columns.map((col) => (
               <ColumnContainer column={col} key={col.title} />

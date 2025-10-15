@@ -7,7 +7,7 @@ import NavItem from "./NavItem";
 const SideMenu = () => {
   const { open } = useSidebarStore((state) => state);
   const toggleDrawer = useSidebarStore((state) => state.toggleDrawer);
-  const sidebarWidth = open ? 240 : 80;
+  const sidebarWidth = open ? 220 : 80;
 
   return (
     <>

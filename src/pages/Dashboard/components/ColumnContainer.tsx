@@ -26,7 +26,9 @@ const ColumnContainer = ({ column }: { column: Column }) => {
   return (
     <>
       <Box
-        sx={{ width: { xs: "50px", md: "300px" } }}
+        sx={{
+          width: "230px",
+        }}
         ref={setNodeRef}
         style={style}
       >

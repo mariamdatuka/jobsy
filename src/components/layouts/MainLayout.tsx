@@ -12,11 +12,12 @@ const MainLayout = () => {
         <Box
           sx={{
             flex: 1,
-            px: 4,
+            px: 3,
             py: 6,
-            marginLeft: open ? "240px" : "80px",
+            marginLeft: open ? "220px" : "80px",
             transition: "margin-left 0.3s ease",
             border: `1px solid #000`,
+            overflow: "auto",
           }}
         >
           <Outlet />
