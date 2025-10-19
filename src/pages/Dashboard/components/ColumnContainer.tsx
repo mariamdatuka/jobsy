@@ -1,48 +1,49 @@
 import { Box, Stack, styled, Typography } from "@mui/material";
 import Text from "@src/components/general/Text";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { SortableContext } from "@dnd-kit/sortable";
+import { useDroppable } from "@dnd-kit/core";
 import JobCard from "./JobCard";
-import { tasksData } from "./KanbanBoard";
+import { type Task } from "./KanbanBoard";
 
 interface Column {
+  id: number;
   title: string;
   color: string;
 }
 
-const ColumnContainer = ({ column }: { column: Column }) => {
-  const { transform, transition, setNodeRef, listeners, attributes } =
-    useSortable({
-      id: column.title,
-      data: {
-        type: "column",
-        column,
-      },
-    });
-  const style = {
-    transition,
-    transform: CSS.Transform.toString(transform),
-  };
+const ColumnContainer = ({
+  column,
+  tasks,
+}: {
+  column: Column;
+  tasks: Task[];
+}) => {
+  const { setNodeRef, isOver } = useDroppable({
+    id: column.id,
+  });
+
   return (
     <>
       <Box
         sx={{
           width: "230px",
         }}
-        ref={setNodeRef}
-        style={style}
       >
-        <TitleBox bgcolor={column.color} {...listeners} {...attributes}>
+        <TitleBox bgcolor={column.color}>
           <Text variant="body2" color="#fff">
             {column.title}
           </Text>
           <Typography component="span" color="#fff">
             /
           </Typography>
-          <Text color="#fff">3</Text>
+          <Text color="#fff">{tasks.length}</Text>
         </TitleBox>
-        <ColumnBox>
-          <JobCard />
+        <ColumnBox ref={setNodeRef}>
+          <SortableContext items={tasks.map((task) => task.taskID)}>
+            {tasks.map((task) => (
+              <JobCard key={task.taskID} task={task} />
+            ))}
+          </SortableContext>
         </ColumnBox>
       </Box>
     </>

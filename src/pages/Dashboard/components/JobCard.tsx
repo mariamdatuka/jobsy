@@ -1,30 +1,76 @@
+import { useSortable } from "@dnd-kit/sortable";
 import { Box, Divider, Stack, styled } from "@mui/material";
 import { KebabMenu } from "@src/assets/icons/KebabMenu";
 import Text from "@src/components/general/Text";
 import theme from "@src/theme";
+import type { Task } from "./KanbanBoard";
+import { CSS } from "@dnd-kit/utilities";
 
-const JobCard = () => {
-  const appliedDate = true;
+const JobCard = ({ task }: { task: Task }) => {
+  const {
+    transform,
+    transition,
+    setNodeRef,
+    listeners,
+    attributes,
+    isDragging,
+  } = useSortable({
+    id: task.taskID,
+    data: {
+      type: "task",
+      task,
+    },
+  });
+  const style = {
+    transition,
+    transform: CSS.Transform.toString(transform),
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  if (isDragging) {
+    return (
+      <Box
+        px="10px"
+        py="14px"
+        minHeight="120px"
+        backgroundColor="#fff"
+        border="1px solid #c03631ff"
+        borderRadius="12px"
+      ></Box>
+    );
+  }
+
   return (
-    <JobContainer>
+    <JobContainer
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      sx={{
+        cursor: isDragging ? "grabbing" : "grab",
+        "&:hover": {
+          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+        },
+      }}
+    >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Text variant="body2" fontWeight="600">
-          Microsoft
+          {task.companyName}
         </Text>
         <KebabMenu />
       </Stack>
       <Text variant="caption" color={theme.palette.secondary.light}>
-        Frontend Developer
+        {task.position}
       </Text>
       <Divider sx={{ borderColor: "#eceef2", my: 1.2 }} />
       <Stack direction="row" alignItems="center" justifyContent="space-between">
-        {appliedDate && (
+        {task?.appliedDate && (
           <Text variant="caption" color={theme.palette.secondary.dark}>
-            25 Dec 2025
+            {task.appliedDate}
           </Text>
         )}
 
-        <CountryTag>USA</CountryTag>
+        <CountryTag>{task.country}</CountryTag>
       </Stack>
     </JobContainer>
   );
