@@ -29,14 +29,42 @@ const JobCard = ({ task }: { task: Task }) => {
 
   if (isDragging) {
     return (
-      <Box
-        px="10px"
-        py="14px"
-        minHeight="120px"
-        backgroundColor="#fff"
-        border="1px solid #c03631ff"
-        borderRadius="12px"
-      ></Box>
+      <JobContainer
+        sx={{
+          backgroundColor: "#fff",
+          border: "1px solid #eceef2",
+          borderRadius: "12px",
+          opacity: 0.5,
+        }}
+      >
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Text variant="body2" fontWeight="600">
+            {task.companyName}
+          </Text>
+          <KebabMenu />
+        </Stack>
+        <Text variant="caption" color={theme.palette.secondary.light}>
+          {task.position}
+        </Text>
+        <Divider sx={{ borderColor: "#eceef2", my: 1.2 }} />
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          {task?.appliedDate && (
+            <Text variant="caption" color={theme.palette.secondary.dark}>
+              {task.appliedDate}
+            </Text>
+          )}
+
+          <CountryTag>{task.country}</CountryTag>
+        </Stack>
+      </JobContainer>
     );
   }
 

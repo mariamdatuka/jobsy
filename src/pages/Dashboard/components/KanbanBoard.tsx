@@ -9,9 +9,11 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  type DragOverEvent,
 } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
 import JobCard from "./JobCard";
+import { arrayMove } from "@dnd-kit/sortable";
 
 export interface Task {
   taskID: number;
@@ -27,27 +29,27 @@ export interface Task {
 const columns = [
   {
     id: 1,
-    title: "Saved",
+    title: "saved",
     color: "#e0e0e0",
   },
   {
     id: 2,
-    title: "Applied",
+    title: "applied",
     color: "#f8a83c ",
   },
   {
     id: 3,
-    title: "Interviewing",
+    title: "interviewing",
     color: "#65cdfe",
   },
   {
     id: 4,
-    title: "Rejected",
+    title: "rejected",
     color: "#e2435b",
   },
   {
     id: 5,
-    title: "Offered",
+    title: "offered",
     color: "#02c575",
   },
 ];
@@ -98,29 +100,61 @@ const KanbanBoard = () => {
     setActiveTask(active.data.current?.task);
   };
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
 
     if (!over) return;
 
     const activeTaskId = active.id as number;
-    const overColumnId = over.id as number;
+    const overId = over.id as number;
+    if (activeTaskId === overId) return;
 
-    setTasks((prevTasks) => {
-      return prevTasks.map((task) => {
-        if (task.taskID === activeTaskId) {
-          return {
-            ...task,
-            columnID: overColumnId,
-            status: columns.find((col) => col.id === overColumnId)
-              ?.title as Task["status"],
-          };
+    const isActiveTask = active.data.current?.type === "task";
+    const isOverTask = over.data.current?.type === "task";
+    const isOverColumn = over.data.current?.type === "column";
+
+    if (!isActiveTask) return;
+
+    // Update columnID during drag for visual feedback
+    if (isOverTask && isOverColumn) {
+      setTasks((prevTasks) => {
+        const activeTask = prevTasks.find((t) => t.taskID === activeTaskId);
+        if (!activeTask) return prevTasks;
+
+        let targetColumnId: number | null = null;
+
+        if (isOverTask) {
+          const overTask = prevTasks.find((t) => t.taskID === overId);
+          if (overTask && activeTask.columnID !== overTask.columnID) {
+            targetColumnId = overTask.columnID;
+          }
+        } else if (isOverColumn) {
+          if (activeTask.columnID !== overId) {
+            targetColumnId = overId;
+          }
         }
-        return task;
-      });
-    });
 
+        if (targetColumnId !== null) {
+          return prevTasks.map((task) => {
+            if (task.taskID === activeTaskId) {
+              return {
+                ...task,
+                columnID: targetColumnId,
+              };
+            }
+            return task;
+          });
+        }
+
+        return prevTasks;
+      });
+    }
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
     setActiveTask(null);
+    // All state changes already happened in handleDragOver
+    // This is just to clear the active task
   };
 
   return (
@@ -128,6 +162,7 @@ const KanbanBoard = () => {
       sensors={sensors}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
+      onDragOver={handleDragOver}
     >
       <Stack direction="row" spacing={2} border="1px solid #02c575">
         {columns.map((col) => (

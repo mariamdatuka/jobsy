@@ -20,6 +20,10 @@ const ColumnContainer = ({
 }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: column.id,
+    data: {
+      type: "column",
+      column,
+    },
   });
 
   return (
