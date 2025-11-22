@@ -9,7 +9,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  type DragOverEvent,
+  type DragCancelEvent,
 } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
 import JobCard from "./JobCard";
@@ -73,7 +73,7 @@ export const tasksData: Task[] = [
   },
   {
     taskID: 3,
-    columnID: 2,
+    columnID: 1,
     companyName: "Meta",
     position: "Software Engineer",
     status: "Applied",
@@ -100,61 +100,73 @@ const KanbanBoard = () => {
     setActiveTask(active.data.current?.task);
   };
 
-  const handleDragOver = (event: DragOverEvent) => {
+  // const handleDragOver = (event: DragOverEvent) => {
+  //   const { active, over } = event;
+
+  //   if (!over) return;
+
+  //   const activeTaskId = active.id as number;
+  //   const overId = over.id as number;
+  //   if (activeTaskId === overId) return;
+
+  //   const isActiveTask = active.data.current?.type === "task";
+  //   const isOverTask = over.data.current?.type === "task";
+  //   const isOverColumn = over.data.current?.type === "column";
+
+  //   if (!isActiveTask) return;
+
+  //   // Update columnID during drag for visual feedback
+  //   if (isOverTask && isOverColumn) {
+  //     setTasks((prevTasks) => {
+  //       const activeTask = prevTasks.find((t) => t.taskID === activeTaskId);
+  //       if (!activeTask) return prevTasks;
+
+  //       let targetColumnId: number | null = null;
+
+  //       if (isOverTask) {
+  //         const overTask = prevTasks.find((t) => t.taskID === overId);
+  //         if (overTask && activeTask.columnID !== overTask.columnID) {
+  //           targetColumnId = overTask.columnID;
+  //         }
+  //       } else if (isOverColumn) {
+  //         if (activeTask.columnID !== overId) {
+  //           targetColumnId = overId;
+  //         }
+  //       }
+
+  //       if (targetColumnId !== null) {
+  //         return prevTasks.map((task) => {
+  //           if (task.taskID === activeTaskId) {
+  //             return {
+  //               ...task,
+  //               columnID: targetColumnId,
+  //             };
+  //           }
+  //           return task;
+  //         });
+  //       }
+
+  //       return prevTasks;
+  //     });
+  //   }
+  // };
+
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (!over) return;
+    if (active.id === over.id) return;
 
-    const activeTaskId = active.id as number;
-    const overId = over.id as number;
-    if (activeTaskId === overId) return;
-
-    const isActiveTask = active.data.current?.type === "task";
-    const isOverTask = over.data.current?.type === "task";
-    const isOverColumn = over.data.current?.type === "column";
-
-    if (!isActiveTask) return;
-
-    // Update columnID during drag for visual feedback
-    if (isOverTask && isOverColumn) {
-      setTasks((prevTasks) => {
-        const activeTask = prevTasks.find((t) => t.taskID === activeTaskId);
-        if (!activeTask) return prevTasks;
-
-        let targetColumnId: number | null = null;
-
-        if (isOverTask) {
-          const overTask = prevTasks.find((t) => t.taskID === overId);
-          if (overTask && activeTask.columnID !== overTask.columnID) {
-            targetColumnId = overTask.columnID;
-          }
-        } else if (isOverColumn) {
-          if (activeTask.columnID !== overId) {
-            targetColumnId = overId;
-          }
-        }
-
-        if (targetColumnId !== null) {
-          return prevTasks.map((task) => {
-            if (task.taskID === activeTaskId) {
-              return {
-                ...task,
-                columnID: targetColumnId,
-              };
-            }
-            return task;
-          });
-        }
-
-        return prevTasks;
-      });
-    }
+    setTasks((items) => {
+      const oldIndex = items.findIndex((i) => i.taskID === active.id);
+      const newIndex = items.findIndex((i) => i.taskID === over.id);
+      return arrayMove(items, oldIndex, newIndex);
+    });
   };
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragCancel = (event: DragCancelEvent) => {
+    void event;
     setActiveTask(null);
-    // All state changes already happened in handleDragOver
-    // This is just to clear the active task
   };
 
   return (
@@ -162,7 +174,8 @@ const KanbanBoard = () => {
       sensors={sensors}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
-      onDragOver={handleDragOver}
+      onDragCancel={handleDragCancel}
+      // onDragOver={handleDragOver}
     >
       <Stack direction="row" spacing={2} border="1px solid #02c575">
         {columns.map((col) => (

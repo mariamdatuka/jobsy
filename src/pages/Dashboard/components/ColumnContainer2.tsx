@@ -3,15 +3,16 @@ import Text from "@src/components/general/Text";
 import { SortableContext } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
 import JobCard from "./JobCard";
-import { type Task } from "./KanbanBoard";
+import { type Task } from "./KanbanBoard2";
+import JobCard2 from "./JobCard2";
 
 interface Column {
-  id: number;
+  id: string;
   title: string;
   color: string;
 }
 
-const ColumnContainer = ({
+const ColumnContainer2 = ({
   column,
   tasks,
 }: {
@@ -45,7 +46,7 @@ const ColumnContainer = ({
         <ColumnBox ref={setNodeRef}>
           <SortableContext items={tasks.map((task) => task.taskID)}>
             {tasks.map((task) => (
-              <JobCard key={task.taskID} task={task} />
+              <JobCard2 key={task.taskID} task={task} />
             ))}
           </SortableContext>
         </ColumnBox>
@@ -54,7 +55,7 @@ const ColumnContainer = ({
   );
 };
 
-export default ColumnContainer;
+export default ColumnContainer2;
 
 const TitleBox = styled(Stack)<{ bgcolor: string }>(({ bgcolor, theme }) => ({
   backgroundColor: bgcolor,
