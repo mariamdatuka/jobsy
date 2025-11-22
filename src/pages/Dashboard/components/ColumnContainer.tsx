@@ -2,11 +2,11 @@ import { Box, Stack, styled, Typography } from "@mui/material";
 import Text from "@src/components/general/Text";
 import { SortableContext } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
-import JobCard from "./JobCard";
 import { type Task } from "./KanbanBoard";
+import JobCard2 from "./JobCard";
 
 interface Column {
-  id: number;
+  id: string;
   title: string;
   color: string;
 }
@@ -45,7 +45,7 @@ const ColumnContainer = ({
         <ColumnBox ref={setNodeRef}>
           <SortableContext items={tasks.map((task) => task.taskID)}>
             {tasks.map((task) => (
-              <JobCard key={task.taskID} task={task} />
+              <JobCard2 key={task.taskID} task={task} />
             ))}
           </SortableContext>
         </ColumnBox>

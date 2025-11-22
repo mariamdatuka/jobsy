@@ -1,5 +1,4 @@
 import { Stack } from "@mui/material";
-import ColumnContainer from "./ColumnContainer";
 import { useState } from "react";
 import {
   DndContext,
@@ -9,18 +8,17 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  type DragCancelEvent,
 } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
-import JobCard from "./JobCard";
 import { arrayMove } from "@dnd-kit/sortable";
+import ColumnContainer2 from "./ColumnContainer";
+import JobCard2 from "./JobCard";
 
 export interface Task {
   taskID: number;
-  columnID: number;
   companyName: string;
   position: string;
-  status: "Saved" | "Applied" | "Interviewing" | "Rejected" | "Offered";
+  status: "SAVED" | "APPLIED" | "INTERVIEWING" | "REJECTED" | "OFFERED";
   country: string;
   city?: string;
   appliedDate?: string;
@@ -28,27 +26,27 @@ export interface Task {
 
 const columns = [
   {
-    id: 1,
+    id: "SAVED",
     title: "saved",
     color: "#e0e0e0",
   },
   {
-    id: 2,
+    id: "APPLIED",
     title: "applied",
     color: "#f8a83c ",
   },
   {
-    id: 3,
+    id: "INTERVIEWING",
     title: "interviewing",
     color: "#65cdfe",
   },
   {
-    id: 4,
+    id: "REJECTED",
     title: "rejected",
     color: "#e2435b",
   },
   {
-    id: 5,
+    id: "OFFFERED",
     title: "offered",
     color: "#02c575",
   },
@@ -57,26 +55,32 @@ const columns = [
 export const tasksData: Task[] = [
   {
     taskID: 1,
-    columnID: 1,
     companyName: "Microsoft",
     position: "Software Developer",
     country: "USA",
-    status: "Saved",
+    status: "SAVED",
   },
   {
     taskID: 2,
-    columnID: 1,
     companyName: "Microsoft",
     position: "Backend Developer",
     country: "USA",
-    status: "Saved",
+    status: "APPLIED",
   },
   {
     taskID: 3,
-    columnID: 1,
     companyName: "Meta",
     position: "Software Engineer",
-    status: "Applied",
+    status: "APPLIED",
+    country: "USA",
+    city: "San Francisco",
+    appliedDate: "2023-10-01",
+  },
+  {
+    taskID: 4,
+    companyName: "Meta",
+    position: "DevOps",
+    status: "APPLIED",
     country: "USA",
     city: "San Francisco",
     appliedDate: "2023-10-01",
@@ -100,73 +104,70 @@ const KanbanBoard = () => {
     setActiveTask(active.data.current?.task);
   };
 
-  // const handleDragOver = (event: DragOverEvent) => {
-  //   const { active, over } = event;
-
-  //   if (!over) return;
-
-  //   const activeTaskId = active.id as number;
-  //   const overId = over.id as number;
-  //   if (activeTaskId === overId) return;
-
-  //   const isActiveTask = active.data.current?.type === "task";
-  //   const isOverTask = over.data.current?.type === "task";
-  //   const isOverColumn = over.data.current?.type === "column";
-
-  //   if (!isActiveTask) return;
-
-  //   // Update columnID during drag for visual feedback
-  //   if (isOverTask && isOverColumn) {
-  //     setTasks((prevTasks) => {
-  //       const activeTask = prevTasks.find((t) => t.taskID === activeTaskId);
-  //       if (!activeTask) return prevTasks;
-
-  //       let targetColumnId: number | null = null;
-
-  //       if (isOverTask) {
-  //         const overTask = prevTasks.find((t) => t.taskID === overId);
-  //         if (overTask && activeTask.columnID !== overTask.columnID) {
-  //           targetColumnId = overTask.columnID;
-  //         }
-  //       } else if (isOverColumn) {
-  //         if (activeTask.columnID !== overId) {
-  //           targetColumnId = overId;
-  //         }
-  //       }
-
-  //       if (targetColumnId !== null) {
-  //         return prevTasks.map((task) => {
-  //           if (task.taskID === activeTaskId) {
-  //             return {
-  //               ...task,
-  //               columnID: targetColumnId,
-  //             };
-  //           }
-  //           return task;
-  //         });
-  //       }
-
-  //       return prevTasks;
-  //     });
-  //   }
-  // };
-
   const handleDragEnd = (event: DragEndEvent) => {
+    setActiveTask(null);
     const { active, over } = event;
 
     if (!over) return;
     if (active.id === over.id) return;
 
-    setTasks((items) => {
-      const oldIndex = items.findIndex((i) => i.taskID === active.id);
-      const newIndex = items.findIndex((i) => i.taskID === over.id);
-      return arrayMove(items, oldIndex, newIndex);
-    });
-  };
+    const activeId = active.id as number;
 
-  const handleDragCancel = (event: DragCancelEvent) => {
-    void event;
-    setActiveTask(null);
+    const isActiveTask = active.data.current?.type === "task";
+    const isOverTask = over.data.current?.type === "task";
+
+    // Dropping task over another task (reordering within same column or moving to different column)
+    if (isActiveTask && isOverTask) {
+      const overId = over.id as number;
+      setTasks((tasks) => {
+        const activeIndex = tasks.findIndex((t) => t.taskID === activeId);
+        const overIndex = tasks.findIndex((t) => t.taskID === overId);
+
+        // If tasks are in the same column, just reorder them
+        const activeTask = tasks[activeIndex];
+        const overTask = tasks[overIndex];
+
+        activeTask.status = overTask.status;
+
+        return arrayMove(tasks, activeIndex, overIndex);
+
+        // if (activeTask.status === overTask.status) {
+        //   return arrayMove(tasks, activeIndex, overIndex);
+        // } else {
+        //   // Moving to different column - update status and reorder
+        //   const newTasks = tasks.map((task) =>
+        //     task.taskID === activeId
+        //       ? { ...task, status: overTask.status }
+        //       : task
+        //   );
+        //   const newActiveIndex = newTasks.findIndex(
+        //     (t) => t.taskID === activeId
+        //   );
+        //   const newOverIndex = newTasks.findIndex((t) => t.taskID === overId);
+        //   return arrayMove(newTasks, newActiveIndex, newOverIndex);
+        // }
+      });
+    }
+
+    const isOverColumn = over.data.current?.type === "column";
+    if (isActiveTask && isOverColumn) {
+      console.log("columns");
+      const overId = over.id as Task["status"];
+      setTasks((tasks) => {
+        const activeIndex = tasks.findIndex((t) => t.taskID === activeId);
+        tasks[activeIndex].status = overId;
+        return arrayMove(tasks, activeIndex, activeIndex);
+      });
+    }
+    // Dropping task over a column (moving to different column)
+    // else if (isActiveTask && !isOverTask) {
+    //   const overId = over.id as Task["status"]; // When over a column, over.id is the status
+    //   setTasks((tasks) =>
+    //     tasks.map((task) =>
+    //       task.taskID === activeId ? { ...task, status: overId } : task
+    //     )
+    //   );
+    // }
   };
 
   return (
@@ -174,22 +175,22 @@ const KanbanBoard = () => {
       sensors={sensors}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
-      onDragCancel={handleDragCancel}
+      // onDragCancel={handleDragCancel}
       // onDragOver={handleDragOver}
     >
       <Stack direction="row" spacing={2} border="1px solid #02c575">
         {columns.map((col) => (
-          <ColumnContainer
+          <ColumnContainer2
             column={col}
             key={col.title}
-            tasks={tasks.filter((task) => task.columnID === col.id)}
+            tasks={tasks.filter((task) => task.status === col.id)}
           />
         ))}
       </Stack>
 
       {createPortal(
         <DragOverlay>
-          {activeTask && <JobCard task={activeTask} />}
+          {activeTask && <JobCard2 task={activeTask} />}
         </DragOverlay>,
         document.body
       )}
