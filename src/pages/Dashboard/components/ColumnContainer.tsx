@@ -42,13 +42,17 @@ const ColumnContainer = ({
           </Typography>
           <Text color="#fff">{tasks.length}</Text>
         </TitleBox>
-        <ColumnBox ref={setNodeRef}>
-          <SortableContext items={tasks.map((task) => task.taskID)}>
-            {tasks.map((task) => (
-              <JobCard2 key={task.taskID} task={task} />
-            ))}
-          </SortableContext>
-        </ColumnBox>
+        <ColumnBoxWrapper>
+          <ColumnBox ref={setNodeRef}>
+            <SortableContext items={tasks.map((task) => task.taskID)}>
+              {tasks.map((task) => (
+                <JobCard2 key={task.taskID} task={task} />
+              ))}
+            </SortableContext>
+          </ColumnBox>
+          <FadeTop />
+          <FadeBottom />
+        </ColumnBoxWrapper>
       </Box>
     </>
   );
@@ -56,7 +60,7 @@ const ColumnContainer = ({
 
 export default ColumnContainer;
 
-const TitleBox = styled(Stack)<{ bgcolor: string }>(({ bgcolor, theme }) => ({
+const TitleBox = styled(Stack)<{ bgcolor: string }>(({ bgcolor }) => ({
   backgroundColor: bgcolor,
   padding: "10px 16px",
   borderTopLeftRadius: "12px",
@@ -66,13 +70,50 @@ const TitleBox = styled(Stack)<{ bgcolor: string }>(({ bgcolor, theme }) => ({
   alignItems: "center",
 }));
 
-const ColumnBox = styled(Stack)({
+const ColumnBoxWrapper = styled(Box)({
+  position: "relative",
   height: "450px",
   maxHeight: "450px",
-  padding: "20px 12px",
-  backgroundColor: "#f5f7f9",
-  overflowY: "scroll",
-  scrollbarWidth: "none",
   borderBottomLeftRadius: "12px",
   borderBottomRightRadius: "12px",
+  overflow: "hidden",
+});
+
+const ColumnBox = styled(Stack)({
+  height: "100%",
+  padding: "20px 12px",
+  display: "flex",
+  flexDirection: "column",
+  gap: "5px",
+  backgroundColor: "#f5f7f9",
+  overflowY: "auto",
+  scrollbarWidth: "none",
+  "&::-webkit-scrollbar": {
+    display: "none",
+  },
+  MsOverflowStyle: "none",
+});
+
+const FadeTop = styled(Box)({
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  height: "30px",
+  background:
+    "linear-gradient(to bottom, rgba(245, 247, 249, 1) 0%, rgba(245, 247, 249, 0) 100%)",
+  pointerEvents: "none",
+  zIndex: 1,
+});
+
+const FadeBottom = styled(Box)({
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  right: 0,
+  height: "30px",
+  background:
+    "linear-gradient(to top, rgba(245, 247, 249, 1) 0%, rgba(245, 247, 249, 0) 100%)",
+  pointerEvents: "none",
+  zIndex: 1,
 });

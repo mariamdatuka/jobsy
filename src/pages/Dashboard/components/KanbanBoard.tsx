@@ -11,8 +11,8 @@ import {
 } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
 import { arrayMove } from "@dnd-kit/sortable";
-import ColumnContainer2 from "./ColumnContainer";
-import JobCard2 from "./JobCard";
+import ColumnContainer from "./ColumnContainer";
+import JobCard from "./JobCard";
 
 export interface Task {
   taskID: number;
@@ -151,7 +151,6 @@ const KanbanBoard = () => {
 
     const isOverColumn = over.data.current?.type === "column";
     if (isActiveTask && isOverColumn) {
-      console.log("columns");
       const overId = over.id as Task["status"];
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.taskID === activeId);
@@ -175,12 +174,10 @@ const KanbanBoard = () => {
       sensors={sensors}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
-      // onDragCancel={handleDragCancel}
-      // onDragOver={handleDragOver}
     >
       <Stack direction="row" spacing={2} border="1px solid #02c575">
         {columns.map((col) => (
-          <ColumnContainer2
+          <ColumnContainer
             column={col}
             key={col.title}
             tasks={tasks.filter((task) => task.status === col.id)}
@@ -190,7 +187,7 @@ const KanbanBoard = () => {
 
       {createPortal(
         <DragOverlay>
-          {activeTask && <JobCard2 task={activeTask} />}
+          {activeTask && <JobCard task={activeTask} />}
         </DragOverlay>,
         document.body
       )}
