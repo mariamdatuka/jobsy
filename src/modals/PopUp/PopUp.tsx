@@ -56,7 +56,7 @@ const PopUp = ({
         paper: {
           sx: {
             padding: "30px",
-            width: isMobile ? "100%" : "630px",
+            width: isMobile ? "100%" : "500px",
             maxWidth: "100%",
             borderRadius: "10px !important",
             display: "flex",
@@ -72,8 +72,8 @@ const PopUp = ({
           src={X}
           alt="close"
           onClick={onClose}
-          width="30px"
-          height="30px"
+          width="25px"
+          height="25px"
           style={{ alignSelf: "end", cursor: "pointer" }}
         />
       )}
@@ -81,7 +81,12 @@ const PopUp = ({
 
       {showHeader && (
         <DialogTitle>
-          <Text variant="h4" color="secondary.main" fontWeight={600}>
+          <Text
+            variant="body1"
+            fontSize="28px"
+            color="secondary.main"
+            fontWeight={600}
+          >
             {title}
           </Text>
         </DialogTitle>
@@ -93,9 +98,9 @@ const PopUp = ({
       </DialogContent>
       {showActionSection && (
         <DialogActions
-          sx={{
-            width: "100%",
-          }}
+        // sx={{
+        //   width: "100%",
+        // }}
         >
           {actionButtons.map(
             (

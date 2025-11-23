@@ -2,7 +2,7 @@ import { Outlet, Navigate } from "react-router";
 import { useUserStore } from "./store/userStore";
 import { Box, CircularProgress } from "@mui/material";
 
-const ProtectedRoutes = () => {
+const PublicRoute = () => {
   const session = useUserStore((state) => state.session);
   const isLoading = useUserStore((state) => state.isLoading);
 
@@ -22,7 +22,7 @@ const ProtectedRoutes = () => {
     );
   }
 
-  return <>{session ? <Outlet /> : <Navigate to="/" replace />}</>;
+  return <>{session ? <Navigate to="/dashboard" replace /> : <Outlet />}</>;
 };
 
-export default ProtectedRoutes;
+export default PublicRoute;

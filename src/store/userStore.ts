@@ -14,7 +14,7 @@ interface UserStore {
   setAuthState: (session: Session | null) => void;
   clearUser: () => void;
   logout: () => Promise<void>;
-  initializeAuth: () => void;
+  initializeAuth: () => Promise<(() => void) | undefined>;
 }
 
 export const useUserStore = create<UserStore>((set, get) => ({
@@ -54,7 +54,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
       if (error) {
         console.error("Error fetching session:", error);
         set({ isLoading: false });
-        return;
+        return undefined;
       }
 
       useUserStore.getState().setAuthState(data?.session);
@@ -70,6 +70,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
     } catch (error) {
       console.error("Auth initialization error:", error);
       set({ isLoading: false });
+      return undefined;
     }
   },
 }));

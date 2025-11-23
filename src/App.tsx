@@ -7,14 +7,21 @@ function App() {
   const initializeAuth = useUserStore((state) => state.initializeAuth);
 
   useEffect(() => {
-    const unsubscribe = initializeAuth;
+    let cleanup: (() => void) | undefined;
+
+    // Call initializeAuth (async) and get the cleanup function
+    initializeAuth().then((unsubscribe) => {
+      cleanup = unsubscribe;
+    });
 
     return () => {
-      if (unsubscribe) {
-        unsubscribe();
+      // Call cleanup if it exists (it's the unsubscribe function)
+      if (cleanup && typeof cleanup === "function") {
+        cleanup();
       }
     };
   }, [initializeAuth]);
+  
   return <RouterProvider router={createBrowserRouter(routes)} />;
 }
 

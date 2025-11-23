@@ -6,42 +6,44 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import MainLayout from "./components/layouts/MainLayout";
 import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";
+import ProtectedRoutes from "./ProtectedRoutes";
+import PublicRoute from "./PublicRoute";
 
 export const routes: RouteObject[] = [
   {
-    path: "/",
-    Component: Login,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/signup",
-    Component: SignUp,
-  },
-  {
-    Component: MainLayout,
+    Component: PublicRoute,
     children: [
       {
-        path: "/dashboard",
-        Component: Dashboard,
+        path: "/",
+        Component: Login,
+        errorElement: <ErrorPage />,
       },
       {
-        path: "/analytics",
-        Component: Analytics,
-      },
-      {
-        path: "/profile",
-        Component: Profile,
+        path: "/signup",
+        Component: SignUp,
       },
     ],
   },
-
-  // {
-  //   element: <ProtectedRoutes />,
-  //   children: [
-  //     {
-  //       path: "/dashboard",
-  //       element: <Dashboard />,
-  //     },
-  //   ],
-  // },
+  {
+    Component: ProtectedRoutes,
+    children: [
+      {
+        Component: MainLayout,
+        children: [
+          {
+            path: "/dashboard",
+            Component: Dashboard,
+          },
+          {
+            path: "/analytics",
+            Component: Analytics,
+          },
+          {
+            path: "/profile",
+            Component: Profile,
+          },
+        ],
+      },
+    ],
+  },
 ];

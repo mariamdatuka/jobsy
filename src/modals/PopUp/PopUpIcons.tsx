@@ -6,7 +6,7 @@ const PopUpIcons = ({ type }: { type: PopupIconTypeProps }) => {
     switch (type) {
       case "success":
         return {
-          Icon: <img src={success} alt="success" width={40} height={40} />,
+          Icon: <img src={success} alt="success" width={30} height={30} />,
         };
     }
   };

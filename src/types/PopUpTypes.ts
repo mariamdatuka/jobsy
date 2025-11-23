@@ -4,7 +4,7 @@ import type { SxProps } from "@mui/material";
 export type PopupIconTypeProps = "success" | "error" | "warning";
 
 export interface PopUpProps {
-  title: string;
+  title?: string;
   description: string | React.ReactNode;
   buttons?: ButtonConfig[];
   open: boolean;
@@ -34,7 +34,7 @@ export interface ButtonConfig {
   label: string;
   onClick: () => void;
   variant?: "contained" | "outlined";
-  color?: "primary" | "error";
+  color?: any;
   disabled?: boolean;
   submitType?: "cancel" | "submit";
   hidden?: boolean;
