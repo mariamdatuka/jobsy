@@ -1,14 +1,15 @@
+import { Box, Stack } from "@mui/material";
+import FiltersContainer from "./components/FiltersContainer";
 import KanbanBoard from "./components/KanbanBoard";
 
 const Dashboard = () => {
-  // const user = useUserStore((state) => state.user);
-
-  // const logout = useUserStore((state) => state.logout);
-
   return (
     <>
       {" "}
-      <KanbanBoard />
+      <Stack spacing={10}>
+        <FiltersContainer />
+        <KanbanBoard />
+      </Stack>
     </>
   );
 };
