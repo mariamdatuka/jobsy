@@ -1,13 +1,14 @@
-import { Box, Stack } from "@mui/material";
-import FiltersContainer from "./components/FiltersContainer";
+import { Stack } from "@mui/material";
+
 import KanbanBoard from "./components/KanbanBoard";
+import DashboardHeader from "./DashboardHeader/DashboardHeader";
 
 const Dashboard = () => {
   return (
     <>
       {" "}
       <Stack spacing={10}>
-        <FiltersContainer />
+        <DashboardHeader />
         <KanbanBoard />
       </Stack>
     </>
