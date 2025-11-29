@@ -1,22 +1,8 @@
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import { useState } from "react";
+import type { Props } from "./DashboardHeader";
 
-type View = "kanban" | "table";
-const DashboardToggleView = () => {
-  const [alignment, setAlignment] = useState<View>(() => {
-    const saved = localStorage.getItem("dashboardView");
-    return (saved as View) || "kanban";
-  });
-  const handleChange = (
-    _: React.MouseEvent<HTMLElement>,
-    newAlignment: View | null
-  ) => {
-    if (newAlignment !== null) {
-      setAlignment(newAlignment);
-      localStorage.setItem("dashboardView", newAlignment);
-    }
-  };
+const DashboardToggleView = ({ alignment, handleChange }: Props) => {
   return (
     <ToggleButtonGroup
       color="primary"

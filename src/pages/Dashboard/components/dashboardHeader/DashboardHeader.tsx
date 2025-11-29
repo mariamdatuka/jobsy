@@ -2,7 +2,15 @@ import { Box, Stack } from "@mui/material";
 import DashboardActions from "./DashboardActions";
 import DashboardToggleView from "./DashboardToggleView";
 
-const DashboardHeader = () => {
+export interface Props {
+  handleChange: (
+    event: React.MouseEvent<HTMLElement>,
+    newAlignment: "kanban" | "table" | null
+  ) => void;
+  alignment: "kanban" | "table";
+}
+
+const DashboardHeader = ({ handleChange, alignment }: Props) => {
   return (
     <Box width="100%" border="1px solid #000000">
       <Stack
@@ -16,8 +24,11 @@ const DashboardHeader = () => {
           <Box>Filters</Box>
         </Box>
         <Box>
-          {/* <DashboardActions /> */}
-          <DashboardToggleView />
+          <DashboardActions />
+          <DashboardToggleView
+            handleChange={handleChange}
+            alignment={alignment}
+          />
         </Box>
       </Stack>
     </Box>
