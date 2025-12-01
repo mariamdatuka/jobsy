@@ -23,13 +23,15 @@ const DashboardHeader = ({ handleChange, alignment }: Props) => {
           <Box>Search input</Box>
           <Box>Filters</Box>
         </Box>
-        <Box>
+        <Stack gap="25px">
           <DashboardActions />
-          <DashboardToggleView
-            handleChange={handleChange}
-            alignment={alignment}
-          />
-        </Box>
+          <Box sx={{ alignSelf: "end" }}>
+            <DashboardToggleView
+              handleChange={handleChange}
+              alignment={alignment}
+            />
+          </Box>
+        </Stack>
       </Stack>
     </Box>
   );

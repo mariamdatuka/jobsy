@@ -1,6 +1,4 @@
 import { Stack } from "@mui/material";
-import { AnimatePresence, motion } from "motion/react";
-
 import KanbanBoard from "./components/kanbanView/KanbanBoard";
 import DashboardHeader from "./components/dashboardHeader/DashboardHeader";
 import { useState } from "react";
