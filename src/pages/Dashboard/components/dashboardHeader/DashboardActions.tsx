@@ -1,7 +1,12 @@
+import NiceModal from "@ebay/nice-modal-react";
 import PlusIcon from "@src/assets/icons/PlusIcon";
 import Button from "@src/components/general/Button";
+import { ADD_JOB_MODAL } from "@src/modals/modal_names";
 
 const DashboardActions = () => {
+  const openAddJobModal = () => {
+    NiceModal.show(ADD_JOB_MODAL);
+  };
   return (
     <Button
       variant="contained"
@@ -9,6 +14,7 @@ const DashboardActions = () => {
       title="add job"
       startIcon={<PlusIcon />}
       sx={{ width: "250px" }}
+      onClick={openAddJobModal}
     />
   );
 };

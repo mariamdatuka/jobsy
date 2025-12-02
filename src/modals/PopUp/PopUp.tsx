@@ -22,6 +22,7 @@ const PopUp = ({
   showCloseButton = true,
   showHeader = true,
   showActionSection = true,
+  children,
 }: PopUpProps) => {
   const defaultButtons: ButtonConfig[] = [
     {
@@ -92,9 +93,12 @@ const PopUp = ({
         </DialogTitle>
       )}
       <DialogContent>
-        <Text variant="body1" color="text.secondary">
-          {description}
-        </Text>
+        {description && (
+          <Text variant="body1" color="text.secondary">
+            {description}
+          </Text>
+        )}
+        {children}
       </DialogContent>
       {showActionSection && (
         <DialogActions

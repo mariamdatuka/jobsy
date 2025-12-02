@@ -5,7 +5,7 @@ export type PopupIconTypeProps = "success" | "error" | "warning";
 
 export interface PopUpProps {
   title?: string;
-  description: string | React.ReactNode;
+  description?: string | React.ReactNode;
   buttons?: ButtonConfig[];
   open: boolean;
   onClose: () => void;
@@ -28,6 +28,7 @@ export interface PopUpProps {
   customDescription?: React.ReactElement;
   showHeader?: boolean;
   showActionSection?: boolean;
+  children?: React.ReactNode;
 }
 
 export interface ButtonConfig {
