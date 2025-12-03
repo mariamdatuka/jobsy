@@ -1,5 +1,7 @@
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import PopUp from "../PopUp/PopUp";
+import { Box } from "@mui/material";
+import AddJobForm from "@src/components/forms/AddJobForm";
 
 export interface AddJobModalProps {
   handleJobSubmit?: any;
@@ -13,6 +15,7 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(
       <PopUp
         open={visible}
         onClose={hide}
+        children={<AddJobForm />}
         buttons={[
           {
             label: "Cancel",

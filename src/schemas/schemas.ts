@@ -31,3 +31,20 @@ export const SignUpSchema = yup.object().shape({
     .required("Last name is required")
     .matches(nameRegex, "Only Latin letters are allowed"),
 });
+
+export const AddJobSchema = yup.object().shape({
+  companyName: yup.string().required("Company name is required"),
+  positionName: yup
+    .string()
+    .required("Position is required")
+    .min(2, "at least 2 characters")
+    .max(30, "at most 30 characters"),
+  country: yup.string(),
+  link: yup.string().url("Must be a valid URL").nullable(),
+  salary: yup.string(),
+  vacancyType: yup.string(),
+  status: yup.string(),
+  notes: yup.string().max(500, "Maximum 500 characters allowed"),
+  dateApplied: yup.date().nullable(),
+  // resume: yup.mixed().nullable(),
+});
