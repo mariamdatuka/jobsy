@@ -42,7 +42,7 @@ export const AddJobSchema = yup.object().shape({
   country: yup.string(),
   link: yup.string().url("Must be a valid URL").nullable(),
   salary: yup.string(),
-  vacancyType: yup.string(),
+  vacancyType: yup.string().required("Vacancy type is required"),
   status: yup.string(),
   notes: yup.string().max(500, "Maximum 500 characters allowed"),
   dateApplied: yup.date().nullable(),
