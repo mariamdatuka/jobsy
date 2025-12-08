@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { AddJobSchema } from "@src/schemas/schemas";
 import SelectInput from "../general/SelectInput";
 import DatePickerValue from "../general/Datepicker";
-import { StatusOptions } from "./helper";
+import { StatusOptions, VacancyTypeOptions } from "./helper";
 import { Stack } from "@mui/material";
 
 const AddJobForm = () => {
@@ -36,8 +36,12 @@ const AddJobForm = () => {
           <Input label="Position" name="positionName" />
           <Input label="Link to vacancy" name="link" />
           <Input label="Salary" name="salary" />
-          <Input label="Country" name="country" />
-          <Stack direction="row" alignItems="center" justifyContent="center">
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+            gap="15px"
+          >
             <SelectInput
               name="status"
               label="Status"
@@ -46,6 +50,13 @@ const AddJobForm = () => {
             />
             <DatePickerValue label="Date Applied" width={200} />
           </Stack>
+          <SelectInput
+            name="vacancyType"
+            label="Type"
+            options={VacancyTypeOptions}
+            width="100%"
+          />
+          <Input label="Country" name="country" />
           <Input label="Notes" name="notes" />
         </Stack>
       </form>
