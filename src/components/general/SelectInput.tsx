@@ -6,11 +6,12 @@ import { Controller, useFormContext } from "react-hook-form";
 
 interface SelectInputProps {
   name: string;
-  options: { label: string; value: string | number }[];
+  options: string[];
   label?: string;
+  width?: number | string;
 }
 
-const SelectInput = ({ name, options, label }: SelectInputProps) => {
+const SelectInput = ({ name, options, label, width = 200 }: SelectInputProps) => {
   const {
     control,
     formState: { errors },
@@ -40,14 +41,14 @@ const SelectInput = ({ name, options, label }: SelectInputProps) => {
             inputProps={{ "aria-label": "Without label" }}
             size="small"
             error={!!error}
-            sx={{ minWidth: 150 }}
+            sx={{ width }}
           >
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
             {options.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
+              <MenuItem key={option} value={option}>
+                {option}
               </MenuItem>
             ))}
           </Select>
