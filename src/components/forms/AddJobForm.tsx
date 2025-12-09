@@ -6,6 +6,7 @@ import SelectInput from "../general/SelectInput";
 import DatePickerValue from "../general/Datepicker";
 import { StatusOptions, VacancyTypeOptions } from "./helper";
 import { Stack } from "@mui/material";
+import dayjs from "dayjs";
 
 const AddJobForm = () => {
   const methods = useForm({
@@ -15,9 +16,9 @@ const AddJobForm = () => {
       positionName: "",
       link: "",
       salary: "",
-      vacancyType: "",
+      vacancyType: "Remote",
       country: "",
-      status: "",
+      status: "Applied",
       dateApplied: null,
       // resume: null,
       notes: "",
@@ -48,7 +49,11 @@ const AddJobForm = () => {
               options={StatusOptions}
               width={200}
             />
-            <DatePickerValue label="Date Applied" width={200} />
+            <DatePickerValue
+              label="Date Applied"
+              width={200}
+              name="dateApplied"
+            />
           </Stack>
           <SelectInput
             name="vacancyType"
@@ -57,7 +62,7 @@ const AddJobForm = () => {
             width="100%"
           />
           <Input label="Country" name="country" />
-          <Input label="Notes" name="notes" />
+          <Input label="Notes" name="notes" multiline rows={2} />
         </Stack>
       </form>
     </FormProvider>

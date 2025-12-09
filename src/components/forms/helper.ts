@@ -1,9 +1,10 @@
 export const StatusOptions = [
   "Applied",
+  "Saved",
   "Interviewing",
   "Offered",
   "Rejected",
   "Accepted",
 ];
 
-export const VacancyTypeOptions = ["remote", "onsite", "hybrid"];
+export const VacancyTypeOptions = ["Remote", "On-site", "Hybrid"];

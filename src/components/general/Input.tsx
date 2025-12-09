@@ -16,6 +16,8 @@ type InputProps = TextFieldProps & {
   sx?: any;
   leftContent?: string | JSX.Element;
   rightContent?: string | JSX.Element;
+  multiline?: boolean;
+  rows?: number;
 };
 
 const Input = ({
@@ -26,6 +28,8 @@ const Input = ({
   sx,
   leftContent,
   rightContent,
+  multiline = false,
+  rows,
 }: InputProps) => {
   const {
     control,
@@ -68,6 +72,8 @@ const Input = ({
             variant={variant}
             error={!!error}
             helperText={error?.message}
+            multiline={multiline}
+            rows={rows}
             slotProps={{
               input: {
                 ...inputSlotProps,

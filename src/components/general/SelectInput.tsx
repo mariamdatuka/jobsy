@@ -11,7 +11,12 @@ interface SelectInputProps {
   width?: number | string;
 }
 
-const SelectInput = ({ name, options, label, width = 200 }: SelectInputProps) => {
+const SelectInput = ({
+  name,
+  options,
+  label,
+  width = 200,
+}: SelectInputProps) => {
   const {
     control,
     formState: { errors },
@@ -37,15 +42,11 @@ const SelectInput = ({ name, options, label, width = 200 }: SelectInputProps) =>
         render={({ field, fieldState: { error } }) => (
           <Select
             {...field}
-            displayEmpty
             inputProps={{ "aria-label": "Without label" }}
             size="small"
             error={!!error}
             sx={{ width }}
           >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
             {options.map((option) => (
               <MenuItem key={option} value={option}>
                 {option}

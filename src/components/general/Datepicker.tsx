@@ -3,15 +3,19 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Stack from "@mui/material/Stack";
+import { Controller, useFormContext } from "react-hook-form";
 interface DatePickerValueProps {
   width?: number | string;
   label?: string;
+  name: string;
 }
 
 export default function DatePickerValue({
   width = 200,
   label,
+  name,
 }: DatePickerValueProps) {
+  const { control } = useFormContext();
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack gap={0.5}>
@@ -26,16 +30,25 @@ export default function DatePickerValue({
             {label}
           </label>
         )}
-        <DatePicker
-          maxDate={dayjs()}
-          slotProps={{
-            textField: {
-              size: "small",
-              sx: {
-                width,
-              },
-            },
-          }}
+
+        <Controller
+          name={name}
+          control={control}
+          render={({ field, fieldState: { error } }) => (
+            <DatePicker
+              value={field.value ?? dayjs()}
+              onChange={(newValue) => field.onChange(newValue)}
+              maxDate={dayjs()}
+              slotProps={{
+                textField: {
+                  size: "small",
+                  sx: { width },
+                  error: !!error,
+                  helperText: error?.message,
+                },
+              }}
+            />
+          )}
         />
       </Stack>
     </LocalizationProvider>
