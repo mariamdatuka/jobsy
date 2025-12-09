@@ -106,26 +106,14 @@ const PopUp = ({
         //   width: "100%",
         // }}
         >
-          {actionButtons.map(
-            (
-              { label, onClick, color, disabled, hidden, variant, buttonSx },
-              index
-            ) => {
-              if (hidden) return null;
+          {actionButtons.map((button, index) => {
+            const { label, hidden, buttonSx, ...rest } = button as any;
+            if (hidden) return null;
 
-              return (
-                <MainButton
-                  key={index}
-                  title={label}
-                  onClick={onClick}
-                  color={color}
-                  disabled={disabled}
-                  variant={variant}
-                  sx={buttonSx}
-                />
-              );
-            }
-          )}
+            return (
+              <MainButton key={index} title={label} {...rest} sx={buttonSx} />
+            );
+          })}
         </DialogActions>
       )}
     </Dialog>

@@ -26,7 +26,10 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(
           {
             label: "Add",
             color: "primary",
+            // if a handleJobSubmit prop is provided, calling it on click is optional
             onClick: handleJobSubmit,
+            type: "submit",
+            form: "add-job-form",
             buttonSx: { width: "150px" },
           },
         ]}

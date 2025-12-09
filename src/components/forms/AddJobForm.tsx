@@ -31,7 +31,7 @@ const AddJobForm = () => {
   };
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
+      <form onSubmit={methods.handleSubmit(onSubmit)} id="add-job-form">
         <Stack spacing={1.5}>
           <Input label="Company Name" name="companyName" />
           <Input label="Position" name="positionName" />

@@ -41,4 +41,5 @@ export interface ButtonConfig {
   hidden?: boolean;
   dataTestId?: string;
   buttonSx?: SxProps;
+  [key: string]: any;
 }
