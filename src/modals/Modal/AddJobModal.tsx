@@ -1,4 +1,5 @@
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
+import { useState } from "react";
 import PopUp from "../PopUp/PopUp";
 import AddJobForm from "@src/components/forms/AddJobForm";
 
@@ -9,12 +10,29 @@ export interface AddJobModalProps {
 const AddJobModal = NiceModal.create<AddJobModalProps>(
   ({ handleJobSubmit }) => {
     const { visible, hide } = useModal();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const submitHandler = async (values: any) => {
+      setIsSubmitting(true);
+      try {
+        if (handleJobSubmit) {
+          await handleJobSubmit(values);
+        }
+        // close modal after successful submit
+        hide();
+      } catch (err) {
+        // let the caller handle errors, but we still stop loading
+        console.error("Add job submit error:", err);
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
 
     return (
       <PopUp
         open={visible}
         onClose={hide}
-        children={<AddJobForm />}
+        children={<AddJobForm onSubmit={submitHandler} />}
         buttons={[
           {
             label: "Cancel",
@@ -26,10 +44,10 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(
           {
             label: "Add",
             color: "primary",
-            // if a handleJobSubmit prop is provided, calling it on click is optional
-            onClick: handleJobSubmit,
+            onClick: () => {},
             type: "submit",
             form: "add-job-form",
+            disabled: isSubmitting,
             buttonSx: { width: "150px" },
           },
         ]}

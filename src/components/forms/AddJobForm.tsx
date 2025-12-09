@@ -6,9 +6,11 @@ import SelectInput from "../general/SelectInput";
 import DatePickerValue from "../general/Datepicker";
 import { StatusOptions, VacancyTypeOptions } from "./helper";
 import { Stack } from "@mui/material";
-import dayjs from "dayjs";
+interface AddJobFormProps {
+  onSubmit: (data: any) => Promise<void> | void;
+}
 
-const AddJobForm = () => {
+const AddJobForm = ({ onSubmit }: AddJobFormProps) => {
   const methods = useForm({
     resolver: yupResolver(AddJobSchema),
     defaultValues: {
@@ -26,12 +28,12 @@ const AddJobForm = () => {
     mode: "all",
   });
 
-  const onSubmit = async (userData: any) => {
-    console.log("userData", userData);
+  const internalSubmit = async (userData: any) => {
+    console.log("data", userData);
   };
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)} id="add-job-form">
+      <form onSubmit={methods.handleSubmit(internalSubmit)} id="add-job-form">
         <Stack spacing={1.5}>
           <Input label="Company Name" name="companyName" />
           <Input label="Position" name="positionName" />

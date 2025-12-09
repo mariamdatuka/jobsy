@@ -19,11 +19,22 @@ const Dashboard = () => {
       localStorage.setItem("dashboardView", newAlignment);
     }
   };
+
+  // Example caller-provided handler for Add Job modal.
+  // Replace implementation with API call/store update as needed.
+  const handleJobSubmit = async (values: any) => {
+    console.log("Add job values from modal:", values);
+    // TODO: call API or update store here
+  };
   return (
     <>
       {" "}
       <Stack spacing={10}>
-        <DashboardHeader alignment={alignment} handleChange={handleChange} />
+        <DashboardHeader
+          alignment={alignment}
+          handleChange={handleChange}
+          handleJobSubmit={handleJobSubmit}
+        />
         <AnimatedView viewKey={alignment}>
           {alignment === "kanban" ? <KanbanBoard /> : <TableView />}
         </AnimatedView>

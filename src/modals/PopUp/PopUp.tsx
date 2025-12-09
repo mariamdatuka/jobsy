@@ -3,12 +3,13 @@ import {
   DialogTitle,
   DialogActions,
   DialogContent,
+  IconButton,
 } from "@mui/material";
 import type { ButtonConfig, PopUpProps } from "@src/types/PopUpTypes";
 import Text from "@src/components/general/Text";
 import MainButton from "@src/components/general/Button";
-import X from "@src/assets/icons/x-close.svg";
 import PopUpIcons from "./PopUpIcons";
+import CloseIcon from "@src/assets/icons/CloseIcon";
 
 const PopUp = ({
   title,
@@ -51,6 +52,7 @@ const PopUp = ({
         "& .MuiDialogTitle-root, .MuiDialogContent-root": {
           padding: "12px 0px",
         },
+        position: "relative",
         ...sx,
       }}
       slotProps={{
@@ -69,14 +71,13 @@ const PopUp = ({
       }}
     >
       {showCloseButton && (
-        <img
-          src={X}
-          alt="close"
+        <IconButton
+          aria-label="Close dialog"
           onClick={onClose}
-          width="25px"
-          height="25px"
-          style={{ alignSelf: "end", cursor: "pointer" }}
-        />
+          sx={{ position: "absolute", right: 8, top: 8 }}
+        >
+          <CloseIcon />
+        </IconButton>
       )}
       {iconType && <PopUpIcons type={iconType} />}
 
