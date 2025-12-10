@@ -6,6 +6,7 @@ import SelectInput from "../general/SelectInput";
 import DatePickerValue from "../general/Datepicker";
 import { StatusOptions, VacancyTypeOptions } from "./helper";
 import { Stack } from "@mui/material";
+import dayjs from "dayjs";
 interface AddJobFormProps {
   onSubmit: (data: any) => Promise<void> | void;
 }
@@ -21,7 +22,7 @@ const AddJobForm = ({ onSubmit }: AddJobFormProps) => {
       vacancyType: "Remote",
       country: "",
       status: "Applied",
-      dateApplied: null,
+      dateApplied: dayjs(),
       // resume: null,
       notes: "",
     },

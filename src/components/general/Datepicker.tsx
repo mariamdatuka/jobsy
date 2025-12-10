@@ -36,8 +36,9 @@ export default function DatePickerValue({
           control={control}
           render={({ field, fieldState: { error } }) => (
             <DatePicker
-              value={field.value ?? dayjs()}
-              onChange={(newValue) => field.onChange(newValue)}
+              // value={field.value ?? dayjs()}
+              // onChange={(newValue) => field.onChange(newValue)}
+              {...field}
               maxDate={dayjs()}
               slotProps={{
                 textField: {

@@ -1,3 +1,4 @@
+import type { Dayjs } from "dayjs";
 import * as yup from "yup";
 
 export const SignInSchema = yup.object().shape({
@@ -55,6 +56,6 @@ export const AddJobSchema = yup.object().shape({
   vacancyType: yup.string(),
   status: yup.string(),
   notes: yup.string().max(500, "Maximum 500 characters allowed"),
-  dateApplied: yup.date().nullable(),
+  dateApplied: yup.mixed<Dayjs>().nullable(),
   // resume: yup.mixed().nullable(),
 });
