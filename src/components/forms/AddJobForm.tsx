@@ -7,6 +7,8 @@ import DatePickerValue from "../general/Datepicker";
 import { StatusOptions, VacancyTypeOptions } from "./helper";
 import { Stack } from "@mui/material";
 import dayjs from "dayjs";
+import { supabase } from "@src/supabase-client";
+import { useUserStore } from "@src/store/userStore";
 interface AddJobFormProps {
   onSubmit: (data: any) => Promise<void> | void;
 }
@@ -30,7 +32,7 @@ const AddJobForm = ({ onSubmit }: AddJobFormProps) => {
   });
 
   const internalSubmit = async (userData: any) => {
-    console.log("data", userData);
+    await onSubmit(userData);
   };
   return (
     <FormProvider {...methods}>

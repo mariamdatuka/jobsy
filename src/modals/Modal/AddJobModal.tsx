@@ -12,27 +12,27 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(
     const { visible, hide } = useModal();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const submitHandler = async (values: any) => {
-      setIsSubmitting(true);
-      try {
-        if (handleJobSubmit) {
-          await handleJobSubmit(values);
-        }
-        // close modal after successful submit
-        hide();
-      } catch (err) {
-        // let the caller handle errors, but we still stop loading
-        console.error("Add job submit error:", err);
-      } finally {
-        setIsSubmitting(false);
-      }
-    };
+    // const submitHandler = async (values: any) => {
+    //   setIsSubmitting(true);
+    //   try {
+    //     if (handleJobSubmit) {
+    //       await handleJobSubmit(values);
+    //     }
+    //     // close modal after successful submit
+    //     hide();
+    //   } catch (err) {
+    //     // let the caller handle errors, but we still stop loading
+    //     console.error("Add job submit error:", err);
+    //   } finally {
+    //     setIsSubmitting(false);
+    //   }
+    // };
 
     return (
       <PopUp
         open={visible}
         onClose={hide}
-        children={<AddJobForm onSubmit={submitHandler} />}
+        children={<AddJobForm onSubmit={handleJobSubmit} />}
         buttons={[
           {
             label: "Cancel",

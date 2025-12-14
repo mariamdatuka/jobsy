@@ -14,49 +14,15 @@ import { arrayMove } from "@dnd-kit/sortable";
 import ColumnContainer from "./ColumnContainer";
 import JobCard from "./JobCard";
 import { columns } from "@src/helpers/constanst";
-
-export interface Task {
-  taskID: number;
-  companyName: string;
-  position: string;
-  status: "SAVED" | "APPLIED" | "INTERVIEWING" | "REJECTED" | "OFFERED";
-  country: string;
-  city?: string;
-  appliedDate?: string;
-}
+import type { Task } from "@src/types/commonTypes";
 
 export const tasksData: Task[] = [
   {
     taskID: 1,
-    companyName: "Microsoft",
+    company_name: "Microsoft",
     position: "Software Developer",
     country: "USA",
     status: "SAVED",
-  },
-  {
-    taskID: 2,
-    companyName: "Microsoft",
-    position: "Backend Developer",
-    country: "USA",
-    status: "APPLIED",
-  },
-  {
-    taskID: 3,
-    companyName: "Meta",
-    position: "Software Engineer",
-    status: "APPLIED",
-    country: "USA",
-    city: "San Francisco",
-    appliedDate: "2023-10-01",
-  },
-  {
-    taskID: 4,
-    companyName: "Meta",
-    position: "DevOps",
-    status: "APPLIED",
-    country: "USA",
-    city: "San Francisco",
-    appliedDate: "2023-10-01",
   },
 ];
 

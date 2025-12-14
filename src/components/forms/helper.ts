@@ -4,7 +4,6 @@ export const StatusOptions = [
   "Interviewing",
   "Offered",
   "Rejected",
-  "Accepted",
 ];
 
 export const VacancyTypeOptions = ["Remote", "On-site", "Hybrid"];
