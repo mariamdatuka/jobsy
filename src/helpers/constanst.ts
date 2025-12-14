@@ -30,3 +30,31 @@ export const navItems: NavItems[] = [
     Icon: LogoutOutlinedIcon,
   },
 ];
+
+export const columns = [
+  {
+    id: "SAVED",
+    title: "saved",
+    color: "#e0e0e0",
+  },
+  {
+    id: "APPLIED",
+    title: "applied",
+    color: "#f8a83c ",
+  },
+  {
+    id: "INTERVIEWING",
+    title: "interviewing",
+    color: "#65cdfe",
+  },
+  {
+    id: "REJECTED",
+    title: "rejected",
+    color: "#e2435b",
+  },
+  {
+    id: "OFFFERED",
+    title: "offered",
+    color: "#02c575",
+  },
+];

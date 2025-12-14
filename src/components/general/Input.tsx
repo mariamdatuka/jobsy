@@ -83,7 +83,7 @@ const Input = ({
               "& .MuiInputBase-input": {
                 padding: "8px 14px",
               },
-              minwidth: "200px",
+              minwidth: "250px",
               borderRadius: "50%",
               ...sx,
             }}

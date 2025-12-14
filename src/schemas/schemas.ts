@@ -34,12 +34,12 @@ export const SignUpSchema = yup.object().shape({
 });
 
 export const AddJobSchema = yup.object().shape({
-  companyName: yup
+  company_name: yup
     .string()
     .required("Company name is required")
     .min(2, "at least 2 characters")
     .max(30, "at most 30 characters"),
-  positionName: yup
+  position: yup
     .string()
     .required("Position is required")
     .min(2, "at least 2 characters")
@@ -53,9 +53,9 @@ export const AddJobSchema = yup.object().shape({
     })
     .url("Is not a valid URL"),
   salary: yup.string().max(30, "at most 20 characters"),
-  vacancyType: yup.string(),
+  vacancy_type: yup.string(),
   status: yup.string(),
   notes: yup.string().max(500, "Maximum 500 characters allowed"),
-  dateApplied: yup.mixed<Dayjs>().nullable(),
+  date_applied: yup.mixed<Dayjs>().nullable(),
   // resume: yup.mixed().nullable(),
 });

@@ -13,6 +13,7 @@ import { createPortal } from "react-dom";
 import { arrayMove } from "@dnd-kit/sortable";
 import ColumnContainer from "./ColumnContainer";
 import JobCard from "./JobCard";
+import { columns } from "@src/helpers/constanst";
 
 export interface Task {
   taskID: number;
@@ -23,34 +24,6 @@ export interface Task {
   city?: string;
   appliedDate?: string;
 }
-
-const columns = [
-  {
-    id: "SAVED",
-    title: "saved",
-    color: "#e0e0e0",
-  },
-  {
-    id: "APPLIED",
-    title: "applied",
-    color: "#f8a83c ",
-  },
-  {
-    id: "INTERVIEWING",
-    title: "interviewing",
-    color: "#65cdfe",
-  },
-  {
-    id: "REJECTED",
-    title: "rejected",
-    color: "#e2435b",
-  },
-  {
-    id: "OFFFERED",
-    title: "offered",
-    color: "#02c575",
-  },
-];
 
 export const tasksData: Task[] = [
   {

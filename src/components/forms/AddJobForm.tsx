@@ -15,14 +15,14 @@ const AddJobForm = ({ onSubmit }: AddJobFormProps) => {
   const methods = useForm({
     resolver: yupResolver(AddJobSchema),
     defaultValues: {
-      companyName: "",
-      positionName: "",
+      company_name: "",
+      position: "",
       link: "",
       salary: "",
-      vacancyType: "Remote",
+      vacancy_type: "Remote",
       country: "",
       status: "Applied",
-      dateApplied: dayjs(),
+      date_applied: dayjs(),
       // resume: null,
       notes: "",
     },
@@ -36,8 +36,8 @@ const AddJobForm = ({ onSubmit }: AddJobFormProps) => {
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(internalSubmit)} id="add-job-form">
         <Stack spacing={1.5}>
-          <Input label="Company Name" name="companyName" />
-          <Input label="Position" name="positionName" />
+          <Input label="Company Name" name="company_name" />
+          <Input label="Position" name="position" />
           <Input label="Link to vacancy" name="link" />
           <Input label="Salary" name="salary" />
           <Stack
@@ -55,11 +55,11 @@ const AddJobForm = ({ onSubmit }: AddJobFormProps) => {
             <DatePickerValue
               label="Date Applied"
               width={200}
-              name="dateApplied"
+              name="date_applied"
             />
           </Stack>
           <SelectInput
-            name="vacancyType"
+            name="vacancy_type"
             label="Type"
             options={VacancyTypeOptions}
             width="100%"
