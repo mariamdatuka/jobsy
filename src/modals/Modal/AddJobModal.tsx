@@ -1,5 +1,5 @@
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
-import { useState } from "react";
+
 import PopUp from "../PopUp/PopUp";
 import AddJobForm from "@src/components/forms/AddJobForm";
 
@@ -10,7 +10,7 @@ export interface AddJobModalProps {
 const AddJobModal = NiceModal.create<AddJobModalProps>(
   ({ handleJobSubmit }) => {
     const { visible, hide } = useModal();
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    // const [isSubmitting, setIsSubmitting] = useState(false);
 
     // const submitHandler = async (values: any) => {
     //   setIsSubmitting(true);
@@ -47,7 +47,7 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(
             onClick: () => {},
             type: "submit",
             form: "add-job-form",
-            disabled: isSubmitting,
+            // disabled: isSubmitting,
             buttonSx: { width: "150px" },
           },
         ]}
