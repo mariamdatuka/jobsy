@@ -4,14 +4,32 @@ import {
   type UseQueryOptions,
 } from "@tanstack/react-query";
 
-export const useSupabaseQuery = <TData, TError>(
-  queryKey: string[],
+export function useSupabaseQuery<TData>(
+  queryKey: QueryKey,
   queryFn: () => Promise<TData>,
-  options?: UseQueryOptions<TData, TError, TData, QueryKey>
-) => {
-  return useQuery<TData, TError>({
+  options?: Omit<
+    UseQueryOptions<TData, Error, TData, QueryKey>,
+    "queryKey" | "queryFn"
+  >
+) {
+  return useQuery<TData, Error>({
     queryKey,
-    queryFn,
+    queryFn: async () => {
+      try {
+        return await queryFn();
+      } catch (error: any) {
+        if (error instanceof TypeError) {
+          throw new Error("Please check your internet connection.");
+        }
+
+        if (error?.message) {
+          throw new Error(error.message);
+        }
+
+        throw new Error("Unexpected error occurred");
+      }
+    },
+    refetchOnWindowFocus: false,
     ...options,
   });
-};
+}

@@ -1,11 +1,25 @@
 import { supabase } from "@src/supabase-client";
 import type { Task } from "@src/types/commonTypes";
 import dayjs from "dayjs";
+import { normalizeText } from "@src/helpers/helpers";
+
+type CreateJobPayload = {
+  company_name: string;
+  position: string;
+  link: string | null;
+  salary: number | null;
+  country: string | null;
+  notes: string | null;
+  status: string | undefined;
+  vacancy_type: string | undefined;
+  date_applied: string | null;
+  user_id: string;
+};
 
 export const createJob = async (values: Task, userId: string) => {
-  const payload = {
-    company_name: values.company_name,
-    position: values.position,
+  const payload: CreateJobPayload = {
+    company_name: normalizeText(values.company_name),
+    position: normalizeText(values.position),
     link: values.link || null,
     salary: values.salary ? Number(values.salary) : null,
     country: values.country || null,
@@ -22,7 +36,7 @@ export const createJob = async (values: Task, userId: string) => {
     .insert(payload)
     .select()
     .single();
-  if (error) throw error.message;
+  if (error) throw error;
   return data;
 };
 

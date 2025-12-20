@@ -3,8 +3,8 @@ import { Box, Divider, Stack, styled } from "@mui/material";
 import { KebabMenu } from "@src/assets/icons/KebabMenu";
 import Text from "@src/components/general/Text";
 import theme from "@src/theme";
-import type { Task } from "./KanbanBoard";
 import { CSS } from "@dnd-kit/utilities";
+import type { Task } from "@src/types/commonTypes";
 
 const JobCard = ({ task }: { task: Task }) => {
   const {
@@ -15,7 +15,7 @@ const JobCard = ({ task }: { task: Task }) => {
     attributes,
     isDragging,
   } = useSortable({
-    id: task.taskID,
+    id: task.id,
     data: {
       type: "task",
       task,
@@ -43,7 +43,7 @@ const JobCard = ({ task }: { task: Task }) => {
           alignItems="center"
         >
           <Text variant="body2" fontWeight="600">
-            {task.companyName}
+            {task.company_name}
           </Text>
           <KebabMenu />
         </Stack>
@@ -56,13 +56,13 @@ const JobCard = ({ task }: { task: Task }) => {
           alignItems="center"
           justifyContent="space-between"
         >
-          {task?.appliedDate && (
+          {task?.date_applied && (
             <Text variant="caption" color={theme.palette.secondary.dark}>
-              {task.appliedDate}
+              {task.date_applied}
             </Text>
           )}
 
-          <CountryTag>{task.country}</CountryTag>
+          <CountryTag>{task?.country}</CountryTag>
         </Stack>
       </JobContainer>
     );
@@ -83,7 +83,7 @@ const JobCard = ({ task }: { task: Task }) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Text variant="body2" fontWeight="600">
-          {task.companyName}
+          {task.company_name}
         </Text>
         <KebabMenu />
       </Stack>
@@ -92,13 +92,13 @@ const JobCard = ({ task }: { task: Task }) => {
       </Text>
       <Divider sx={{ borderColor: "#eceef2", my: 1.2 }} />
       <Stack direction="row" alignItems="center" justifyContent="space-between">
-        {task?.appliedDate && (
+        {task?.date_applied && (
           <Text variant="caption" color={theme.palette.secondary.dark}>
-            {task.appliedDate}
+            {task.date_applied}
           </Text>
         )}
 
-        <CountryTag>{task.country}</CountryTag>
+        <CountryTag>{task?.country}</CountryTag>
       </Stack>
     </JobContainer>
   );

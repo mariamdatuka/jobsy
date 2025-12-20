@@ -22,9 +22,6 @@ const Dashboard = () => {
     }
   };
 
-  // const handleJobSubmit = async (values: Task, userid: string) => {
-  //   await createJob(values, userid);
-  // };
   return (
     <>
       {" "}

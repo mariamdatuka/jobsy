@@ -1,0 +1,17 @@
+import { useSupabaseQuery } from "@src/hooks/useSupabaseQuery";
+import { fetchTasks } from "../services/jobs";
+import { QKEY_TASKS } from "@src/services/queryKeys";
+
+export const useTasks = (userID: string) => {
+  const { data, error, isPending, refetch } = useSupabaseQuery(
+    [QKEY_TASKS, userID],
+    () => fetchTasks(userID)
+  );
+
+  return {
+    taskInfo: data,
+    error,
+    isPending,
+    refetch,
+  };
+};

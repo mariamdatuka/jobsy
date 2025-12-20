@@ -2,8 +2,8 @@ import { Box, Stack, styled, Typography } from "@mui/material";
 import Text from "@src/components/general/Text";
 import { SortableContext } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
-import { type Task } from "./KanbanBoard";
 import JobCard2 from "./JobCard";
+import type { Task } from "@src/types/commonTypes";
 
 interface Column {
   id: string;
@@ -16,7 +16,7 @@ const ColumnContainer = ({
   tasks,
 }: {
   column: Column;
-  tasks: Task[];
+  tasks: Task[] | null;
 }) => {
   const { setNodeRef } = useDroppable({
     id: column.id,
@@ -40,15 +40,17 @@ const ColumnContainer = ({
           <Typography component="span" color="#fff">
             /
           </Typography>
-          <Text color="#fff">{tasks.length}</Text>
+          <Text color="#fff">1</Text>
         </TitleBox>
         <ColumnBoxWrapper>
           <ColumnBox ref={setNodeRef}>
-            <SortableContext items={tasks.map((task) => task.taskID)}>
-              {tasks.map((task) => (
-                <JobCard2 key={task.taskID} task={task} />
-              ))}
-            </SortableContext>
+            {tasks && (
+              <SortableContext items={tasks.map((task) => task.id)}>
+                {tasks.map((task) => (
+                  <JobCard2 key={task.id} task={task} />
+                ))}
+              </SortableContext>
+            )}
           </ColumnBox>
           <FadeTop />
           <FadeBottom />
