@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import { routes } from "./router";
 import { useEffect } from "react";
 import { useUserStore } from "./store/userStore";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const initializeAuth = useUserStore((state) => state.initializeAuth);
@@ -21,8 +22,13 @@ function App() {
       }
     };
   }, [initializeAuth]);
-  
-  return <RouterProvider router={createBrowserRouter(routes)} />;
+
+  return (
+    <>
+      <RouterProvider router={createBrowserRouter(routes)} />
+      <ToastContainer position="bottom-right" />
+    </>
+  );
 }
 
 export default App;

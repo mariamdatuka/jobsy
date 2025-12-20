@@ -6,6 +6,7 @@ import AddJobForm from "@src/components/forms/AddJobForm";
 import type { Task } from "@src/types/commonTypes";
 import { createJob } from "@src/services/jobs";
 import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
+import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
 
 export interface AddJobModalProps {
   handleJobSubmit?: any;
@@ -22,9 +23,8 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(() => {
     },
     {
       onSuccess: (_data, vars) => {
-        // invalidate tasks for this user so Kanban/Table refetch
-        // queryClient.invalidateQueries(["tasks", vars.userId]);
         hide();
+        showToast(TOAST_TYPE.SUCCESS, "Job added successfully");
       },
     }
   );
@@ -36,6 +36,7 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(() => {
     <PopUp
       open={visible}
       onClose={isPending ? undefined : hide}
+      showCloseButton={!isPending}
       children={<AddJobForm onSubmit={handleJobSubmit} />}
       buttons={[
         {
