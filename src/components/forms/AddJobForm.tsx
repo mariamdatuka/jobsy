@@ -7,12 +7,15 @@ import DatePickerValue from "../general/Datepicker";
 import { StatusOptions, VacancyTypeOptions } from "./helper";
 import { Stack } from "@mui/material";
 import dayjs from "dayjs";
+import type { Task } from "@src/types/commonTypes";
+import { useUserStore } from "@src/store/userStore";
 
 interface AddJobFormProps {
-  onSubmit: (data: any) => Promise<void> | void;
+  onSubmit: (values: Task, userId: string) => Promise<void> | void;
 }
 
 const AddJobForm = ({ onSubmit }: AddJobFormProps) => {
+  const session = useUserStore((state) => state.session);
   const methods = useForm({
     resolver: yupResolver(AddJobSchema),
     defaultValues: {
@@ -31,8 +34,10 @@ const AddJobForm = ({ onSubmit }: AddJobFormProps) => {
   });
 
   const internalSubmit = async (userData: any) => {
-    await onSubmit(userData);
+    await onSubmit(userData, session?.user.id!);
+    console.log("Submitted data:", userData);
   };
+
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(internalSubmit)} id="add-job-form">

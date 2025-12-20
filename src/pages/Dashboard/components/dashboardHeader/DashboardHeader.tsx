@@ -8,14 +8,10 @@ export interface Props {
     newAlignment: "kanban" | "table" | null
   ) => void;
   alignment: "kanban" | "table";
-  handleJobSubmit?: (values: any) => Promise<void> | void;
+  handleJobSubmit?: (values: any, userid: string) => Promise<void> | void;
 }
 
-const DashboardHeader = ({
-  handleChange,
-  alignment,
-  handleJobSubmit,
-}: Props) => {
+const DashboardHeader = ({ handleChange, alignment }: Props) => {
   return (
     <Box width="100%" border="1px solid #000000">
       <Stack
@@ -29,7 +25,7 @@ const DashboardHeader = ({
           <Box>Filters</Box>
         </Box>
         <Stack gap="25px">
-          <DashboardActions handleJobSubmit={handleJobSubmit} />
+          <DashboardActions />
           <Box sx={{ alignSelf: "end" }}>
             <DashboardToggleView
               handleChange={handleChange}

@@ -3,13 +3,13 @@ import PlusIcon from "@src/assets/icons/PlusIcon";
 import Button from "@src/components/general/Button";
 import { ADD_JOB_MODAL } from "@src/modals/modal_names";
 
-interface Props {
-  handleJobSubmit?: (values: any) => Promise<void> | void;
-}
+// interface Props {
+//   handleJobSubmit?: (values: any, userid: string) => Promise<void> | void;
+// }
 
-const DashboardActions = ({ handleJobSubmit }: Props) => {
+const DashboardActions = () => {
   const openAddJobModal = () => {
-    NiceModal.show(ADD_JOB_MODAL, { handleJobSubmit });
+    NiceModal.show(ADD_JOB_MODAL);
   };
   return (
     <Button

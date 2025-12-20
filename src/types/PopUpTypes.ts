@@ -8,7 +8,7 @@ export interface PopUpProps {
   description?: string | React.ReactNode;
   buttons?: ButtonConfig[];
   open: boolean;
-  onClose: () => void;
+  onClose: any;
   isMobile?: boolean;
   iconType?: PopupIconTypeProps;
   // actionButtons?: {
@@ -41,5 +41,7 @@ export interface ButtonConfig {
   hidden?: boolean;
   dataTestId?: string;
   buttonSx?: SxProps;
+  loadingIndicator?: string;
+  loadingPosition?: "start" | "end" | "center";
   [key: string]: any;
 }
