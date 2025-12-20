@@ -19,12 +19,17 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(() => {
   // mutation expects a single variables object { values, userId }
   const { isPending, isSuccess, isError, mutate } = useSupabaseMutation(
     (vars: { values: Task; userId: string }) => {
+      // throw new TypeError("Failed to fetch");
       return createJob(vars.values, vars.userId);
     },
     {
-      onSuccess: (_data, vars) => {
+      onSuccess: (_data, _vars) => {
         hide();
-        showToast(TOAST_TYPE.SUCCESS, "Job added successfully");
+        showToast(TOAST_TYPE.SUCCESS, "Job saved successfully");
+      },
+      onError: (error, _vars) => {
+        console.log(error);
+        showToast(TOAST_TYPE.ERROR, `Error: ${error.message}`);
       },
     }
   );

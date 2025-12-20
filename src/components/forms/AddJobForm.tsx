@@ -35,7 +35,6 @@ const AddJobForm = ({ onSubmit }: AddJobFormProps) => {
 
   const internalSubmit = async (userData: any) => {
     await onSubmit(userData, session?.user.id!);
-    console.log("Submitted data:", userData);
   };
 
   return (

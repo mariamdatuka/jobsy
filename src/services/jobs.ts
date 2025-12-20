@@ -22,7 +22,7 @@ export const createJob = async (values: Task, userId: string) => {
     .insert(payload)
     .select()
     .single();
-  if (error) throw error;
+  if (error) throw error.message;
   return data;
 };
 

@@ -20,15 +20,15 @@ export function useSupabaseMutation<
       try {
         return await mutationFn(variables);
       } catch (error: any) {
-        if (error === "Failed to fetch") {
-          throw new Error("Ups ! internet connection lost, try again");
+        if (error instanceof TypeError) {
+          throw new Error("Please check your internet connection.");
         }
 
-        if (error === "Invalid login credentials") {
-          throw new Error(error);
+        if (error?.message) {
+          throw new Error(error.message);
         }
 
-        throw new Error("Something went wrong");
+        throw new Error("Unexpected error occurred, try again!");
       }
     },
     ...options,
