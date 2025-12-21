@@ -58,3 +58,5 @@ export const columns = [
     color: "#02c575",
   },
 ];
+
+export const editJobActions = ["Edit", "Delete"];
