@@ -1,5 +1,5 @@
 import { Stack } from "@mui/material";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   DndContext,
   type DragStartEvent,
@@ -112,8 +112,9 @@ const KanbanBoard = () => {
 
   const session = useUserStore((state) => state.session);
 
-  const { taskInfo } = useTasks(session?.user?.id!);
-  const tasks = taskInfo || [];
+  const { tasks } = useTasks(session?.user?.id!);
+  const tasksData = tasks || [];
+
   return (
     <DndContext
       sensors={sensors}
@@ -121,13 +122,15 @@ const KanbanBoard = () => {
       // onDragEnd={handleDragEnd}
     >
       <Stack direction="row" spacing={2} border="1px solid #02c575">
-        {columns.map((col) => (
-          <ColumnContainer
-            column={col}
-            key={col.title}
-            tasks={tasks.filter((task) => task.status === col.id)}
-          />
-        ))}
+        {columns.map((col) => {
+          const filteredTasks = useMemo(() => {
+            return tasksData.filter((task) => task.status === col.id);
+          }, [tasks, col.id]);
+
+          return (
+            <ColumnContainer key={col.id} column={col} tasks={filteredTasks} />
+          );
+        })}
       </Stack>
 
       {createPortal(

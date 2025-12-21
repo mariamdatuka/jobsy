@@ -23,9 +23,12 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(() => {
       return createJob(vars.values, vars.userId);
     },
     {
-      onSuccess: (_data, _vars) => {
+      onSuccess: async (_data, _vars) => {
         hide();
         showToast(TOAST_TYPE.SUCCESS, "Job saved successfully");
+        await queryClient.invalidateQueries({
+          queryKey: ["tasks", _vars.userId],
+        });
       },
       onError: (error, _vars) => {
         console.log(error);

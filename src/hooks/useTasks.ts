@@ -9,7 +9,7 @@ export const useTasks = (userID: string) => {
   );
 
   return {
-    taskInfo: data,
+    tasks: data,
     error,
     isPending,
     refetch,
