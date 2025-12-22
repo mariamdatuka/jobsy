@@ -108,7 +108,7 @@ const JobCard = ({ task }: { task: Task }) => {
 
 export default JobCard;
 
-const JobContainer = styled(Stack)(() => ({
+export const JobContainer = styled(Stack)(() => ({
   backgroundColor: "#fff",
   padding: "10px 14px",
   border: "1px solid #eceef2",

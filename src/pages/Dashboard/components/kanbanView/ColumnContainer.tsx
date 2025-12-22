@@ -4,6 +4,7 @@ import { SortableContext } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
 import JobCard2 from "./JobCard";
 import type { Task } from "@src/types/commonTypes";
+import JobCardSkeleton from "@src/components/skeletons/JobCardSkeleton";
 
 interface Column {
   id: string;
@@ -14,9 +15,11 @@ interface Column {
 const ColumnContainer = ({
   column,
   tasks,
+  isLoading,
 }: {
   column: Column;
   tasks: Task[] | null;
+  isLoading?: boolean;
 }) => {
   const { setNodeRef } = useDroppable({
     id: column.id,
@@ -44,12 +47,16 @@ const ColumnContainer = ({
         </TitleBox>
         <ColumnBoxWrapper>
           <ColumnBox ref={setNodeRef}>
-            {tasks && (
+            {!isLoading && tasks ? (
               <SortableContext items={tasks.map((task) => task.id)}>
                 {tasks.map((task) => (
                   <JobCard2 key={task.id} task={task} />
                 ))}
               </SortableContext>
+            ) : (
+              Array.from({ length: 3 }).map((_, idx) => (
+                <JobCardSkeleton key={idx} />
+              ))
             )}
           </ColumnBox>
           <FadeTop />

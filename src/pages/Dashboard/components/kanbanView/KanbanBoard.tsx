@@ -112,8 +112,15 @@ const KanbanBoard = () => {
 
   const session = useUserStore((state) => state.session);
 
-  const { tasks } = useTasks(session?.user?.id!);
+  const { tasks, isLoading } = useTasks(session?.user?.id!);
   const tasksData = tasks || [];
+
+  const tasksByStatus = useMemo(() => {
+    return columns.reduce((acc, col) => {
+      acc[col.id] = tasksData.filter((task) => task.status === col.id);
+      return acc;
+    }, {} as Record<string, Task[]>);
+  }, [tasksData, columns, session?.user.id]);
 
   return (
     <DndContext
@@ -122,15 +129,14 @@ const KanbanBoard = () => {
       // onDragEnd={handleDragEnd}
     >
       <Stack direction="row" spacing={2} border="1px solid #02c575">
-        {columns.map((col) => {
-          const filteredTasks = useMemo(() => {
-            return tasksData.filter((task) => task.status === col.id);
-          }, [tasks, col.id]);
-
-          return (
-            <ColumnContainer key={col.id} column={col} tasks={filteredTasks} />
-          );
-        })}
+        {columns.map((col) => (
+          <ColumnContainer
+            key={col.id}
+            column={col}
+            tasks={tasksByStatus[col.id] ?? []}
+            isLoading={isLoading}
+          />
+        ))}
       </Stack>
 
       {createPortal(

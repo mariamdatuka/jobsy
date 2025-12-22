@@ -3,7 +3,7 @@ import { fetchTasks } from "../services/jobs";
 import { QKEY_TASKS } from "@src/services/queryKeys";
 
 export const useTasks = (userID: string) => {
-  const { data, error, isPending, refetch } = useSupabaseQuery(
+  const { data, error, isPending, isLoading, refetch } = useSupabaseQuery(
     [QKEY_TASKS, userID],
     () => fetchTasks(userID)
   );
@@ -13,5 +13,6 @@ export const useTasks = (userID: string) => {
     error,
     isPending,
     refetch,
+    isLoading,
   };
 };
