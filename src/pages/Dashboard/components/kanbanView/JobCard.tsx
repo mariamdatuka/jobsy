@@ -5,7 +5,6 @@ import Text from "@src/components/general/Text";
 import theme from "@src/theme";
 import { CSS } from "@dnd-kit/utilities";
 import type { Task } from "@src/types/commonTypes";
-import CustomPopper from "@src/components/popper/CustomPopper";
 import EditActions from "./EditActions";
 
 const JobCard = ({ task }: { task: Task }) => {

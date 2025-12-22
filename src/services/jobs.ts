@@ -40,25 +40,26 @@ export const createJob = async (values: Task, userId: string) => {
   return data;
 };
 
-export const updateJob = async (id: string, value: Partial<Task>) => {
-  const payload = {
-    /* map fields */
-  };
-  const { data, error } = await supabase
-    .from("tasks")
-    .update(payload)
-    .eq("id", id)
-    .select()
-    .single();
-  if (error) throw error;
-  return data;
-};
+// export const updateJob = async (id: string, value: Partial<Task>) => {
+//   const payload = {
+//     /* map fields */
+//   };
+//   const { data, error } = await supabase
+//     .from("tasks")
+//     .update(payload)
+//     .eq("id", id)
+//     .select()
+//     .single();
+//   if (error) throw error;
+//   return data;
+// };
 
 export const fetchTasks = async (userId: string) => {
   const { data, error } = await supabase
     .from("tasks")
     .select("*")
-    .eq("user_id", userId);
+    .eq("user_id", userId)
+    .order("date_applied", { ascending: false });
   if (error) throw error;
   return data;
 };
