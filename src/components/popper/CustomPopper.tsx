@@ -6,20 +6,22 @@ import ClickAwayListener from "@mui/material/ClickAwayListener";
 import { editJobActions } from "@src/helpers/constanst";
 import { styled, Divider } from "@mui/material";
 import Text from "../general/Text";
+import type { Task } from "@src/types/commonTypes";
 
 type CustomPopperProps = {
   actions?: string[];
-  onClick?: () => void;
+  handleJobActionsClick?: (action: string) => void;
   open?: boolean;
   placement?: PopperPlacementType;
   anchorEl?: HTMLElement | null;
   handleClose: () => void;
+  task?: Task;
 };
 
 export default function CustomPopper({
   actions = editJobActions,
   open = false,
-  onClick,
+  handleJobActionsClick,
   anchorEl = null,
   handleClose,
   placement = "bottom-start",
@@ -45,7 +47,7 @@ export default function CustomPopper({
                     <Text
                       color="secondary.light"
                       sx={{ cursor: "pointer", fontSize: "12px" }}
-                      onClick={onClick}
+                      onClick={() => handleJobActionsClick?.(action)}
                     >
                       {action}
                     </Text>

@@ -36,9 +36,12 @@ export const SignUpSchema = yup.object().shape({
 export const AddJobSchema = yup.object().shape({
   company_name: yup
     .string()
-    .required("Company name is required")
     .min(2, "at least 2 characters")
-    .max(30, "at most 30 characters"),
+    .max(30, "at most 30 characters")
+    .when("autofilled", ([autofilled], schema) => {
+      return autofilled ? schema.notRequired() : schema.required("Required");
+    }),
+
   position: yup
     .string()
     .required("Position is required")
@@ -57,5 +60,6 @@ export const AddJobSchema = yup.object().shape({
   status: yup.string(),
   notes: yup.string().max(500, "Maximum 500 characters allowed"),
   date_applied: yup.mixed<Dayjs>().nullable(),
+  autofilled: yup.boolean().default(false),
   // resume: yup.mixed().nullable(),
 });

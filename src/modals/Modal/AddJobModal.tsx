@@ -4,28 +4,34 @@ import { useQueryClient } from "@tanstack/react-query";
 import PopUp from "../PopUp/PopUp";
 import AddJobForm from "@src/components/forms/AddJobForm";
 import type { Task } from "@src/types/commonTypes";
-import { createJob } from "@src/services/jobs";
+import { createJob, updateJob } from "@src/services/jobs";
 import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
 
 export interface AddJobModalProps {
   handleJobSubmit?: any;
+  initialTask?: Task;
 }
 
-const AddJobModal = NiceModal.create<AddJobModalProps>(() => {
+const AddJobModal = NiceModal.create<AddJobModalProps>(({ initialTask }) => {
   const { visible, hide } = useModal();
   const queryClient = useQueryClient();
+  const isEditMode = !!initialTask;
 
-  // mutation expects a single variables object { values, userId }
-  const { isPending, isSuccess, isError, mutate } = useSupabaseMutation(
-    (vars: { values: Task; userId: string }) => {
-      // throw new TypeError("Failed to fetch");
+  const { isPending, mutate } = useSupabaseMutation(
+    (vars: { values: Task; userId: string; taskId?: string }) => {
+      if (vars.taskId) {
+        return updateJob(vars.taskId, vars.values);
+      }
       return createJob(vars.values, vars.userId);
     },
     {
       onSuccess: async (_data, _vars) => {
         hide();
-        showToast(TOAST_TYPE.SUCCESS, "Job saved successfully");
+        showToast(
+          TOAST_TYPE.SUCCESS,
+          isEditMode ? "Job updated successfully" : "Job saved successfully"
+        );
         await queryClient.invalidateQueries({
           queryKey: ["tasks", _vars.userId],
         });
@@ -38,14 +44,16 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(() => {
   );
 
   const handleJobSubmit = async (values: Task, userId: string) => {
-    mutate({ values, userId });
+    mutate({ values, userId, taskId: initialTask?.id });
   };
   return (
     <PopUp
       open={visible}
       onClose={isPending ? undefined : hide}
       showCloseButton={!isPending}
-      children={<AddJobForm onSubmit={handleJobSubmit} />}
+      children={
+        <AddJobForm onSubmit={handleJobSubmit} initialTask={initialTask} />
+      }
       buttons={[
         {
           label: "Cancel",
@@ -56,7 +64,7 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(() => {
           disabled: isPending,
         },
         {
-          label: "Add",
+          label: isEditMode ? "Update" : "Add",
           color: "primary",
           onClick: () => {},
           type: "submit",

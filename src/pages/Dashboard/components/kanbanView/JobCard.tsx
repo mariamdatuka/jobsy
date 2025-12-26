@@ -7,7 +7,13 @@ import { CSS } from "@dnd-kit/utilities";
 import type { Task } from "@src/types/commonTypes";
 import EditActions from "./EditActions";
 
-const JobCard = ({ task }: { task: Task }) => {
+const JobCard = ({
+  task,
+  handleJobActionsClick,
+}: {
+  task: Task;
+  handleJobActionsClick?: (action: string, task: Task) => void;
+}) => {
   const {
     transform,
     transition,
@@ -86,7 +92,10 @@ const JobCard = ({ task }: { task: Task }) => {
         <Text variant="body2" fontWeight="600">
           {task.company_name}
         </Text>
-        <EditActions />
+        <EditActions
+          handleJobActionsClick={handleJobActionsClick}
+          task={task}
+        />
       </Stack>
       <Text variant="caption" color={theme.palette.secondary.light}>
         {task.position}

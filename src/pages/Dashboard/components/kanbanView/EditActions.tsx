@@ -2,8 +2,15 @@ import { KebabMenu } from "@src/assets/icons/KebabMenu";
 import CustomPopper from "@src/components/popper/CustomPopper";
 import { useState } from "react";
 import type React from "react";
+import type { Task } from "@src/types/commonTypes";
 
-const EditActions = () => {
+const EditActions = ({
+  handleJobActionsClick,
+  task,
+}: {
+  handleJobActionsClick?: (action: string, task: Task) => void;
+  task: Task;
+}) => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -20,6 +27,9 @@ const EditActions = () => {
         open={open}
         anchorEl={anchorEl}
         handleClose={() => setOpen(false)}
+        handleJobActionsClick={(action) =>
+          handleJobActionsClick?.(action, task)
+        }
       />
     </>
   );

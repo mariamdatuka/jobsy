@@ -17,6 +17,8 @@ import { columns } from "@src/helpers/constanst";
 import type { Task } from "@src/types/commonTypes";
 import { useTasks } from "@src/hooks/useTasks";
 import { useUserStore } from "@src/store/userStore";
+import NiceModal from "@ebay/nice-modal-react";
+import { ADD_JOB_MODAL } from "@src/modals/modal_names";
 
 // export const tasksData: Task[] = [
 //   {
@@ -122,6 +124,14 @@ const KanbanBoard = () => {
     }, {} as Record<string, Task[]>);
   }, [tasksData, columns, session?.user.id]);
 
+  const handleJobActionsClick = (action: string, task: Task) => {
+    if (action === "Edit") {
+      NiceModal.show(ADD_JOB_MODAL, { initialTask: task });
+    } else if (action === "Delete") {
+      console.log("Delete job", task);
+    }
+  };
+
   return (
     <DndContext
       sensors={sensors}
@@ -135,6 +145,7 @@ const KanbanBoard = () => {
             column={col}
             tasks={tasksByStatus[col.id] ?? []}
             isLoading={isLoading}
+            handleJobActionsClick={handleJobActionsClick}
           />
         ))}
       </Stack>

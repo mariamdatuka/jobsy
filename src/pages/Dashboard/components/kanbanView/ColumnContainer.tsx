@@ -16,10 +16,12 @@ const ColumnContainer = ({
   column,
   tasks,
   isLoading,
+  handleJobActionsClick,
 }: {
   column: Column;
   tasks: Task[] | null;
   isLoading?: boolean;
+  handleJobActionsClick?: (action: string, task: Task) => void;
 }) => {
   const { setNodeRef } = useDroppable({
     id: column.id,
@@ -50,7 +52,11 @@ const ColumnContainer = ({
             {!isLoading && tasks ? (
               <SortableContext items={tasks.map((task) => task.id)}>
                 {tasks.map((task) => (
-                  <JobCard2 key={task.id} task={task} />
+                  <JobCard2
+                    key={task.id}
+                    task={task}
+                    handleJobActionsClick={handleJobActionsClick}
+                  />
                 ))}
               </SortableContext>
             ) : (

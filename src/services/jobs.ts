@@ -6,12 +6,12 @@ import { normalizeText } from "@src/helpers/helpers";
 type CreateJobPayload = {
   company_name: string;
   position: string;
-  link: string | null;
-  salary: number | null;
-  country: string | null;
-  notes: string | null;
-  status: string | undefined;
-  vacancy_type: string | undefined;
+  link?: string | null;
+  salary?: string | null;
+  country?: string | null;
+  notes?: string | null;
+  status?: string | undefined;
+  vacancy_type?: string | undefined;
   date_applied: string | null;
   user_id: string;
 };
@@ -20,10 +20,10 @@ export const createJob = async (values: Task, userId: string) => {
   const payload: CreateJobPayload = {
     company_name: normalizeText(values.company_name),
     position: normalizeText(values.position),
-    link: values.link || null,
-    salary: values.salary ? Number(values.salary) : null,
-    country: values.country || null,
-    notes: values.notes || null,
+    link: values?.link,
+    salary: values?.salary,
+    country: values?.country,
+    notes: values?.notes,
     status: values.status?.toUpperCase(),
     vacancy_type: values.vacancy_type?.toUpperCase(),
     date_applied: values.date_applied
@@ -40,19 +40,49 @@ export const createJob = async (values: Task, userId: string) => {
   return data;
 };
 
-// export const updateJob = async (id: string, value: Partial<Task>) => {
-//   const payload = {
-//     /* map fields */
-//   };
-//   const { data, error } = await supabase
-//     .from("tasks")
-//     .update(payload)
-//     .eq("id", id)
-//     .select()
-//     .single();
-//   if (error) throw error;
-//   return data;
-// };
+type UpdateJobPayload = {
+  company_name?: string;
+  position?: string;
+  link?: string;
+  salary?: string;
+  country?: string;
+  notes?: string;
+  status?: string;
+  vacancy_type?: string;
+  date_applied?: string;
+};
+
+export const updateJob = async (id: string, value: Task) => {
+  const payload: UpdateJobPayload = {
+    company_name: value.company_name
+      ? normalizeText(value.company_name)
+      : undefined,
+    position: value.position ? normalizeText(value.position) : undefined,
+    link: value.link || undefined,
+    salary: value.salary || undefined,
+    country: value.country || undefined,
+    notes: value.notes || undefined,
+    status: value.status?.toUpperCase(),
+    vacancy_type: value.vacancy_type?.toUpperCase(),
+    date_applied: value.date_applied
+      ? dayjs(value.date_applied).format("YYYY-MM-DD")
+      : undefined,
+  };
+
+  // Remove undefined fields
+  const cleanPayload = Object.fromEntries(
+    Object.entries(payload).filter(([_, v]) => v !== undefined)
+  ) as UpdateJobPayload;
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .update(cleanPayload)
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+};
 
 export const fetchTasks = async (userId: string) => {
   const { data, error } = await supabase
