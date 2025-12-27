@@ -53,10 +53,8 @@ export const columns = [
     color: "#e2435b",
   },
   {
-    id: "OFFFERED",
+    id: "OFFERED",
     title: "offered",
     color: "#02c575",
   },
 ];
-
-export const editJobActions = ["Edit", "Delete"];

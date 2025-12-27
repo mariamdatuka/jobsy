@@ -3,31 +3,48 @@ import Box from "@mui/material/Box";
 import Popper, { type PopperPlacementType } from "@mui/material/Popper";
 import Fade from "@mui/material/Fade";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
-import { editJobActions } from "@src/helpers/constanst";
 import { styled, Divider } from "@mui/material";
 import Text from "../general/Text";
 import type { Task } from "@src/types/commonTypes";
+import { useJobActionsStore } from "@src/store/useJobActionsStore";
+
+interface ActionsType {
+  label: string;
+  onClick: () => void;
+}
+
+const jobActions = (task: Task) => [
+  {
+    label: "Edit",
+    onClick: () => useJobActionsStore.getState().onEditJob(task),
+  },
+  {
+    label: "Delete",
+    onClick: () => useJobActionsStore.getState().onDeleteJob(task.id),
+  },
+];
 
 type CustomPopperProps = {
-  actions?: string[];
+  actions?: ActionsType[];
   handleJobActionsClick?: (action: string) => void;
   open?: boolean;
   placement?: PopperPlacementType;
   anchorEl?: HTMLElement | null;
   handleClose: () => void;
-  task?: Task;
+  task: Task;
 };
 
 export default function CustomPopper({
-  actions = editJobActions,
+  actions,
   open = false,
-  handleJobActionsClick,
   anchorEl = null,
   handleClose,
   placement = "bottom-start",
+  task,
 }: CustomPopperProps) {
   const canBeOpen = open && Boolean(anchorEl);
   const id = canBeOpen ? "transition-popper" : undefined;
+  const resolvedActions: ActionsType[] = actions ?? jobActions(task);
 
   return (
     <Popper
@@ -42,16 +59,16 @@ export default function CustomPopper({
           <Box>
             <ClickAwayListener onClickAway={handleClose}>
               <CustomBox>
-                {actions.map((action, idx) => (
-                  <React.Fragment key={action}>
+                {resolvedActions.map((action, idx) => (
+                  <React.Fragment key={action.label}>
                     <Text
                       color="secondary.light"
                       sx={{ cursor: "pointer", fontSize: "12px" }}
-                      onClick={() => handleJobActionsClick?.(action)}
+                      onClick={() => action.onClick?.()}
                     >
-                      {action}
+                      {action.label}
                     </Text>
-                    {idx !== actions.length - 1 && (
+                    {idx !== resolvedActions.length - 1 && (
                       <Divider sx={{ width: "100%" }} />
                     )}
                   </React.Fragment>

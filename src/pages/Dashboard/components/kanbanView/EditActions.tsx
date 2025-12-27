@@ -4,13 +4,7 @@ import { useState } from "react";
 import type React from "react";
 import type { Task } from "@src/types/commonTypes";
 
-const EditActions = ({
-  handleJobActionsClick,
-  task,
-}: {
-  handleJobActionsClick?: (action: string, task: Task) => void;
-  task: Task;
-}) => {
+const EditActions = ({ task }: { task: Task }) => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -27,9 +21,7 @@ const EditActions = ({
         open={open}
         anchorEl={anchorEl}
         handleClose={() => setOpen(false)}
-        handleJobActionsClick={(action) =>
-          handleJobActionsClick?.(action, task)
-        }
+        task={task}
       />
     </>
   );

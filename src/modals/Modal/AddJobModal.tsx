@@ -1,5 +1,6 @@
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 
 import PopUp from "../PopUp/PopUp";
 import AddJobForm from "@src/components/forms/AddJobForm";
@@ -17,6 +18,7 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(({ initialTask }) => {
   const { visible, hide } = useModal();
   const queryClient = useQueryClient();
   const isEditMode = !!initialTask;
+  const [isFormSubmittable, setIsFormSubmittable] = useState(false);
 
   const { isPending, mutate } = useSupabaseMutation(
     (vars: { values: Task; userId: string; taskId?: string }) => {
@@ -52,7 +54,11 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(({ initialTask }) => {
       onClose={isPending ? undefined : hide}
       showCloseButton={!isPending}
       children={
-        <AddJobForm onSubmit={handleJobSubmit} initialTask={initialTask} />
+        <AddJobForm 
+          onSubmit={handleJobSubmit} 
+          initialTask={initialTask}
+          onFormStateChange={setIsFormSubmittable}
+        />
       }
       buttons={[
         {
@@ -72,6 +78,7 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(({ initialTask }) => {
           buttonSx: { width: "150px" },
           loading: isPending,
           loadingPosition: "start",
+          disabled: isPending || !isFormSubmittable,
         },
       ]}
     />

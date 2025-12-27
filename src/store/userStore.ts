@@ -17,7 +17,7 @@ interface UserStore {
   initializeAuth: () => Promise<(() => void) | undefined>;
 }
 
-export const useUserStore = create<UserStore>((set, get) => ({
+export const useUserStore = create<UserStore>((set) => ({
   user: null,
   session: null,
   isLoading: true,

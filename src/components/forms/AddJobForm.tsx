@@ -15,9 +15,14 @@ import { useCallback, useEffect, type AnimationEvent } from "react";
 interface AddJobFormProps {
   onSubmit: (values: Task, userId: string) => Promise<void> | void;
   initialTask?: Task;
+  onFormStateChange?: (isSubmittable: boolean) => void;
 }
 
-const AddJobForm = ({ onSubmit, initialTask }: AddJobFormProps) => {
+const AddJobForm = ({
+  onSubmit,
+  initialTask,
+  onFormStateChange,
+}: AddJobFormProps) => {
   const session = useUserStore((state) => state.session);
 
   const methods = useForm({
@@ -47,19 +52,26 @@ const AddJobForm = ({ onSubmit, initialTask }: AddJobFormProps) => {
   // console.log("form values:", methods.formState.isDirty);
 
   const onUserNameAnimationStart = useCallback(
-    () =>
-      (event: AnimationEvent<HTMLDivElement>): void => {
-        if (event.animationName === "mui-auto-fill") {
-          console.log("Autofill detected");
-          methods.setValue("autofilled", true, { shouldValidate: true });
-        }
-      },
-    []
+    (event: AnimationEvent<HTMLDivElement>): void => {
+      if (event.animationName === "mui-auto-fill") {
+        console.log("Autofill detected");
+        methods.setValue("autofilled", true, { shouldValidate: true });
+      }
+    },
+    [methods]
   );
 
   const formValues = methods.watch();
+  const { isDirty } = methods.formState;
 
-  //...
+  // Calculate if form is submittable: isDirty OR (autofilled AND has company_name)
+  const isSubmittable =
+    isDirty || (formValues.autofilled && !!formValues.company_name?.trim());
+
+  // Notify parent of form state changes
+  useEffect(() => {
+    onFormStateChange?.(isSubmittable);
+  }, [isSubmittable, onFormStateChange]);
 
   useEffect(() => {
     if (
@@ -71,7 +83,10 @@ const AddJobForm = ({ onSubmit, initialTask }: AddJobFormProps) => {
   }, [formValues, methods.formState.dirtyFields, methods]);
 
   const internalSubmit = async (userData: any) => {
-    if (methods.formState.isDirty) await onSubmit(userData, session?.user.id!);
+    // Only submit if form is dirty or autofilled with data
+    if (isSubmittable) {
+      await onSubmit(userData, session?.user.id!);
+    }
   };
 
   return (
@@ -81,7 +96,9 @@ const AddJobForm = ({ onSubmit, initialTask }: AddJobFormProps) => {
           <Input
             label="Company Name"
             name="company_name"
-            slotProps={{ onAnimationStart: onUserNameAnimationStart() }}
+            slotProps={{
+              input: { onAnimationStart: onUserNameAnimationStart },
+            }}
           />
           <Input label="Position" name="position" />
           <Input label="Link to vacancy" name="link" />
