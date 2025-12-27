@@ -45,12 +45,6 @@ const AddJobForm = ({
     mode: "all",
   });
 
-  // const touched = methods.formState.touchedFields;
-  // const dirty = methods.formState.dirtyFields;
-  // console.log("touched fields:", touched);
-  // console.log("dirty fields:", dirty);
-  // console.log("form values:", methods.formState.isDirty);
-
   const onUserNameAnimationStart = useCallback(
     (event: AnimationEvent<HTMLDivElement>): void => {
       if (event.animationName === "mui-auto-fill") {
