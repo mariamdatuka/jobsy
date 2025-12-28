@@ -6,12 +6,12 @@ import { normalizeText } from "@src/helpers/helpers";
 type CreateJobPayload = {
   company_name: string;
   position: string;
-  link?: string | null;
-  salary?: string | null;
-  country?: string | null;
-  notes?: string | null;
-  status?: string | undefined;
-  vacancy_type?: string | undefined;
+  link?: string;
+  salary?: string;
+  country?: string;
+  notes?: string;
+  status?: string;
+  vacancy_type?: string;
   date_applied: string | null;
   user_id: string;
 };

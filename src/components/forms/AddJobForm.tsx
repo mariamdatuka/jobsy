@@ -60,8 +60,6 @@ const AddJobForm = ({
   const formValues = methods.watch();
   const { isDirty } = methods.formState;
 
-  // Check if there are actual meaningful changes (not just whitespace)
-
   const isSubmittable =
     isDirty || (formValues.autofilled && !!formValues.company_name?.trim());
 
