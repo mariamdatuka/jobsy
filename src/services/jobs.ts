@@ -52,31 +52,25 @@ type UpdateJobPayload = {
   date_applied?: string;
 };
 
-export const updateJob = async (id: string, value: Task) => {
-  const payload: UpdateJobPayload = {
-    company_name: value.company_name
-      ? normalizeText(value.company_name)
-      : undefined,
-    position: value.position ? normalizeText(value.position) : undefined,
-    link: value.link || undefined,
-    salary: value.salary || undefined,
-    country: value.country || undefined,
-    notes: value.notes || undefined,
-    status: value.status?.toUpperCase(),
-    vacancy_type: value.vacancy_type?.toUpperCase(),
-    date_applied: value.date_applied
-      ? dayjs(value.date_applied).format("YYYY-MM-DD")
-      : undefined,
+export const updateJob = async (id: string, payload: UpdateJobPayload) => {
+  const normalizedPayload: UpdateJobPayload = {
+    ...payload,
+    company_name: payload.company_name
+      ? normalizeText(payload.company_name)
+      : payload.company_name,
+    position: payload.position
+      ? normalizeText(payload.position)
+      : payload.position,
+    status: payload.status?.toUpperCase(),
+    vacancy_type: payload.vacancy_type?.toUpperCase(),
+    date_applied: payload.date_applied
+      ? dayjs(payload.date_applied).format("YYYY-MM-DD")
+      : payload.date_applied,
   };
-
-  // Remove undefined fields
-  const cleanPayload = Object.fromEntries(
-    Object.entries(payload).filter(([_, v]) => v !== undefined)
-  ) as UpdateJobPayload;
 
   const { data, error } = await supabase
     .from("tasks")
-    .update(cleanPayload)
+    .update(normalizedPayload)
     .eq("id", id)
     .select()
     .single();

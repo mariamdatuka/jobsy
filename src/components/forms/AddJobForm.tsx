@@ -9,19 +9,21 @@ import { Stack } from "@mui/material";
 import dayjs from "dayjs";
 import type { Task } from "@src/types/commonTypes";
 import { useUserStore } from "@src/store/userStore";
-import { toCapitalizeFormat } from "@src/helpers/helpers";
+import { buildPatchPayload, toCapitalizeFormat } from "@src/helpers/helpers";
 import { useCallback, useEffect, type AnimationEvent } from "react";
 
 interface AddJobFormProps {
   onSubmit: (values: Task, userId: string) => Promise<void> | void;
   initialTask?: Task;
   onFormStateChange?: (isSubmittable: boolean) => void;
+  isEditMode?: boolean;
 }
 
 const AddJobForm = ({
   onSubmit,
   initialTask,
   onFormStateChange,
+  isEditMode = false,
 }: AddJobFormProps) => {
   const session = useUserStore((state) => state.session);
 
@@ -42,7 +44,7 @@ const AddJobForm = ({
       notes: initialTask?.notes || "",
       autofilled: false,
     },
-    mode: "all",
+    mode: "onChange",
   });
 
   const onUserNameAnimationStart = useCallback(
@@ -58,11 +60,11 @@ const AddJobForm = ({
   const formValues = methods.watch();
   const { isDirty } = methods.formState;
 
-  // Calculate if form is submittable: isDirty OR (autofilled AND has company_name)
+  // Check if there are actual meaningful changes (not just whitespace)
+
   const isSubmittable =
     isDirty || (formValues.autofilled && !!formValues.company_name?.trim());
 
-  // Notify parent of form state changes
   useEffect(() => {
     onFormStateChange?.(isSubmittable);
   }, [isSubmittable, onFormStateChange]);
@@ -77,10 +79,12 @@ const AddJobForm = ({
   }, [formValues, methods.formState.dirtyFields, methods]);
 
   const internalSubmit = async (userData: any) => {
-    // Only submit if form is dirty or autofilled with data
-    if (isSubmittable) {
-      await onSubmit(userData, session?.user.id!);
-    }
+    if (!isSubmittable) return;
+    const payload = isEditMode
+      ? buildPatchPayload(userData, methods.formState.dirtyFields)
+      : userData;
+
+    await onSubmit(payload, session?.user.id!);
   };
 
   return (

@@ -39,7 +39,6 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(({ initialTask }) => {
         });
       },
       onError: (error, _vars) => {
-        console.log(error);
         showToast(TOAST_TYPE.ERROR, `Error: ${error.message}`);
       },
     }
@@ -54,10 +53,11 @@ const AddJobModal = NiceModal.create<AddJobModalProps>(({ initialTask }) => {
       onClose={isPending ? undefined : hide}
       showCloseButton={!isPending}
       children={
-        <AddJobForm 
-          onSubmit={handleJobSubmit} 
+        <AddJobForm
+          onSubmit={handleJobSubmit}
           initialTask={initialTask}
           onFormStateChange={setIsFormSubmittable}
+          isEditMode={isEditMode}
         />
       }
       buttons={[
