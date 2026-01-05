@@ -1,3 +1,5 @@
+import type { Task } from "@src/types/commonTypes";
+
 export const normalizeText = (value: string) =>
   value.trim().replace(/\s+/g, " ");
 
@@ -36,3 +38,22 @@ export const buildPatchPayload = (
 
 //   return payload;
 // }
+
+export const getNewIndexOrder = (
+  tasksInColumn: Task[],
+  overTaskId?: string
+) => {
+  if (tasksInColumn.length === 0) return 1024;
+
+  if (!overTaskId) {
+    // If there's no overTaskId, place at the end
+    return tasksInColumn[tasksInColumn.length - 1].index_number + 1024;
+  }
+
+  const overIndex = tasksInColumn.findIndex((t) => t.id === overTaskId);
+  const prev = tasksInColumn[overIndex - 1];
+  const next = tasksInColumn[overIndex];
+
+  if (!prev) return next.index_number / 2;
+  return (prev.index_number + next.index_number) / 2;
+};

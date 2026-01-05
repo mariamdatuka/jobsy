@@ -10,7 +10,6 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
-import { arrayMove } from "@dnd-kit/sortable";
 import ColumnContainer from "./ColumnContainer";
 import JobCard from "./JobCard";
 import { columns } from "@src/helpers/constanst";
@@ -20,28 +19,40 @@ import { useUserStore } from "@src/store/userStore";
 import { useJobActionsStore } from "@src/store/useJobActionsStore";
 import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { updateJob } from "@src/services/jobs";
+import { useQueryClient } from "@tanstack/react-query";
+import { QKEY_TASKS } from "@src/services/queryKeys";
+import { getNewIndexOrder } from "@src/helpers/helpers";
 
 const KanbanBoard = () => {
   const session = useUserStore((state) => state.session);
   const { tasks, isLoading } = useTasks(session?.user?.id!);
   const tasksData = tasks || [];
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const queryClient = useQueryClient();
 
   const setJobsData = useJobActionsStore((state) => state.setJobsData);
   const jobs = useJobActionsStore((state) => state.jobsData);
-  console.log("Jobs from store:", jobs);
 
   const { mutate: updateJobMutate } = useSupabaseMutation(
-    (vars: { id: string; status: string }) =>
-      updateJob(vars.id, { status: vars.status }),
-    {}
+    (vars: { id: string; status: string; index_number: number }) =>
+      updateJob(vars.id, {
+        status: vars?.status,
+        index_number: vars.index_number,
+      })
+    // {
+    //   onSuccess: async (_data, _vars) => {
+    //     await queryClient.invalidateQueries({
+    //       queryKey: [QKEY_TASKS, _vars.id],
+    //     });
+    //   },
+    // }
   );
 
   useEffect(() => {
     if (tasksData) {
       setJobsData(tasksData);
     }
-  }, [tasks]);
+  }, []);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -58,10 +69,12 @@ const KanbanBoard = () => {
 
   const tasksByStatus = useMemo(() => {
     return columns.reduce((acc, col) => {
-      acc[col.id] = jobs.filter((task) => task.status === col.id);
+      acc[col.id] = jobs
+        .filter((task) => task.status === col.id)
+        .sort((a, b) => a.index_number - b.index_number);
       return acc;
     }, {} as Record<string, Task[]>);
-  }, [jobs, columns, session?.user.id]);
+  }, [jobs, columns]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     setActiveTask(null);
@@ -75,46 +88,81 @@ const KanbanBoard = () => {
     const isActiveTask = active.data.current?.type === "task";
     const isOverTask = over.data.current?.type === "task";
 
-    // Dropping task over another task (reordering within same column or moving to different column)
     if (isActiveTask && isOverTask) {
       const overId = over.id;
+      const activeIndex = jobs.findIndex((t) => t.id === activeId);
+      const overIndex = jobs.findIndex((t) => t.id === overId);
 
-      setJobsData((tasks) => {
-        const activeIndex = tasks.findIndex((t) => t.id === activeId);
-        const overIndex = tasks.findIndex((t) => t.id === overId);
+      const activeTask = jobs[activeIndex];
+      const overTask = jobs[overIndex];
 
-        // If tasks are in the same column, just reorder them
-        const activeTask = tasks[activeIndex];
-        const overTask = tasks[overIndex];
+      const isSameColumn = activeTask.status === overTask.status;
 
-        activeTask.status = overTask.status;
+      // If tasks are in the same column, just reorder them
+      //   if (isSameColumn) {
+      //     setJobsData((tasks) => {
+      //       const activeIndex = tasks.findIndex((t) => t.id === activeId);
+      //       const overIndex = tasks.findIndex((t) => t.id === overId);
+      //       return arrayMove(tasks, activeIndex, overIndex);
+      //     });
 
-        updateJobMutate({ id: activeTask.id, status: overTask.status });
+      //     return;
+      //   }
 
-        return arrayMove(tasks, activeIndex, overIndex);
-      });
+      //   setJobsData((tasks) =>
+      //     tasks.map((t) =>
+      //       t.id === activeTask.id ? { ...t, status: overTask.status } : t
+      //     )
+      //   );
+
+      //   updateJobMutate({
+      //     id: activeTask.id,
+      //     status: overTask.status,
+      //   });
+      //   return;
+      // }
+
+      if (isSameColumn) {
+        const columnTasks = tasksByStatus[activeTask.status];
+
+        const newIndex = getNewIndexOrder(columnTasks, overTask.id);
+
+        setJobsData((tasks) =>
+          tasks.map((t) =>
+            t.id === activeTask.id ? { ...t, index_order: newIndex } : t
+          )
+        );
+
+        updateJobMutate({
+          id: activeTask.id,
+          status: activeTask.status,
+          index_number: newIndex,
+        });
+
+        return;
+      }
     }
 
     const isOverColumn = over.data.current?.type === "column";
     if (isActiveTask && isOverColumn) {
       const overId = String(over.id) as Task["status"];
-      setJobsData((tasks) => {
-        const activeIndex = tasks.findIndex((t) => t.id === activeId);
-        tasks[activeIndex].status = overId;
-        updateJobMutate({ id: String(activeId), status: overId });
-        return arrayMove(tasks, activeIndex, activeIndex);
-      });
-    }
-    // Dropping task over a column (moving to different column)
-    else if (isActiveTask && !isOverTask) {
-      const overId = over.id as Task["status"]; // When over a column, over.id is the status
       setJobsData((tasks) =>
         tasks.map((task) =>
           task.id === activeId ? { ...task, status: overId } : task
         )
       );
-      updateJobMutate({ id: String(activeId), status: overId });
+      // updateJobMutate({ id: String(activeId), status: overId });
     }
+    // // Dropping task over a column (moving to different column)
+    // else if (isActiveTask && !isOverTask) {
+    //   const overId = over.id as Task["status"]; // When over a column, over.id is the status
+    //   setJobsData((tasks) =>
+    //     tasks.map((task) =>
+    //       task.id === activeId ? { ...task, status: overId } : task
+    //     )
+    //   );
+    //   updateJobMutate({ id: String(activeId), status: overId });
+    // }
   };
 
   return (

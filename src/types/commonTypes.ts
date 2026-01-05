@@ -9,4 +9,5 @@ export interface Task {
   link?: string;
   salary?: string;
   notes?: string;
+  index_number: number;
 }

@@ -50,6 +50,7 @@ type UpdateJobPayload = {
   status?: string;
   vacancy_type?: string;
   date_applied?: string;
+  index_number?: number;
 };
 
 export const updateJob = async (id: string, payload: UpdateJobPayload) => {
