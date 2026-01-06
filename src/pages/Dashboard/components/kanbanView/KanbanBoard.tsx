@@ -38,21 +38,23 @@ const KanbanBoard = () => {
       updateJob(vars.id, {
         status: vars?.status,
         index_number: vars.index_number,
-      })
-    // {
-    //   onSuccess: async (_data, _vars) => {
-    //     await queryClient.invalidateQueries({
-    //       queryKey: [QKEY_TASKS, _vars.id],
-    //     });
-    //   },
-    // }
+      }),
+    {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: [QKEY_TASKS, session?.user?.id],
+        });
+      },
+    }
   );
 
   useEffect(() => {
     if (tasksData) {
       setJobsData(tasksData);
+      console.log("bla");
     }
-  }, []);
+    console.log("tasksData changed");
+  }, [tasks]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -127,9 +129,10 @@ const KanbanBoard = () => {
 
         const newIndex = getNewIndexOrder(columnTasks, overTask.id);
 
+        // Optimistically update the local jobs state so the UI reflects the new order immediately
         setJobsData((tasks) =>
           tasks.map((t) =>
-            t.id === activeTask.id ? { ...t, index_order: newIndex } : t
+            t.id === activeTask.id ? { ...t, index_number: newIndex } : t
           )
         );
 
