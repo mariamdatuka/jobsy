@@ -22,10 +22,13 @@ import { updateTaskPosition } from "@src/services/jobs";
 import { useQueryClient } from "@tanstack/react-query";
 import { QKEY_TASKS } from "@src/services/queryKeys";
 import { getIndexForColumnDrop, getNewIndexOrder } from "@src/helpers/helpers";
+import { useSearchParams } from "react-router";
 
 const KanbanBoard = () => {
+  const [searchParams] = useSearchParams();
+  const search = searchParams.get("search") || "";
   const session = useUserStore((state) => state.session);
-  const { tasks, isLoading } = useTasks(session?.user?.id!);
+  const { tasks, isLoading } = useTasks(session?.user?.id!, { search });
   const tasksData = tasks || [];
   const [activeCard, setActiveCard] = useState<Task | null>(null);
   const queryClient = useQueryClient();

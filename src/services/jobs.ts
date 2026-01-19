@@ -79,12 +79,36 @@ export const updateJob = async (id: string, payload: UpdateJobPayload) => {
   return data;
 };
 
-export const fetchTasks = async (userId: string) => {
-  const { data, error } = await supabase
-    .from("tasks")
-    .select("*")
-    .eq("user_id", userId)
-    .order("date_applied", { ascending: false });
+type FetchTasksParams = {
+  userID: string;
+  search?: string;
+  filters?: {
+    status?: string[];
+    location?: string[];
+    vacancyType?: string[];
+    dateFrom?: string;
+    dateTo?: string;
+  };
+};
+
+export const fetchTasks = async ({
+  userID,
+  search,
+  filters,
+}: FetchTasksParams) => {
+  let query = supabase.from("tasks").select("*").eq("user_id", userID);
+
+  //  SEARCH (company OR position)
+  if (search) {
+    query = query.or(
+      `company_name.ilike.%${search}%,position.ilike.%${search}%`
+    );
+  }
+
+  const { data, error } = await query.order("index_number", {
+    ascending: true,
+  });
+
   if (error) throw error;
   return data;
 };
