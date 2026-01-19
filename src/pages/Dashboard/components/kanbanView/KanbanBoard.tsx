@@ -18,43 +18,46 @@ import { useTasks } from "@src/hooks/useTasks";
 import { useUserStore } from "@src/store/userStore";
 import { useJobActionsStore } from "@src/store/useJobActionsStore";
 import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
-import { updateJob } from "@src/services/jobs";
+import { updateTaskPosition } from "@src/services/jobs";
 import { useQueryClient } from "@tanstack/react-query";
 import { QKEY_TASKS } from "@src/services/queryKeys";
-import { getNewIndexOrder } from "@src/helpers/helpers";
+import { getIndexForColumnDrop, getNewIndexOrder } from "@src/helpers/helpers";
 
 const KanbanBoard = () => {
   const session = useUserStore((state) => state.session);
   const { tasks, isLoading } = useTasks(session?.user?.id!);
   const tasksData = tasks || [];
-  const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [activeCard, setActiveCard] = useState<Task | null>(null);
   const queryClient = useQueryClient();
 
   const setJobsData = useJobActionsStore((state) => state.setJobsData);
   const jobs = useJobActionsStore((state) => state.jobsData);
 
-  const { mutate: updateJobMutate } = useSupabaseMutation(
+  const { mutate: updateTaskPositionMutate } = useSupabaseMutation(
     (vars: { id: string; status: string; index_number: number }) =>
-      updateJob(vars.id, {
-        status: vars?.status,
-        index_number: vars.index_number,
-      }),
+      updateTaskPosition(vars.id, vars.status, vars.index_number),
     {
-      onSuccess: async () => {
+      onSuccess: async (data) => {
+        if (data?.rebalanced) {
+          console.log("✨ Column auto-rebalanced");
+          console.log("Min gap was:", data.min_gap);
+        }
+
         await queryClient.invalidateQueries({
           queryKey: [QKEY_TASKS, session?.user?.id],
         });
+      },
+      onError: (error) => {
+        console.error("Failed to update task position:", error);
       },
     }
   );
 
   useEffect(() => {
-    if (tasksData) {
+    if (tasksData && tasksData.length > 0) {
       setJobsData(tasksData);
-      console.log("bla");
     }
-    console.log("tasksData changed");
-  }, [tasks]);
+  }, [tasksData, setJobsData]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -63,11 +66,6 @@ const KanbanBoard = () => {
       },
     })
   );
-
-  const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event;
-    setActiveTask(active.data.current?.task);
-  };
 
   const tasksByStatus = useMemo(() => {
     return columns.reduce((acc, col) => {
@@ -78,11 +76,17 @@ const KanbanBoard = () => {
     }, {} as Record<string, Task[]>);
   }, [jobs, columns]);
 
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    setActiveCard(active.data.current?.task);
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
-    setActiveTask(null);
+    setActiveCard(null);
     const { active, over } = event;
 
     if (!over) return;
+
     if (active.id === over.id) return;
 
     const activeId = active.id;
@@ -100,43 +104,19 @@ const KanbanBoard = () => {
 
       const isSameColumn = activeTask.status === overTask.status;
 
-      // If tasks are in the same column, just reorder them
-      //   if (isSameColumn) {
-      //     setJobsData((tasks) => {
-      //       const activeIndex = tasks.findIndex((t) => t.id === activeId);
-      //       const overIndex = tasks.findIndex((t) => t.id === overId);
-      //       return arrayMove(tasks, activeIndex, overIndex);
-      //     });
+      const columnTasks = tasksByStatus[overTask.status];
 
-      //     return;
-      //   }
-
-      //   setJobsData((tasks) =>
-      //     tasks.map((t) =>
-      //       t.id === activeTask.id ? { ...t, status: overTask.status } : t
-      //     )
-      //   );
-
-      //   updateJobMutate({
-      //     id: activeTask.id,
-      //     status: overTask.status,
-      //   });
-      //   return;
-      // }
+      const activeInx = columnTasks.findIndex((t) => t.id === activeTask.id);
+      const overInx = columnTasks.findIndex((t) => t.id === overTask.id);
+      const newIndex = getNewIndexOrder(columnTasks, activeInx, overInx);
 
       if (isSameColumn) {
-        const columnTasks = tasksByStatus[activeTask.status];
-
-        const newIndex = getNewIndexOrder(columnTasks, overTask.id);
-
-        // Optimistically update the local jobs state so the UI reflects the new order immediately
         setJobsData((tasks) =>
           tasks.map((t) =>
             t.id === activeTask.id ? { ...t, index_number: newIndex } : t
           )
         );
-
-        updateJobMutate({
+        updateTaskPositionMutate({
           id: activeTask.id,
           status: activeTask.status,
           index_number: newIndex,
@@ -144,28 +124,49 @@ const KanbanBoard = () => {
 
         return;
       }
+      setJobsData((tasks) =>
+        tasks.map((t) =>
+          t.id === activeTask.id
+            ? { ...t, index_number: newIndex, status: overTask.status }
+            : t
+        )
+      );
+
+      updateTaskPositionMutate({
+        id: activeTask.id,
+        status: overTask.status,
+        index_number: newIndex,
+      });
+
+      return;
     }
 
     const isOverColumn = over.data.current?.type === "column";
-    if (isActiveTask && isOverColumn) {
-      const overId = String(over.id) as Task["status"];
+    const overId = String(over.id) as Task["status"];
+    if (
+      isActiveTask &&
+      isOverColumn &&
+      overId !== active.data.current?.task.status
+    ) {
+      const columnTasks = tasksByStatus[overId];
+
+      const activeIndex = jobs.findIndex((t) => t.id === activeId);
+      const activeTask = jobs[activeIndex];
+      const newIndex = getIndexForColumnDrop(columnTasks);
+
       setJobsData((tasks) =>
         tasks.map((task) =>
-          task.id === activeId ? { ...task, status: overId } : task
+          task.id === activeId
+            ? { ...task, status: overId, index_number: newIndex }
+            : task
         )
       );
-      // updateJobMutate({ id: String(activeId), status: overId });
+      updateTaskPositionMutate({
+        id: activeTask.id,
+        status: overId,
+        index_number: newIndex,
+      });
     }
-    // // Dropping task over a column (moving to different column)
-    // else if (isActiveTask && !isOverTask) {
-    //   const overId = over.id as Task["status"]; // When over a column, over.id is the status
-    //   setJobsData((tasks) =>
-    //     tasks.map((task) =>
-    //       task.id === activeId ? { ...task, status: overId } : task
-    //     )
-    //   );
-    //   updateJobMutate({ id: String(activeId), status: overId });
-    // }
   };
 
   return (
@@ -187,7 +188,7 @@ const KanbanBoard = () => {
 
       {createPortal(
         <DragOverlay>
-          {activeTask && <JobCard task={activeTask} />}
+          {activeCard && <JobCard task={activeCard} />}
         </DragOverlay>,
         document.body
       )}

@@ -41,19 +41,40 @@ export const buildPatchPayload = (
 
 export const getNewIndexOrder = (
   tasksInColumn: Task[],
-  overTaskId?: string
+  activeIndex: number,
+  overIndex: number
 ) => {
-  if (tasksInColumn.length === 0) return 1024;
+  const sorted = [...tasksInColumn].sort(
+    (a, b) => a.index_number - b.index_number
+  );
 
-  if (!overTaskId) {
-    // If there's no overTaskId, place at the end
-    return tasksInColumn[tasksInColumn.length - 1].index_number + 1024;
+  // Dropping AFTER the over task
+  if (activeIndex < overIndex) {
+    const over = sorted[overIndex];
+    const next = sorted[overIndex + 1];
+
+    if (!next) {
+      return over.index_number + 1024;
+    }
+
+    return (over.index_number + next.index_number) / 2;
   }
 
-  const overIndex = tasksInColumn.findIndex((t) => t.id === overTaskId);
-  const prev = tasksInColumn[overIndex - 1];
-  const next = tasksInColumn[overIndex];
+  // Dropping BEFORE the over task
+  const prev = sorted[overIndex - 1];
+  const over = sorted[overIndex];
 
-  if (!prev) return next.index_number / 2;
-  return (prev.index_number + next.index_number) / 2;
+  if (!prev) return over.index_number / 2;
+
+  return (prev.index_number + over.index_number) / 2;
+};
+
+export const getIndexForColumnDrop = (tasksInColumn: Task[]) => {
+  if (tasksInColumn.length === 0) return 1024;
+
+  const sorted = [...tasksInColumn].sort(
+    (a, b) => a.index_number - b.index_number
+  );
+
+  return sorted[sorted.length - 1].index_number + 1024;
 };
