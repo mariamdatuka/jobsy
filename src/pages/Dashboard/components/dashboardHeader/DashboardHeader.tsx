@@ -1,6 +1,7 @@
 import { Box, Stack } from "@mui/material";
 import DashboardActions from "./DashboardActions";
 import DashboardToggleView from "./DashboardToggleView";
+import Search from "./Search";
 
 export interface Props {
   handleChange: (
@@ -21,7 +22,7 @@ const DashboardHeader = ({ handleChange, alignment }: Props) => {
         padding={2}
       >
         <Box display="flex" gap={2}>
-          <Box>Search input</Box>
+          <Search />
           <Box>Filters</Box>
         </Box>
         <Stack gap="25px">

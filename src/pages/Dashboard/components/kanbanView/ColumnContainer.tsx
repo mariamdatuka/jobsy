@@ -43,7 +43,7 @@ const ColumnContainer = ({
           <Typography component="span" color="#fff">
             /
           </Typography>
-          <Text color="#fff">1</Text>
+          <Text color="#fff">{tasks?.length || 0}</Text>
         </TitleBox>
         <ColumnBoxWrapper>
           <ColumnBox ref={setNodeRef}>

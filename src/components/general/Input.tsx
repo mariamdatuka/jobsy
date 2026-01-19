@@ -84,10 +84,13 @@ const Input = ({
             }}
             sx={{
               "& .MuiInputBase-input": {
-                padding: "8px 14px",
+                padding: !leftContent ? "8px 14px" : "8px 14px 8px 0px",
               },
               minwidth: "250px",
               borderRadius: "50%",
+              "& .MuiInputBase-input::placeholder": {
+                fontSize: "12px",
+              },
               ...sx,
             }}
           />
