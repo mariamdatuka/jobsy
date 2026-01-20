@@ -2,11 +2,12 @@ import { Box, Stack } from "@mui/material";
 import DashboardActions from "./DashboardActions";
 import DashboardToggleView from "./DashboardToggleView";
 import Search from "./Search";
+import Filters from "./Filters";
 
 export interface Props {
   handleChange: (
     event: React.MouseEvent<HTMLElement>,
-    newAlignment: "kanban" | "table" | null
+    newAlignment: "kanban" | "table" | null,
   ) => void;
   alignment: "kanban" | "table";
   handleJobSubmit?: (values: any, userid: string) => Promise<void> | void;
@@ -23,7 +24,7 @@ const DashboardHeader = ({ handleChange, alignment }: Props) => {
       >
         <Box display="flex" gap={2}>
           <Search />
-          <Box>Filters</Box>
+          <Filters />
         </Box>
         <Stack gap="25px">
           <DashboardActions />
