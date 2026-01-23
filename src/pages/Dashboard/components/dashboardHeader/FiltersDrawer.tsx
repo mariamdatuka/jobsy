@@ -1,4 +1,5 @@
 import { Drawer } from "@mui/material";
+import { MultiSelectFilter } from "./FilterGroup";
 
 const FiltersDrawer = ({
   open,
@@ -15,14 +16,23 @@ const FiltersDrawer = ({
       slotProps={{
         paper: {
           sx: {
-            width: 300,
+            width: 350,
             padding: "30px 10px",
-            alignItems: "center",
+            // alignItems: "center",
           },
         },
       }}
     >
-      <div>hi</div>
+      <MultiSelectFilter
+        title="Status"
+        options={["applied", "saved"]}
+        filterKey="status"
+      />
+      <MultiSelectFilter
+        title="Type"
+        options={["full-time", "part-time"]}
+        filterKey="type"
+      />
     </Drawer>
   );
 };

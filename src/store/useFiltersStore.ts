@@ -1,29 +1,36 @@
 import { create } from "zustand";
 
-type DateFilter = {
-  preset?: "7d" | "30d";
-  from?: string;
-  to?: string;
-};
+type DateFilter =
+  | {
+      type: "preset";
+      preset: "last 7 days" | "last 30 days";
+    }
+  | {
+      type: "range";
+      from: string; // ISO
+      to: string; // ISO
+    };
 
 interface FiltersState {
   status: string[];
-  vacancyType: string[];
-  date: DateFilter;
+  type: string[];
+  date: DateFilter | null;
 }
 
-type MultiSelectFilterKey = "status" | "vacancyType";
+type MultiSelectFilterKey = "status" | "type";
 
 interface FilterStore extends FiltersState {
   toggleFilter: (key: MultiSelectFilterKey, value: string) => void;
-  setDateFilter: (date: DateFilter) => void;
   resetFilters: () => void;
+  setPresetDate: (preset: "last 7 days" | "last 30 days") => void;
+  setCustomDate: (from: string, to: string) => void;
+  resetDate?: () => void;
 }
 
 export const useFiltersStore = create<FilterStore>((set) => ({
   status: [],
-  vacancyType: [],
-  date: {},
+  type: [],
+  date: null,
 
   toggleFilter: (key, value) =>
     set((state) => {
@@ -35,15 +42,27 @@ export const useFiltersStore = create<FilterStore>((set) => ({
       };
     }),
 
-  setDateFilter: (date) =>
-    set(() => ({
-      date,
+  setPresetDate: (preset) =>
+    set((state) => ({
+      date: {
+        type: "preset",
+        preset,
+      },
+    })),
+
+  setCustomDate: (from, to) =>
+    set((state) => ({
+      date: {
+        type: "range",
+        from,
+        to,
+      },
     })),
 
   resetFilters: () =>
     set({
       status: [],
-      vacancyType: [],
-      date: {},
+      type: [],
+      date: null,
     }),
 }));
