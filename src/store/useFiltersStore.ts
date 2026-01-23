@@ -1,9 +1,11 @@
 import { create } from "zustand";
 
+export type DatePreset = "7d" | "30d";
+
 type DateFilter =
   | {
       type: "preset";
-      preset: "last 7 days" | "last 30 days";
+      preset: DatePreset;
     }
   | {
       type: "range";
@@ -17,12 +19,12 @@ interface FiltersState {
   date: DateFilter | null;
 }
 
-type MultiSelectFilterKey = "status" | "type";
+export type MultiSelectFilterKey = "status" | "type";
 
 interface FilterStore extends FiltersState {
   toggleFilter: (key: MultiSelectFilterKey, value: string) => void;
   resetFilters: () => void;
-  setPresetDate: (preset: "last 7 days" | "last 30 days") => void;
+  setPresetDate: (preset: DatePreset) => void;
   setCustomDate: (from: string, to: string) => void;
   resetDate?: () => void;
 }

@@ -1,5 +1,5 @@
 import { Drawer } from "@mui/material";
-import { MultiSelectFilter } from "./FilterGroup";
+import { DateFilter, MultiSelectFilter } from "./FilterGroup";
 
 const FiltersDrawer = ({
   open,
@@ -33,6 +33,7 @@ const FiltersDrawer = ({
         options={["full-time", "part-time"]}
         filterKey="type"
       />
+      <DateFilter title="Date Applied" />
     </Drawer>
   );
 };
