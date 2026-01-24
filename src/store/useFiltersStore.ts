@@ -15,23 +15,23 @@ type DateFilter =
 
 interface FiltersState {
   status: string[];
-  type: string[];
+  jobType: string[];
   date: DateFilter | null;
 }
 
-export type MultiSelectFilterKey = "status" | "type";
-
+export type MultiSelectFilterKey = "status" | "jobType";
 interface FilterStore extends FiltersState {
   toggleFilter: (key: MultiSelectFilterKey, value: string) => void;
   resetFilters: () => void;
   setPresetDate: (preset: DatePreset) => void;
   setCustomDate: (from: string, to: string) => void;
+  clearDate: () => void;
   resetDate?: () => void;
 }
 
 export const useFiltersStore = create<FilterStore>((set) => ({
   status: [],
-  type: [],
+  jobType: [],
   date: null,
 
   toggleFilter: (key, value) =>
@@ -45,7 +45,7 @@ export const useFiltersStore = create<FilterStore>((set) => ({
     }),
 
   setPresetDate: (preset) =>
-    set((state) => ({
+    set(() => ({
       date: {
         type: "preset",
         preset,
@@ -53,7 +53,7 @@ export const useFiltersStore = create<FilterStore>((set) => ({
     })),
 
   setCustomDate: (from, to) =>
-    set((state) => ({
+    set(() => ({
       date: {
         type: "range",
         from,
@@ -64,7 +64,11 @@ export const useFiltersStore = create<FilterStore>((set) => ({
   resetFilters: () =>
     set({
       status: [],
-      type: [],
+      jobType: [],
       date: null,
     }),
+  clearDate: () =>
+    set(() => ({
+      date: null,
+    })),
 }));

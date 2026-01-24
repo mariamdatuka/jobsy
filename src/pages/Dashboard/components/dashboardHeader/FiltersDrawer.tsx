@@ -1,5 +1,8 @@
 import { Drawer } from "@mui/material";
 import { DateFilter, MultiSelectFilter } from "./FilterGroup";
+import FilterActions from "./FilterActions";
+import { useState } from "react";
+import { useFiltersStore } from "@src/store/useFiltersStore";
 
 const FiltersDrawer = ({
   open,
@@ -8,6 +11,22 @@ const FiltersDrawer = ({
   open: boolean;
   toggleDrawer: () => void;
 }) => {
+  const [from, setFrom] = useState<string | null>("");
+  const [to, setTo] = useState<string | null>("");
+  const [showCustomInputs, setShowCustomInputs] = useState(false);
+  const [dateError, setDateError] = useState<string>("");
+  const setCustomDate = useFiltersStore((state) => state.setCustomDate);
+  const handleFilters = () => {
+    if (showCustomInputs) {
+      if (!from || !to) {
+        setDateError("Please select both From and To dates");
+        return;
+      }
+
+      setCustomDate(from, to);
+      setDateError("");
+    }
+  };
   return (
     <Drawer
       open={open}
@@ -17,7 +36,7 @@ const FiltersDrawer = ({
         paper: {
           sx: {
             width: 350,
-            padding: "30px 10px",
+            padding: "40px 25px",
             // alignItems: "center",
           },
         },
@@ -25,15 +44,25 @@ const FiltersDrawer = ({
     >
       <MultiSelectFilter
         title="Status"
-        options={["applied", "saved"]}
+        options={["saved", "applied", "interviewing", "offered", "rejected"]}
         filterKey="status"
       />
       <MultiSelectFilter
         title="Type"
-        options={["full-time", "part-time"]}
-        filterKey="type"
+        options={["Remote", "Hybrid", "On-site"]}
+        filterKey="jobType"
       />
-      <DateFilter title="Date Applied" />
+      <DateFilter
+        title="Date Applied"
+        from={from}
+        to={to}
+        setTo={setTo}
+        setFrom={setFrom}
+        showCustomInputs={showCustomInputs}
+        setShowCustomInputs={setShowCustomInputs}
+        dateError={dateError}
+      />
+      <FilterActions handleFilters={handleFilters} />
     </Drawer>
   );
 };

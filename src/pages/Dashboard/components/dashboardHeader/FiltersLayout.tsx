@@ -3,7 +3,7 @@ import MainButton from "@src/components/general/Button";
 import FiltersDrawer from "./FiltersDrawer";
 import { useState } from "react";
 
-const Filters = () => {
+const FiltersLayout = () => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleDrawer = () => {
     setIsOpen((prev) => !prev);
@@ -16,4 +16,4 @@ const Filters = () => {
   );
 };
 
-export default Filters;
+export default FiltersLayout;

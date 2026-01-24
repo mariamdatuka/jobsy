@@ -1,8 +1,8 @@
-import { Box, Chip, Divider, Stack } from "@mui/material";
+import { Chip, Divider, Stack } from "@mui/material";
 import Text from "@src/components/general/Text";
 import { useFiltersStore } from "@src/store/useFiltersStore";
-import { useState } from "react";
 import { type DatePreset } from "@src/store/useFiltersStore";
+import BaseDatepicker from "@src/components/general/BaseDatepicker";
 
 // ============= Base Filter Group Component =============
 type BaseFilterGroupProps = {
@@ -12,20 +12,20 @@ type BaseFilterGroupProps = {
 
 type MultiSelectFilterProps = {
   title: string;
-  filterKey: "status" | "type";
+  filterKey: "status" | "jobType";
   options: string[];
 };
 
 const BaseFilterGroup = ({ title, children }: BaseFilterGroupProps) => (
-  <Box>
+  <Stack spacing={2} my={2}>
     <Text variant="body1" fontWeight={600} color="secondary.main">
       {title}
     </Text>
-    <Stack direction="row" flexWrap="wrap" mt={1} gap={1}>
+    <Stack direction="row" flexWrap="wrap" mt={2} gap={1}>
       {children}
     </Stack>
-    <Divider sx={{ my: 2, borderColor: "dividerLight" }} />
-  </Box>
+    <Divider sx={{ borderColor: "dividerLight" }} />
+  </Stack>
 );
 
 export const MultiSelectFilter = ({
@@ -56,27 +56,52 @@ export const MultiSelectFilter = ({
 // ============= Date Filter =============
 type DateFilterProps = {
   title?: string;
+  from: string | null;
+  to: string | null;
+  showCustomInputs: boolean;
+  setShowCustomInputs: any;
+  setFrom: (date: string | null) => void;
+  setTo: (date: string | null) => void;
+  dateError?: string;
 };
 
-export const DateFilter = ({ title = "Date" }: DateFilterProps) => {
+export const DateFilter = ({
+  title = "Date",
+  from,
+  to,
+  showCustomInputs,
+  setShowCustomInputs,
+  setFrom,
+  setTo,
+  dateError,
+}: DateFilterProps) => {
   const setPresetDate = useFiltersStore((state) => state.setPresetDate);
-  const setCustomDate = useFiltersStore((state) => state.setCustomDate);
+  const clearDate = useFiltersStore((state) => state.clearDate);
   const currentDate = useFiltersStore((state) => state.date);
-  const [showCustomInputs, setShowCustomInputs] = useState(false);
+
+  console.log("Current Date Filter:", currentDate);
 
   const handlePresetClick = (preset: DatePreset) => {
+    if (currentDate?.type === "preset" && currentDate.preset === preset) {
+      clearDate();
+      return;
+    }
+
     setPresetDate(preset);
     setShowCustomInputs(false);
   };
 
   const handleCustomClick = () => {
-    setShowCustomInputs(true);
-  };
-
-  const handleDateChange = (from: string, to: string) => {
-    if (from && to) {
-      setCustomDate(from, to);
+    if (currentDate?.type === "range") {
+      clearDate();
+      setShowCustomInputs(false);
+      setFrom(null);
+      setTo(null);
+      clearDate();
+      return;
     }
+
+    setShowCustomInputs((prev: boolean) => !prev);
   };
 
   const isPresetActive = (preset: DatePreset) => {
@@ -117,31 +142,22 @@ export const DateFilter = ({ title = "Date" }: DateFilterProps) => {
       />
 
       {showCustomInputs && (
-        <Stack direction="row" spacing={1} width="100%" mt={1}>
-          <input
-            type="date"
-            defaultValue={currentDate?.type === "range" ? currentDate.from : ""}
-            onChange={(e) => {
-              const to =
-                currentDate?.type === "range"
-                  ? currentDate.to
-                  : new Date().toISOString().split("T")[0];
-              handleDateChange(e.target.value, to);
-            }}
-            style={{ padding: "8px", flex: 1 }}
+        <Stack spacing={1} mt={1}>
+          <BaseDatepicker
+            label="From"
+            value={from}
+            onChange={(date) => setFrom(date)}
           />
-          <input
-            type="date"
-            defaultValue={currentDate?.type === "range" ? currentDate.to : ""}
-            onChange={(e) => {
-              const from =
-                currentDate?.type === "range"
-                  ? currentDate.from
-                  : new Date().toISOString().split("T")[0];
-              handleDateChange(from, e.target.value);
-            }}
-            style={{ padding: "8px", flex: 1 }}
+          <BaseDatepicker
+            label="To"
+            value={to}
+            onChange={(date) => setTo(date)}
           />
+          {dateError && (
+            <Text variant="caption" color="error.main">
+              {dateError}
+            </Text>
+          )}
         </Stack>
       )}
     </BaseFilterGroup>
