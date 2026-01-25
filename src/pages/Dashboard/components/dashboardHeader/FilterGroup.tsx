@@ -3,6 +3,7 @@ import Text from "@src/components/general/Text";
 import { useFiltersStore } from "@src/store/useFiltersStore";
 import { type DatePreset } from "@src/store/useFiltersStore";
 import BaseDatepicker from "@src/components/general/BaseDatepicker";
+import { set } from "react-hook-form";
 
 // ============= Base Filter Group Component =============
 type BaseFilterGroupProps = {
@@ -86,15 +87,20 @@ export const DateFilter = ({
       clearDate();
       return;
     }
-
     setPresetDate(preset);
+    setFrom(null);
+    setTo(null);
     setShowCustomInputs(false);
   };
 
   const handleCustomClick = () => {
-    if (currentDate?.type === "range") {
+    if (currentDate?.type === "preset") {
       clearDate();
-      setShowCustomInputs(false);
+      setShowCustomInputs(true);
+      return;
+    }
+    if (from || to) {
+      setShowCustomInputs((prev: boolean) => !prev);
       setFrom(null);
       setTo(null);
       clearDate();

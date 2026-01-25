@@ -16,6 +16,7 @@ const FiltersDrawer = ({
   const [showCustomInputs, setShowCustomInputs] = useState(false);
   const [dateError, setDateError] = useState<string>("");
   const setCustomDate = useFiltersStore((state) => state.setCustomDate);
+  const clearDate = useFiltersStore((state) => state.clearDate);
   const handleFilters = () => {
     if (showCustomInputs) {
       if (!from || !to) {
@@ -25,6 +26,8 @@ const FiltersDrawer = ({
 
       setCustomDate(from, to);
       setDateError("");
+      clearDate();
+      setShowCustomInputs(false);
     }
   };
   return (
