@@ -35,7 +35,7 @@ export const MultiSelectFilter = ({
   options,
 }: MultiSelectFilterProps) => {
   const toggleFilter = useFiltersStore((state) => state.toggleFilter);
-  const selectedValues = useFiltersStore((state) => state[filterKey]);
+  const selectedValues = useFiltersStore((state) => state.filters[filterKey]);
 
   return (
     <BaseFilterGroup title={title}>
@@ -78,7 +78,7 @@ export const DateFilter = ({
 }: DateFilterProps) => {
   const setPresetDate = useFiltersStore((state) => state.setPresetDate);
   const clearDate = useFiltersStore((state) => state.clearDate);
-  const currentDate = useFiltersStore((state) => state.date);
+  const currentDate = useFiltersStore((state) => state.filters.date);
 
   const handlePresetClick = (preset: DatePreset) => {
     if (currentDate?.type === "preset" && currentDate.preset === preset) {
@@ -118,7 +118,7 @@ export const DateFilter = ({
     );
   };
 
-  const isCustomActive = currentDate?.type === "range";
+  const isCustomActive = currentDate?.type === "range" || showCustomInputs;
 
   return (
     <BaseFilterGroup title={title}>

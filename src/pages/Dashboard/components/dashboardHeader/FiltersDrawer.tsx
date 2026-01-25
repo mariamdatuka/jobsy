@@ -86,6 +86,8 @@ const FiltersDrawer = ({
       <FilterActions
         handleFilters={handleFilters}
         handleClearAllFilters={handleClearAllFilters}
+        from={from}
+        to={to}
       />
     </Drawer>
   );

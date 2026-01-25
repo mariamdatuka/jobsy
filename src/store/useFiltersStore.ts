@@ -13,66 +13,84 @@ type DateFilter =
       to: string; // ISO
     };
 
-interface FiltersState {
+export interface FiltersState {
   status: string[];
   jobType: string[];
   date: DateFilter | null;
 }
 
-interface initialState {
+interface Filters {
   filters: FiltersState;
 }
 
+const initialFilters: FiltersState = {
+  status: [],
+  jobType: [],
+  date: null,
+};
+
 export type MultiSelectFilterKey = "status" | "jobType";
-interface FilterStore extends FiltersState {
+interface FilterStore extends Filters {
   toggleFilter: (key: MultiSelectFilterKey, value: string) => void;
   resetFilters: () => void;
   setPresetDate: (preset: DatePreset) => void;
   setCustomDate: (from: string, to: string) => void;
   clearDate: () => void;
-  resetDate?: () => void;
 }
 
 export const useFiltersStore = create<FilterStore>((set) => ({
-  status: [],
-  jobType: [],
-  date: null,
-
+  filters: initialFilters,
   toggleFilter: (key, value) =>
     set((state) => {
-      const values = state[key];
+      const values = state.filters[key];
       const exists = values.includes(value);
 
       return {
-        [key]: exists ? values.filter((v) => v !== value) : [...values, value],
+        filters: {
+          ...state.filters,
+          [key]: exists
+            ? values.filter((v) => v !== value)
+            : [...values, value],
+        },
       };
     }),
 
   setPresetDate: (preset) =>
-    set(() => ({
-      date: {
-        type: "preset",
-        preset,
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        date: {
+          type: "preset",
+          preset,
+        },
       },
     })),
 
   setCustomDate: (from, to) =>
-    set(() => ({
-      date: {
-        type: "range",
-        from,
-        to,
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        date: {
+          type: "range",
+          from,
+          to,
+        },
       },
     })),
 
   resetFilters: () =>
     set({
-      status: [],
-      jobType: [],
-      date: null,
+      filters: {
+        status: [],
+        jobType: [],
+        date: null,
+      },
     }),
   clearDate: () =>
-    set(() => ({
-      date: null,
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        date: null,
+      },
     })),
 }));

@@ -1,3 +1,4 @@
+import type { FiltersState } from "@src/store/useFiltersStore";
 import type { Task } from "@src/types/commonTypes";
 
 export const normalizeText = (value: string) =>
@@ -13,6 +14,17 @@ export const toCapitalizeFormat = (status?: string) => {
 export const toCapitalize = (status?: string) => {
   if (!status) return;
   return status[0].toUpperCase() + status.slice(1).toLowerCase();
+};
+
+export const isFiltersEmpty = (filters: FiltersState) => {
+  if (
+    filters.status.length === 0 &&
+    filters.jobType.length === 0 &&
+    filters.date === null
+  ) {
+    return true;
+  }
+  return false;
 };
 
 export const buildPatchPayload = (
