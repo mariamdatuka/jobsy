@@ -9,9 +9,15 @@ export const toCapitalizeFormat = (status?: string) => {
   return status.charAt(0) + status.slice(1).toLowerCase();
 };
 
+//first word uppercase
+export const toCapitalize = (status?: string) => {
+  if (!status) return;
+  return status[0].toUpperCase() + status.slice(1).toLowerCase();
+};
+
 export const buildPatchPayload = (
   values: any,
-  dirtyFields: Record<string, any>
+  dirtyFields: Record<string, any>,
 ) => {
   const payload: Record<string, any> = {};
 
@@ -42,10 +48,10 @@ export const buildPatchPayload = (
 export const getNewIndexOrder = (
   tasksInColumn: Task[],
   activeIndex: number,
-  overIndex: number
+  overIndex: number,
 ) => {
   const sorted = [...tasksInColumn].sort(
-    (a, b) => a.index_number - b.index_number
+    (a, b) => a.index_number - b.index_number,
   );
 
   // Dropping AFTER the over task
@@ -73,7 +79,7 @@ export const getIndexForColumnDrop = (tasksInColumn: Task[]) => {
   if (tasksInColumn.length === 0) return 1024;
 
   const sorted = [...tasksInColumn].sort(
-    (a, b) => a.index_number - b.index_number
+    (a, b) => a.index_number - b.index_number,
   );
 
   return sorted[sorted.length - 1].index_number + 1024;

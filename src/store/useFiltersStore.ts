@@ -19,6 +19,10 @@ interface FiltersState {
   date: DateFilter | null;
 }
 
+interface initialState {
+  filters: FiltersState;
+}
+
 export type MultiSelectFilterKey = "status" | "jobType";
 interface FilterStore extends FiltersState {
   toggleFilter: (key: MultiSelectFilterKey, value: string) => void;

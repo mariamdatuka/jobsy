@@ -3,7 +3,7 @@ import Text from "@src/components/general/Text";
 import { useFiltersStore } from "@src/store/useFiltersStore";
 import { type DatePreset } from "@src/store/useFiltersStore";
 import BaseDatepicker from "@src/components/general/BaseDatepicker";
-import { set } from "react-hook-form";
+import { toCapitalize } from "@src/helpers/helpers";
 
 // ============= Base Filter Group Component =============
 type BaseFilterGroupProps = {
@@ -44,7 +44,7 @@ export const MultiSelectFilter = ({
           key={option}
           variant="outlined"
           clickable
-          label={option}
+          label={toCapitalize(option)}
           color={selectedValues.includes(option) ? "primary" : "default"}
           onClick={() => toggleFilter(filterKey, option)}
           sx={{ my: 0.5 }}
@@ -80,8 +80,6 @@ export const DateFilter = ({
   const clearDate = useFiltersStore((state) => state.clearDate);
   const currentDate = useFiltersStore((state) => state.date);
 
-  console.log("Current Date Filter:", currentDate);
-
   const handlePresetClick = (preset: DatePreset) => {
     if (currentDate?.type === "preset" && currentDate.preset === preset) {
       clearDate();
@@ -94,16 +92,18 @@ export const DateFilter = ({
   };
 
   const handleCustomClick = () => {
+    // If switching from preset, clear and show inputs
     if (currentDate?.type === "preset") {
       clearDate();
       setShowCustomInputs(true);
       return;
     }
+    // If custom range exists, clear everything
     if (from || to) {
       setShowCustomInputs((prev: boolean) => !prev);
       setFrom(null);
       setTo(null);
-      clearDate();
+
       return;
     }
 

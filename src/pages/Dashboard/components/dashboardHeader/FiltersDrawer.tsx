@@ -4,6 +4,12 @@ import FilterActions from "./FilterActions";
 import { useState } from "react";
 import { useFiltersStore } from "@src/store/useFiltersStore";
 
+const validateDateRange = (from: string | null, to: string | null): string => {
+  if (!from || !to) return "Please select both From and To dates";
+  if (new Date(from) > new Date(to)) return "From date must be before To date";
+  return "";
+};
+
 const FiltersDrawer = ({
   open,
   toggleDrawer,
@@ -11,25 +17,37 @@ const FiltersDrawer = ({
   open: boolean;
   toggleDrawer: () => void;
 }) => {
-  const [from, setFrom] = useState<string | null>("");
-  const [to, setTo] = useState<string | null>("");
+  const [from, setFrom] = useState<string | null>(null);
+  const [to, setTo] = useState<string | null>(null);
   const [showCustomInputs, setShowCustomInputs] = useState(false);
   const [dateError, setDateError] = useState<string>("");
   const setCustomDate = useFiltersStore((state) => state.setCustomDate);
-  const clearDate = useFiltersStore((state) => state.clearDate);
+  const clearFilters = useFiltersStore((state) => state.resetFilters);
+
   const handleFilters = () => {
     if (showCustomInputs) {
-      if (!from || !to) {
-        setDateError("Please select both From and To dates");
+      const error = validateDateRange(from, to);
+      if (error) {
+        setDateError(error);
         return;
       }
 
-      setCustomDate(from, to);
-      setDateError("");
-      clearDate();
-      setShowCustomInputs(false);
+      if (from && to) {
+        setCustomDate(from, to);
+        setDateError("");
+        setShowCustomInputs(false);
+      }
     }
   };
+
+  const handleClearAllFilters = () => {
+    clearFilters();
+    setFrom(null);
+    setTo(null);
+    setShowCustomInputs(false);
+    setDateError("");
+  };
+
   return (
     <Drawer
       open={open}
@@ -65,7 +83,10 @@ const FiltersDrawer = ({
         setShowCustomInputs={setShowCustomInputs}
         dateError={dateError}
       />
-      <FilterActions handleFilters={handleFilters} />
+      <FilterActions
+        handleFilters={handleFilters}
+        handleClearAllFilters={handleClearAllFilters}
+      />
     </Drawer>
   );
 };

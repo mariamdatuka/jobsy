@@ -1,7 +1,13 @@
 import { Stack } from "@mui/material";
 import MainButton from "@src/components/general/Button";
 
-const FilterActions = ({ handleFilters }: { handleFilters: () => void }) => {
+const FilterActions = ({
+  handleFilters,
+  handleClearAllFilters,
+}: {
+  handleFilters: () => void;
+  handleClearAllFilters: () => void;
+}) => {
   return (
     <Stack
       spacing={2}
@@ -16,7 +22,11 @@ const FilterActions = ({ handleFilters }: { handleFilters: () => void }) => {
         id="apply-button"
         onClick={handleFilters}
       />
-      <MainButton title="Clear All" variant="outlined" />
+      <MainButton
+        title="Clear All"
+        variant="outlined"
+        onClick={handleClearAllFilters}
+      />
     </Stack>
   );
 };
