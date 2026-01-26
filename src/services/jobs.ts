@@ -2,6 +2,7 @@ import { supabase } from "@src/supabase-client";
 import type { Task } from "@src/types/commonTypes";
 import dayjs from "dayjs";
 import { normalizeText } from "@src/helpers/helpers";
+import type { FiltersState } from "@src/store/useFiltersStore";
 
 type CreateJobPayload = {
   company_name: string;
@@ -82,13 +83,7 @@ export const updateJob = async (id: string, payload: UpdateJobPayload) => {
 type FetchTasksParams = {
   userID: string;
   search?: string;
-  filters?: {
-    status?: string[];
-    location?: string[];
-    vacancyType?: string[];
-    dateFrom?: string;
-    dateTo?: string;
-  };
+  filters?: FiltersState;
 };
 
 export const fetchTasks = async ({
@@ -97,12 +92,20 @@ export const fetchTasks = async ({
   filters,
 }: FetchTasksParams) => {
   let query = supabase.from("tasks").select("*").eq("user_id", userID);
-
+  console.log("Fetching tasks with filters:", filters);
   //  SEARCH (company OR position)
   if (search) {
     query = query.or(
-      `company_name.ilike.%${search}%,position.ilike.%${search}%`
+      `company_name.ilike.%${search}%,position.ilike.%${search}%`,
     );
+  }
+
+  if (filters?.status?.length) {
+    query = query.in("status", filters.status);
+  }
+
+  if (filters?.jobType?.length) {
+    query = query.in("vacancy_type", filters.jobType);
   }
 
   const { data, error } = await query.order("index_number", {
@@ -116,7 +119,7 @@ export const fetchTasks = async ({
 export const updateTaskPosition = async (
   id: string,
   status: string,
-  index_number: number
+  index_number: number,
 ) => {
   const { data, error } = await supabase.rpc("update_task_index", {
     p_task_id: id,

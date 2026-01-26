@@ -2,7 +2,9 @@ import { Drawer } from "@mui/material";
 import { DateFilter, MultiSelectFilter } from "./FilterGroup";
 import FilterActions from "./FilterActions";
 import { useState } from "react";
-import { useFiltersStore } from "@src/store/useFiltersStore";
+import { useFiltersStore, type FiltersState } from "@src/store/useFiltersStore";
+
+import { useSearchParams } from "react-router";
 
 const validateDateRange = (from: string | null, to: string | null): string => {
   if (!from || !to) return "Please select both From and To dates";
@@ -21,8 +23,48 @@ const FiltersDrawer = ({
   const [to, setTo] = useState<string | null>(null);
   const [showCustomInputs, setShowCustomInputs] = useState(false);
   const [dateError, setDateError] = useState<string>("");
+  const [searchParams, setSearchParams] = useSearchParams();
   const setCustomDate = useFiltersStore((state) => state.setCustomDate);
   const clearFilters = useFiltersStore((state) => state.resetFilters);
+  const allFilters = useFiltersStore((state) => state.filters);
+
+  const onApply = (filters: FiltersState) => {
+    const params = Object.fromEntries(searchParams);
+
+    if (filters.status.length) {
+      params.status = filters.status.join(",");
+    } else {
+      delete params.status;
+    }
+
+    if (filters.jobType.length) {
+      params.jobType = filters.jobType.join(",");
+    } else {
+      delete params.jobType;
+    }
+
+    // --- DATE ---
+    if (!filters.date) {
+      delete params.dateType;
+      delete params.datePreset;
+      delete params.dateFrom;
+      delete params.dateTo;
+    } else if (filters.date.type === "preset") {
+      params.dateType = "preset";
+      params.datePreset = filters.date.preset;
+
+      delete params.dateFrom;
+      delete params.dateTo;
+    } else {
+      params.dateType = "range";
+      params.dateFrom = filters.date.from;
+      params.dateTo = filters.date.to;
+
+      delete params.datePreset;
+    }
+
+    setSearchParams(params);
+  };
 
   const handleFilters = () => {
     if (showCustomInputs) {
@@ -37,7 +79,10 @@ const FiltersDrawer = ({
         setDateError("");
         setShowCustomInputs(false);
       }
+      onApply(allFilters);
     }
+
+    onApply(allFilters);
   };
 
   const handleClearAllFilters = () => {
