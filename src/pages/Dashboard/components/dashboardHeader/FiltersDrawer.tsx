@@ -5,6 +5,9 @@ import { useState } from "react";
 import { useFiltersStore, type FiltersState } from "@src/store/useFiltersStore";
 
 import { useSearchParams } from "react-router";
+import { decodeDate } from "@src/helpers/helpers";
+import { useTasks } from "@src/hooks/useTasks";
+import { useUserStore } from "@src/store/userStore";
 
 const validateDateRange = (from: string | null, to: string | null): string => {
   if (!from || !to) return "Please select both From and To dates";
@@ -78,8 +81,9 @@ const FiltersDrawer = ({
         setCustomDate(from, to);
         setDateError("");
         setShowCustomInputs(false);
+        onApply(allFilters);
+        return;
       }
-      onApply(allFilters);
     }
 
     onApply(allFilters);
@@ -92,6 +96,19 @@ const FiltersDrawer = ({
     setShowCustomInputs(false);
     setDateError("");
   };
+
+  const statusParam = searchParams
+    .get("status")
+    ?.split(",")
+    .map((s) => s.toUpperCase());
+  console.log(statusParam, "status param splitted");
+  const appliedFilters: FiltersState = {
+    status: statusParam ?? [],
+    jobType: searchParams.get("jobType")?.split(",") ?? [],
+    date: decodeDate(searchParams),
+  };
+
+  const userID = useUserStore((state) => state.session?.user?.id!);
 
   return (
     <Drawer

@@ -1,5 +1,6 @@
 import type { FiltersState } from "@src/store/useFiltersStore";
 import type { Task } from "@src/types/commonTypes";
+import { type DateFilter } from "@src/store/useFiltersStore";
 
 export const normalizeText = (value: string) =>
   value.trim().replace(/\s+/g, " ");
@@ -95,4 +96,35 @@ export const getIndexForColumnDrop = (tasksInColumn: Task[]) => {
   );
 
   return sorted[sorted.length - 1].index_number + 1024;
+};
+
+export const decodeDate = (
+  searchParams: URLSearchParams,
+): DateFilter | null => {
+  const dateType = searchParams.get("dateType");
+  console.log(searchParams, "search params in decode date");
+  if (dateType === "preset") {
+    const preset = searchParams.get("datePreset");
+    if (!preset) return null;
+
+    return {
+      type: "preset",
+      preset: preset as any,
+    };
+  }
+
+  if (dateType === "range") {
+    const from = searchParams.get("dateFrom");
+    const to = searchParams.get("dateTo");
+
+    if (!from || !to) return null;
+
+    return {
+      type: "range",
+      from,
+      to,
+    };
+  }
+
+  return null;
 };

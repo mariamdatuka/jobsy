@@ -92,20 +92,30 @@ export const fetchTasks = async ({
   filters,
 }: FetchTasksParams) => {
   let query = supabase.from("tasks").select("*").eq("user_id", userID);
-  console.log("Fetching tasks with filters:", filters);
+
   //  SEARCH (company OR position)
   if (search) {
     query = query.or(
       `company_name.ilike.%${search}%,position.ilike.%${search}%`,
     );
   }
-
+  // console.log(filters?.status.length, "status length");
   if (filters?.status?.length) {
     query = query.in("status", filters.status);
   }
 
   if (filters?.jobType?.length) {
     query = query.in("vacancy_type", filters.jobType);
+  }
+  // if (filters?.date?.type === "preset") {
+  //   const from = getDateFromPreset(filters.date.preset);
+  //   query = query.gte("created_at", from);
+  // }
+
+  if (filters?.date?.type === "range") {
+    query = query
+      .gte("date_applied", filters.date.from)
+      .lte("date_applied", filters.date.to);
   }
 
   const { data, error } = await query.order("index_number", {

@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 export type DatePreset = "7d" | "30d";
 
-type DateFilter =
+export type DateFilter =
   | {
       type: "preset";
       preset: DatePreset;

@@ -21,14 +21,33 @@ import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { updateTaskPosition } from "@src/services/jobs";
 import { useQueryClient } from "@tanstack/react-query";
 import { QKEY_TASKS } from "@src/services/queryKeys";
-import { getIndexForColumnDrop, getNewIndexOrder } from "@src/helpers/helpers";
+import {
+  decodeDate,
+  getIndexForColumnDrop,
+  getNewIndexOrder,
+} from "@src/helpers/helpers";
 import { useSearchParams } from "react-router";
+import type { FiltersState } from "@src/store/useFiltersStore";
 
 const KanbanBoard = () => {
   const [searchParams] = useSearchParams();
   const search = searchParams.get("search") || "";
   const session = useUserStore((state) => state.session);
-  const { tasks, isLoading } = useTasks(session?.user?.id!, { search });
+
+  const statusParam = searchParams
+    .get("status")
+    ?.split(",")
+    .map((s) => s.toUpperCase());
+
+  const appliedFilters: FiltersState = {
+    status: statusParam ?? [],
+    jobType: searchParams.get("jobType")?.split(",") ?? [],
+    date: decodeDate(searchParams),
+  };
+  const { tasks, isLoading } = useTasks(session?.user?.id!, {
+    search,
+    filters: appliedFilters,
+  });
   const tasksData = tasks || [];
   const [activeCard, setActiveCard] = useState<Task | null>(null);
   const queryClient = useQueryClient();
@@ -53,7 +72,7 @@ const KanbanBoard = () => {
       onError: (error) => {
         console.error("Failed to update task position:", error);
       },
-    }
+    },
   );
 
   useEffect(() => {
@@ -67,16 +86,19 @@ const KanbanBoard = () => {
       activationConstraint: {
         distance: 8,
       },
-    })
+    }),
   );
 
   const tasksByStatus = useMemo(() => {
-    return columns.reduce((acc, col) => {
-      acc[col.id] = jobs
-        .filter((task) => task.status === col.id)
-        .sort((a, b) => a.index_number - b.index_number);
-      return acc;
-    }, {} as Record<string, Task[]>);
+    return columns.reduce(
+      (acc, col) => {
+        acc[col.id] = jobs
+          .filter((task) => task.status === col.id)
+          .sort((a, b) => a.index_number - b.index_number);
+        return acc;
+      },
+      {} as Record<string, Task[]>,
+    );
   }, [jobs, columns]);
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -116,8 +138,8 @@ const KanbanBoard = () => {
       if (isSameColumn) {
         setJobsData((tasks) =>
           tasks.map((t) =>
-            t.id === activeTask.id ? { ...t, index_number: newIndex } : t
-          )
+            t.id === activeTask.id ? { ...t, index_number: newIndex } : t,
+          ),
         );
         updateTaskPositionMutate({
           id: activeTask.id,
@@ -131,8 +153,8 @@ const KanbanBoard = () => {
         tasks.map((t) =>
           t.id === activeTask.id
             ? { ...t, index_number: newIndex, status: overTask.status }
-            : t
-        )
+            : t,
+        ),
       );
 
       updateTaskPositionMutate({
@@ -161,8 +183,8 @@ const KanbanBoard = () => {
         tasks.map((task) =>
           task.id === activeId
             ? { ...task, status: overId, index_number: newIndex }
-            : task
-        )
+            : task,
+        ),
       );
       updateTaskPositionMutate({
         id: activeTask.id,
@@ -193,7 +215,7 @@ const KanbanBoard = () => {
         <DragOverlay>
           {activeCard && <JobCard task={activeCard} />}
         </DragOverlay>,
-        document.body
+        document.body,
       )}
     </DndContext>
   );
