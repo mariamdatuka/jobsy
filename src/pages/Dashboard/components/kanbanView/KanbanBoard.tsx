@@ -28,20 +28,19 @@ import {
 } from "@src/helpers/helpers";
 import { useSearchParams } from "react-router";
 import type { FiltersState } from "@src/store/useFiltersStore";
+import { useSetUrlParams } from "@src/hooks/useSetUrlParams";
 
 const KanbanBoard = () => {
+  const [activeCard, setActiveCard] = useState<Task | null>(null);
   const [searchParams] = useSearchParams();
   const search = searchParams.get("search") || "";
   const session = useUserStore((state) => state.session);
 
-  const statusParam = searchParams
-    .get("status")
-    ?.split(",")
-    .map((s) => s.toUpperCase());
+  const { getParamArrayUpper } = useSetUrlParams();
 
   const appliedFilters: FiltersState = {
-    status: statusParam ?? [],
-    jobType: searchParams.get("jobType")?.split(",") ?? [],
+    status: getParamArrayUpper("status") ?? [],
+    jobType: getParamArrayUpper("jobType") ?? [],
     date: decodeDate(searchParams),
   };
   const { tasks, isLoading } = useTasks(session?.user?.id!, {
@@ -49,7 +48,7 @@ const KanbanBoard = () => {
     filters: appliedFilters,
   });
   const tasksData = tasks || [];
-  const [activeCard, setActiveCard] = useState<Task | null>(null);
+
   const queryClient = useQueryClient();
 
   const setJobsData = useJobActionsStore((state) => state.setJobsData);

@@ -1,4 +1,4 @@
-import type { FiltersState } from "@src/store/useFiltersStore";
+import type { DatePreset, FiltersState } from "@src/store/useFiltersStore";
 import type { Task } from "@src/types/commonTypes";
 import { type DateFilter } from "@src/store/useFiltersStore";
 
@@ -98,11 +98,33 @@ export const getIndexForColumnDrop = (tasksInColumn: Task[]) => {
   return sorted[sorted.length - 1].index_number + 1024;
 };
 
+export const getDateFromPreset = (preset: DatePreset) => {
+  if (preset === "7d") {
+    const now = new Date();
+    const sevenDaysAgo = new Date(now);
+    sevenDaysAgo.setDate(now.getDate() - 7);
+    return sevenDaysAgo.toISOString().split("T")[0];
+  } else if (preset === "30d") {
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now);
+    thirtyDaysAgo.setDate(now.getDate() - 30);
+    return thirtyDaysAgo.toISOString().split("T")[0];
+  }
+};
+
+export const validateDateRange = (
+  from: string | null,
+  to: string | null,
+): string => {
+  if (!from || !to) return "Please select both From and To dates";
+  if (new Date(from) > new Date(to)) return "From date must be before To date";
+  return "";
+};
+
 export const decodeDate = (
   searchParams: URLSearchParams,
 ): DateFilter | null => {
   const dateType = searchParams.get("dateType");
-  console.log(searchParams, "search params in decode date");
   if (dateType === "preset") {
     const preset = searchParams.get("datePreset");
     if (!preset) return null;

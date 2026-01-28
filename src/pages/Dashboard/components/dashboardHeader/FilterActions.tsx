@@ -34,6 +34,7 @@ const FilterActions = ({
       <MainButton
         title="Clear All"
         variant="outlined"
+        disabled={isEmpty}
         onClick={handleClearAllFilters}
       />
     </Stack>

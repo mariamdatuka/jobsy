@@ -1,7 +1,7 @@
 import { supabase } from "@src/supabase-client";
 import type { Task } from "@src/types/commonTypes";
 import dayjs from "dayjs";
-import { normalizeText } from "@src/helpers/helpers";
+import { getDateFromPreset, normalizeText } from "@src/helpers/helpers";
 import type { FiltersState } from "@src/store/useFiltersStore";
 
 type CreateJobPayload = {
@@ -99,7 +99,7 @@ export const fetchTasks = async ({
       `company_name.ilike.%${search}%,position.ilike.%${search}%`,
     );
   }
-  // console.log(filters?.status.length, "status length");
+
   if (filters?.status?.length) {
     query = query.in("status", filters.status);
   }
@@ -107,10 +107,10 @@ export const fetchTasks = async ({
   if (filters?.jobType?.length) {
     query = query.in("vacancy_type", filters.jobType);
   }
-  // if (filters?.date?.type === "preset") {
-  //   const from = getDateFromPreset(filters.date.preset);
-  //   query = query.gte("created_at", from);
-  // }
+  if (filters?.date?.type === "preset") {
+    const from = getDateFromPreset(filters.date.preset);
+    query = query.gte("date_applied", from);
+  }
 
   if (filters?.date?.type === "range") {
     query = query
