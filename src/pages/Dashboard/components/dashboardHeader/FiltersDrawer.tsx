@@ -24,6 +24,8 @@ const FiltersDrawer = ({
   const { onApply } = useSetUrlParams();
 
   const handleFilters = () => {
+    let filtersToApply = { ...allFilters };
+
     if (showCustomInputs) {
       const error = validateDateRange(from, to);
       if (error) {
@@ -32,15 +34,14 @@ const FiltersDrawer = ({
       }
 
       if (from && to) {
+        filtersToApply.date = { type: "range", from, to };
         setCustomDate(from, to);
         setDateError("");
         setShowCustomInputs(false);
-        onApply(allFilters);
-        return;
       }
     }
-
-    onApply(allFilters);
+    onApply(filtersToApply);
+    toggleDrawer();
   };
 
   const handleClearAllFilters = () => {
@@ -73,7 +74,7 @@ const FiltersDrawer = ({
       />
       <MultiSelectFilter
         title="Type"
-        options={["Remote", "Hybrid", "On-site"]}
+        options={["remote", "hybrid", "on-site"]}
         filterKey="jobType"
       />
       <DateFilter
