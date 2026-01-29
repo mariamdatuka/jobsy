@@ -21,7 +21,7 @@ const FiltersDrawer = ({
   const clearFilters = useFiltersStore((state) => state.resetFilters);
   const allFilters = useFiltersStore((state) => state.filters);
 
-  const { onApply } = useSetUrlParams();
+  const { onApply, clearFilters: clearUrlFilters } = useSetUrlParams();
 
   const handleFilters = () => {
     let filtersToApply = { ...allFilters };
@@ -50,6 +50,7 @@ const FiltersDrawer = ({
     setTo(null);
     setShowCustomInputs(false);
     setDateError("");
+    clearUrlFilters();
   };
 
   return (

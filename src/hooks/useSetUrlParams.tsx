@@ -2,6 +2,7 @@ import type {
   FiltersState,
   MultiSelectFilterKey,
 } from "@src/store/useFiltersStore";
+
 import { useSearchParams } from "react-router";
 
 export const useSetUrlParams = () => {
@@ -51,9 +52,27 @@ export const useSetUrlParams = () => {
     return value.split(",").map((s) => s.toUpperCase());
   };
 
+  const clearFilters = () => {
+    const params = Object.fromEntries(searchParams);
+
+    // keep search
+    const search = params.search;
+
+    // reset everything
+    const newParams: Record<string, string> = {};
+
+    if (search) {
+      newParams.search = search;
+    }
+
+    setSearchParams(newParams);
+  };
+
   return {
     onApply,
     searchParams,
+    setSearchParams,
     getParamArrayUpper,
+    clearFilters,
   };
 };
