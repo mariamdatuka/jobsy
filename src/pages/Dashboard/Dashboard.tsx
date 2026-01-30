@@ -14,7 +14,7 @@ const Dashboard = () => {
 
   const handleChange = (
     _: React.MouseEvent<HTMLElement>,
-    newAlignment: View | null
+    newAlignment: View | null,
   ) => {
     if (newAlignment !== null) {
       setAlignment(newAlignment);
@@ -26,11 +26,7 @@ const Dashboard = () => {
     <>
       {" "}
       <Stack spacing={10}>
-        <DashboardHeader
-          alignment={alignment}
-          handleChange={handleChange}
-          // handleJobSubmit={handleJobSubmit}
-        />
+        <DashboardHeader alignment={alignment} handleChange={handleChange} />
         <AnimatedView viewKey={alignment}>
           {alignment === "kanban" ? <KanbanBoard /> : <TableView />}
         </AnimatedView>

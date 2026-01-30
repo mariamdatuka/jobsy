@@ -2,6 +2,7 @@ import type {
   FiltersState,
   MultiSelectFilterKey,
 } from "@src/store/useFiltersStore";
+import { FILTER_PARAM_KEYS } from "@src/types/paramKeys";
 
 import { useSearchParams } from "react-router";
 
@@ -68,11 +69,16 @@ export const useSetUrlParams = () => {
     setSearchParams(newParams);
   };
 
+  const areFiltersApplied = () => {
+    return FILTER_PARAM_KEYS.some((key) => searchParams.has(key));
+  };
+
   return {
     onApply,
     searchParams,
     setSearchParams,
     getParamArrayUpper,
     clearFilters,
+    areFiltersApplied,
   };
 };

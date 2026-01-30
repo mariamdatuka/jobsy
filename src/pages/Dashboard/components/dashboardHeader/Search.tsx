@@ -9,7 +9,7 @@ const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const methods = useForm({
     defaultValues: {
-      search_term: searchParams.get("search") ?? "",
+      search_term: "",
     },
     mode: "all",
   });
