@@ -52,25 +52,19 @@ export const useSetUrlParams = () => {
     if (!value) return [];
     return value.split(",").map((s) => s.toUpperCase());
   };
-
+  const areFiltersApplied = () => {
+    return FILTER_PARAM_KEYS.some((key) => searchParams.has(key));
+  };
   const clearFilters = () => {
+    const areFiltersInURL = areFiltersApplied();
+    if (!areFiltersInURL) return;
     const params = Object.fromEntries(searchParams);
-
-    // keep search
     const search = params.search;
-
-    // reset everything
     const newParams: Record<string, string> = {};
-
     if (search) {
       newParams.search = search;
     }
-
     setSearchParams(newParams);
-  };
-
-  const areFiltersApplied = () => {
-    return FILTER_PARAM_KEYS.some((key) => searchParams.has(key));
   };
 
   return {
