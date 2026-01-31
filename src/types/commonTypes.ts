@@ -1,3 +1,5 @@
+import type { MultiSelectFilterKey } from "@src/store/useFiltersStore";
+
 export interface Task {
   id: string;
   company_name: string;
@@ -11,3 +13,5 @@ export interface Task {
   notes?: string;
   index_number: number;
 }
+
+export const MULTI_SELECT_KEYS: MultiSelectFilterKey[] = ["status", "jobType"];

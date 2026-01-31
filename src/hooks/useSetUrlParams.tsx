@@ -2,6 +2,7 @@ import type {
   FiltersState,
   MultiSelectFilterKey,
 } from "@src/store/useFiltersStore";
+import { MULTI_SELECT_KEYS } from "@src/types/commonTypes";
 import { FILTER_PARAM_KEYS } from "@src/types/paramKeys";
 
 import { useSearchParams } from "react-router";
@@ -67,6 +68,25 @@ export const useSetUrlParams = () => {
     setSearchParams(newParams);
   };
 
+  const countCommaParam = (key: MultiSelectFilterKey) => {
+    const value = searchParams.get(key);
+    return value ? value.split(",").length : 0;
+  };
+
+  const urlFilterCounter = () => {
+    let count = 0;
+
+    MULTI_SELECT_KEYS.forEach((key) => {
+      count += countCommaParam(key);
+    });
+
+    if (searchParams.has("dateType")) {
+      count += 1;
+    }
+
+    return count;
+  };
+
   return {
     onApply,
     searchParams,
@@ -74,5 +94,6 @@ export const useSetUrlParams = () => {
     getParamArrayUpper,
     clearFilters,
     areFiltersApplied,
+    urlFilterCounter,
   };
 };

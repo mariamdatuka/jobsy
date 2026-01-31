@@ -14,14 +14,17 @@ const FiltersLayout = () => {
   const clearFilters = useFiltersStore((state) => state.resetFilters);
   const allFilters = useFiltersStore((state) => state.filters);
   const AreDraftFiltersApplied = isFiltersEmpty(allFilters);
-  const { clearFilters: clearUrlFilters, areFiltersApplied } =
-    useSetUrlParams();
+  const {
+    clearFilters: clearUrlFilters,
+    areFiltersApplied,
+    urlFilterCounter,
+  } = useSetUrlParams();
   const handleClearFilters = () => {
     clearFilters();
     clearUrlFilters();
   };
 
-  console.log("FiltersLayout rendered");
+  const counter = urlFilterCounter();
 
   const areUrlFiltersApplied = areFiltersApplied();
   return (
@@ -29,14 +32,14 @@ const FiltersLayout = () => {
       <MainButton title="Filters" startIcon={<Menu />} onClick={toggleDrawer} />
       {areUrlFiltersApplied && (
         <MainButton
-          title="Clear All"
+          title={`Clear All (${counter})`}
           onClick={handleClearFilters}
           variant="outlined"
         />
       )}
       {!AreDraftFiltersApplied && !areUrlFiltersApplied && (
         <MainButton
-          title="Draft Filters"
+          title={`Draft Filters`}
           onClick={() => setIsOpen(true)}
           variant="outlined"
         />
