@@ -74,17 +74,14 @@ export const useSetUrlParams = () => {
   };
 
   const urlFilterCounter = () => {
-    let count = 0;
+    const multiCount = MULTI_SELECT_KEYS.reduce(
+      (sum, key) => sum + countCommaParam(key),
+      0,
+    );
 
-    MULTI_SELECT_KEYS.forEach((key) => {
-      count += countCommaParam(key);
-    });
+    const dateCount = searchParams.has("dateType") ? 1 : 0;
 
-    if (searchParams.has("dateType")) {
-      count += 1;
-    }
-
-    return count;
+    return multiCount + dateCount;
   };
 
   return {
