@@ -4,7 +4,7 @@ import FiltersDrawer from "./FiltersDrawer";
 import { useState } from "react";
 import { useSetUrlParams } from "@src/hooks/useSetUrlParams";
 import { useFiltersStore } from "@src/store/useFiltersStore";
-import { isFiltersEmpty } from "@src/helpers/helpers";
+import { countFilters, isFiltersEmpty } from "@src/helpers/helpers";
 
 const FiltersLayout = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +24,8 @@ const FiltersLayout = () => {
     clearUrlFilters();
   };
 
-  const counter = urlFilterCounter();
+  const urlFiltersCounter = urlFilterCounter();
+  const draftFiltersCounter = countFilters(allFilters);
 
   const areUrlFiltersApplied = areFiltersApplied();
   return (
@@ -32,14 +33,14 @@ const FiltersLayout = () => {
       <MainButton title="Filters" startIcon={<Menu />} onClick={toggleDrawer} />
       {areUrlFiltersApplied && (
         <MainButton
-          title={`Clear All (${counter})`}
+          title={`Clear All (${urlFiltersCounter})`}
           onClick={handleClearFilters}
           variant="outlined"
         />
       )}
       {!AreDraftFiltersApplied && !areUrlFiltersApplied && (
         <MainButton
-          title={`Draft Filters`}
+          title={`Draft Filters (${draftFiltersCounter})`}
           onClick={() => setIsOpen(true)}
           variant="outlined"
         />

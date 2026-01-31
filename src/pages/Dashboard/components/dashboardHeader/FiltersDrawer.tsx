@@ -23,7 +23,7 @@ const FiltersDrawer = ({
 
   const { onApply, clearFilters: clearUrlFilters } = useSetUrlParams();
 
-  const handleFilters = () => {
+  const handleApplyingFilters = () => {
     let filtersToApply = { ...allFilters };
 
     if (showCustomInputs) {
@@ -89,7 +89,7 @@ const FiltersDrawer = ({
         dateError={dateError}
       />
       <FilterActions
-        handleFilters={handleFilters}
+        handleApplyingFilters={handleApplyingFilters}
         handleClearAllFilters={handleClearAllFilters}
         from={from}
         to={to}

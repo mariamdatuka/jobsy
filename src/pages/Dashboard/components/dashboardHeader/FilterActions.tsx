@@ -4,12 +4,12 @@ import { isFiltersEmpty } from "@src/helpers/helpers";
 import { useFiltersStore } from "@src/store/useFiltersStore";
 
 const FilterActions = ({
-  handleFilters,
+  handleApplyingFilters,
   handleClearAllFilters,
   from,
   to,
 }: {
-  handleFilters: () => void;
+  handleApplyingFilters: () => void;
   handleClearAllFilters: () => void;
   from: string | null;
   to: string | null;
@@ -29,7 +29,7 @@ const FilterActions = ({
         disabled={isEmpty}
         sx={{ px: 4 }}
         id="apply-button"
-        onClick={handleFilters}
+        onClick={handleApplyingFilters}
       />
       <MainButton
         title="Clear All"

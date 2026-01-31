@@ -1,5 +1,5 @@
 import type { DatePreset, FiltersState } from "@src/store/useFiltersStore";
-import type { Task } from "@src/types/commonTypes";
+import { MULTI_SELECT_KEYS, type Task } from "@src/types/commonTypes";
 import { type DateFilter } from "@src/store/useFiltersStore";
 
 export const normalizeText = (value: string) =>
@@ -149,4 +149,14 @@ export const decodeDate = (
   }
 
   return null;
+};
+
+export const countFilters = (filters: FiltersState) => {
+  const multiCount = MULTI_SELECT_KEYS.reduce((sum, key) => {
+    return sum + filters[key].length;
+  }, 0);
+
+  const dateCount = filters.date ? 1 : 0;
+
+  return multiCount + dateCount;
 };
