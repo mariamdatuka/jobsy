@@ -194,29 +194,34 @@ const KanbanBoard = () => {
   };
 
   return (
-    <DndContext
-      sensors={sensors}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-    >
-      <Stack direction="row" spacing={2} border="1px solid #02c575">
-        {columns.map((col) => (
-          <ColumnContainer
-            key={col.id}
-            column={col}
-            tasks={tasksByStatus[col.id] || []}
-            isLoading={isLoading}
-          />
-        ))}
-      </Stack>
-
-      {createPortal(
-        <DragOverlay>
-          {activeCard && <JobCard task={activeCard} />}
-        </DragOverlay>,
-        document.body,
+    <>
+      {!isLoading && tasksData.length === 0 && search && (
+        <div>There are no results for "{search}"</div>
       )}
-    </DndContext>
+      <DndContext
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <Stack direction="row" spacing={2} border="1px solid #02c575">
+          {columns.map((col) => (
+            <ColumnContainer
+              key={col.id}
+              column={col}
+              tasks={tasksByStatus[col.id] || []}
+              isLoading={isLoading}
+            />
+          ))}
+        </Stack>
+
+        {createPortal(
+          <DragOverlay>
+            {activeCard && <JobCard task={activeCard} />}
+          </DragOverlay>,
+          document.body,
+        )}
+      </DndContext>
+    </>
   );
 };
 
