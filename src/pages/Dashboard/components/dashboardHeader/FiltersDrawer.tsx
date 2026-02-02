@@ -63,6 +63,8 @@ const FiltersDrawer = ({
           sx: {
             width: 350,
             padding: "40px 25px",
+            borderTopLeftRadius: "12px",
+            borderBottomLeftRadius: "12px",
             // alignItems: "center",
           },
         },
