@@ -45,13 +45,10 @@ const KanbanBoard = () => {
     jobType: getParamArrayUpper("jobType") ?? [],
     date: decodeDate(searchParams),
   };
-  const { tasks, isFetching, isPending, isLoading } = useTasks(
-    session?.user?.id!,
-    {
-      search,
-      filters: appliedFilters,
-    },
-  );
+  const { tasks, isPending, isLoading } = useTasks(session?.user?.id!, {
+    search,
+    filters: appliedFilters,
+  });
   const tasksData = tasks || [];
 
   const queryClient = useQueryClient();
@@ -198,14 +195,14 @@ const KanbanBoard = () => {
     }
   };
 
-  const showSkeleton = tasksData.length === 0 && isFetching; // first load only
-  const showEmptyState = !tasks && !isFetching && search;
-  const showSpinner = isFetching && tasksData.length > 0;
-
-  if (showSpinner) return <Spinner />;
+  const showSkeleton = tasksData.length === 0 && isPending && !search; // first load only
+  const showEmptyState = search && !isLoading && tasksData.length === 0;
+  const showSpinner = isLoading && search;
 
   if (showEmptyState)
     return <EmptyResultState searchTerm={search} message="No results for" />;
+
+  if (showSpinner) return <Spinner />;
 
   return (
     <>
