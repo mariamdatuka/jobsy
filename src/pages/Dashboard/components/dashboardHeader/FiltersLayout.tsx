@@ -33,7 +33,7 @@ const FiltersLayout = () => {
       <MainButton title="Filters" startIcon={<Menu />} onClick={toggleDrawer} />
       {areUrlFiltersApplied && (
         <MainButton
-          title={`Clear All (${urlFiltersCounter})`}
+          title={`Clear All Filters (${urlFiltersCounter})`}
           onClick={handleClearFilters}
           variant="outlined"
         />

@@ -34,11 +34,12 @@ import Spinner from "@src/components/animations/Spinner";
 
 const KanbanBoard = () => {
   const [activeCard, setActiveCard] = useState<Task | null>(null);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const search = searchParams.get("search") || "";
   const session = useUserStore((state) => state.session);
 
-  const { getParamArrayUpper } = useSetUrlParams();
+  const { getParamArrayUpper, areFiltersApplied } = useSetUrlParams();
+  const areUrlFiltersApplied = areFiltersApplied();
 
   const appliedFilters: FiltersState = {
     status: getParamArrayUpper("status") ?? [],
@@ -196,11 +197,22 @@ const KanbanBoard = () => {
   };
 
   const showSkeleton = tasksData.length === 0 && isPending && !search; // first load only
-  const showEmptyState = search && !isLoading && tasksData.length === 0;
-  const showSpinner = isLoading && search;
+  const showEmptyState =
+    (search || areUrlFiltersApplied) && !isLoading && tasksData.length === 0;
+  const showSpinner = isLoading && (search || areUrlFiltersApplied);
+  const handleClearSearch = () => {
+    searchParams.delete("search");
+    setSearchParams(searchParams);
+  };
 
   if (showEmptyState)
-    return <EmptyResultState searchTerm={search} message="No results for" />;
+    return (
+      <EmptyResultState
+        searchTerm={search}
+        message={`No Results${search ? ` for:` : ""}`}
+        handleClearSearch={handleClearSearch}
+      />
+    );
 
   if (showSpinner) return <Spinner />;
 
