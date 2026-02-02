@@ -30,6 +30,7 @@ import { useSearchParams } from "react-router";
 import type { FiltersState } from "@src/store/useFiltersStore";
 import { useSetUrlParams } from "@src/hooks/useSetUrlParams";
 import EmptyResultState from "@src/components/general/EmptyResultState";
+import Spinner from "@src/components/animations/Spinner";
 
 const KanbanBoard = () => {
   const [activeCard, setActiveCard] = useState<Task | null>(null);
@@ -44,10 +45,13 @@ const KanbanBoard = () => {
     jobType: getParamArrayUpper("jobType") ?? [],
     date: decodeDate(searchParams),
   };
-  const { tasks, isLoading } = useTasks(session?.user?.id!, {
-    search,
-    filters: appliedFilters,
-  });
+  const { tasks, isFetching, isPending, isLoading } = useTasks(
+    session?.user?.id!,
+    {
+      search,
+      filters: appliedFilters,
+    },
+  );
   const tasksData = tasks || [];
 
   const queryClient = useQueryClient();
@@ -194,12 +198,17 @@ const KanbanBoard = () => {
     }
   };
 
+  const showSkeleton = tasksData.length === 0 && isFetching; // first load only
+  const showEmptyState = !tasks && !isFetching && search;
+  const showSpinner = isFetching && tasksData.length > 0;
+
+  if (showSpinner) return <Spinner />;
+
+  if (showEmptyState)
+    return <EmptyResultState searchTerm={search} message="No results for" />;
+
   return (
     <>
-      <EmptyResultState />
-      {/* {!isLoading && tasksData.length === 0 && search && (
-        <div>There are no results for "{search}"</div>
-      )}
       <DndContext
         sensors={sensors}
         onDragStart={handleDragStart}
@@ -211,7 +220,7 @@ const KanbanBoard = () => {
               key={col.id}
               column={col}
               tasks={tasksByStatus[col.id] || []}
-              isLoading={isLoading}
+              isLoading={showSkeleton}
             />
           ))}
         </Stack>
@@ -222,7 +231,7 @@ const KanbanBoard = () => {
           </DragOverlay>,
           document.body,
         )}
-      </DndContext> */}
+      </DndContext>
     </>
   );
 };

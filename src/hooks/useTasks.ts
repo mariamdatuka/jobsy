@@ -7,9 +7,18 @@ export const useTasks = (
   userID: string,
   params?: { search?: string; filters?: FiltersState },
 ) => {
-  const { data, error, isPending, isLoading, refetch, isSuccess } =
-    useSupabaseQuery([QKEY_TASKS, userID, params], () =>
-      fetchTasks({ userID, search: params?.search, filters: params?.filters }),
+  const { data, error, isPending, isLoading, refetch, isSuccess, isFetching } =
+    useSupabaseQuery(
+      [QKEY_TASKS, userID, params?.filters, params?.filters],
+      () =>
+        fetchTasks({
+          userID,
+          search: params?.search,
+          filters: params?.filters,
+        }),
+      {
+        placeholderData: (prev) => prev,
+      },
     );
 
   return {
@@ -19,5 +28,6 @@ export const useTasks = (
     refetch,
     isLoading,
     isSuccess,
+    isFetching,
   };
 };
