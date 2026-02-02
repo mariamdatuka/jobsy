@@ -29,6 +29,7 @@ import {
 import { useSearchParams } from "react-router";
 import type { FiltersState } from "@src/store/useFiltersStore";
 import { useSetUrlParams } from "@src/hooks/useSetUrlParams";
+import EmptyResultState from "@src/components/general/EmptyResultState";
 
 const KanbanBoard = () => {
   const [activeCard, setActiveCard] = useState<Task | null>(null);
@@ -195,7 +196,8 @@ const KanbanBoard = () => {
 
   return (
     <>
-      {!isLoading && tasksData.length === 0 && search && (
+      <EmptyResultState />
+      {/* {!isLoading && tasksData.length === 0 && search && (
         <div>There are no results for "{search}"</div>
       )}
       <DndContext
@@ -220,7 +222,7 @@ const KanbanBoard = () => {
           </DragOverlay>,
           document.body,
         )}
-      </DndContext>
+      </DndContext> */}
     </>
   );
 };

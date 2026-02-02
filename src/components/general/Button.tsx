@@ -13,7 +13,6 @@ const MainButton = ({
   variant = "contained",
   startIcon,
   endIcon,
-
   ...rest
 }: MainButtonProps) => {
   return (

@@ -1,7 +1,30 @@
-import React from "react";
+import { Stack } from "@mui/material";
+import Emptystate from "@src/assets/icons/EmptyState.svg";
+import Text from "./Text";
+import MainButton from "./Button";
 
-const EmptyResultState = () => {
-  return <div>EmptyResultState</div>;
+interface Props {
+  searchTerm?: string;
+  message?: string;
+}
+const EmptyResultState = ({ searchTerm, message }: Props) => {
+  return (
+    <Stack alignItems="center" justifyContent="center">
+      <img src={Emptystate} alt="emptyicon" width="150px" height="150px" />
+      <Text color="secondary.dark" sx={{ wordBreak: "breakAll" }}>
+        {message}
+        {searchTerm && <span style={{ fontWeight: 700 }}>"{searchTerm}"</span>}
+      </Text>
+      <MainButton
+        title="clear search"
+        sx={{
+          backgroundColor: "secondary.dark",
+          mt: 2,
+          "&:hover": { backgroundColor: "secondary.light" },
+        }}
+      />
+    </Stack>
+  );
 };
 
 export default EmptyResultState;
