@@ -37,7 +37,7 @@ const Search = () => {
           placeholder="search by company name, position"
           name="search_term"
           leftContent={<SearchIcon />}
-          sx={{ minWidth: "260px" }}
+          sx={{ minWidth: "260px", maxWidth: "400px" }}
         />
       </form>
     </FormProvider>

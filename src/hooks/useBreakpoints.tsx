@@ -8,6 +8,8 @@ const useBreakpoints = () => {
   const isSmallDesktop = useMediaQuery(theme.breakpoints.between("md", "lg"));
   const isMediumDesktop = useMediaQuery(theme.breakpoints.between("lg", "xl"));
   const isLargeDesktop = useMediaQuery(theme.breakpoints.up("xl"));
+  const isTabletOnly = useMediaQuery(theme.breakpoints.down("md"));
+  const isMediumOnly = useMediaQuery(theme.breakpoints.down("lg"));
 
   return {
     isMobile,
@@ -15,6 +17,8 @@ const useBreakpoints = () => {
     isSmallDesktop,
     isMediumDesktop,
     isLargeDesktop,
+    isTabletOnly,
+    isMediumOnly,
   };
 };
 

@@ -115,7 +115,7 @@ export const JobContainer = styled(Stack)(() => ({
   gap: "4px",
 }));
 
-const CountryTag = styled(Box)(({ theme }) => ({
+export const CountryTag = styled(Box)(({ theme }) => ({
   backgroundColor: "#F2F4F7",
   color: theme.palette.secondary.dark,
   borderRadius: "50%",

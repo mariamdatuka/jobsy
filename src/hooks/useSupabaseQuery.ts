@@ -7,10 +7,7 @@ import {
 export function useSupabaseQuery<TData>(
   queryKey: QueryKey,
   queryFn: () => Promise<TData>,
-  options?: Omit<
-    UseQueryOptions<TData, Error, TData, QueryKey>,
-    "queryKey" | "queryFn"
-  >
+  options?: any,
 ) {
   return useQuery<TData, Error>({
     queryKey,

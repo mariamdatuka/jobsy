@@ -1,5 +1,6 @@
-import { useSupabaseQuery } from "@src/hooks/useSupabaseQuery";
-import { fetchTasks } from "../services/jobs";
+import { fetchTasks } from "@src/services/jobs";
+import { useJobActionsStore } from "@src/store/useJobActionsStore";
+import { useSupabaseQuery } from "./useSupabaseQuery";
 import { QKEY_TASKS } from "@src/services/queryKeys";
 import type { FiltersState } from "@src/store/useFiltersStore";
 
@@ -7,6 +8,8 @@ export const useTasks = (
   userID: string,
   params?: { search?: string; filters?: FiltersState },
 ) => {
+  const setJobsData = useJobActionsStore((s) => s.setJobsData);
+
   const { data, error, isPending, isLoading, refetch, isSuccess, isFetching } =
     useSupabaseQuery(
       [QKEY_TASKS, userID, params?.search, params?.filters],
@@ -17,7 +20,7 @@ export const useTasks = (
           filters: params?.filters,
         }),
       {
-        // placeholderData: (prev) => prev,
+        onSuccess: (data: any) => setJobsData(data),
       },
     );
 

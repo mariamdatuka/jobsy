@@ -28,12 +28,13 @@ const FiltersLayout = () => {
   const draftFiltersCounter = countFilters(allFilters);
 
   const areUrlFiltersApplied = areFiltersApplied();
+
   return (
     <>
       <MainButton title="Filters" startIcon={<Menu />} onClick={toggleDrawer} />
       {areUrlFiltersApplied && (
         <MainButton
-          title={`Clear All Filters (${urlFiltersCounter})`}
+          title={`Clear Filters (${urlFiltersCounter})`}
           onClick={handleClearFilters}
           variant="outlined"
         />

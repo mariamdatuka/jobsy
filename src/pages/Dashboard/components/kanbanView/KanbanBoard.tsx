@@ -14,48 +14,38 @@ import ColumnContainer from "./ColumnContainer";
 import JobCard from "./JobCard";
 import { columns } from "@src/helpers/constanst";
 import type { Task } from "@src/types/commonTypes";
-import { useTasks } from "@src/hooks/useTasks";
 import { useUserStore } from "@src/store/userStore";
 import { useJobActionsStore } from "@src/store/useJobActionsStore";
 import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { updateTaskPosition } from "@src/services/jobs";
 import { useQueryClient } from "@tanstack/react-query";
 import { QKEY_TASKS } from "@src/services/queryKeys";
-import {
-  decodeDate,
-  getIndexForColumnDrop,
-  getNewIndexOrder,
-} from "@src/helpers/helpers";
+import { getIndexForColumnDrop, getNewIndexOrder } from "@src/helpers/helpers";
 import { useSearchParams } from "react-router";
-import type { FiltersState } from "@src/store/useFiltersStore";
 import { useSetUrlParams } from "@src/hooks/useSetUrlParams";
 import EmptyResultState from "@src/components/general/EmptyResultState";
 import Spinner from "@src/components/animations/Spinner";
+import { useJobsViewData } from "@src/hooks/useJobsDataView";
 
 const KanbanBoard = () => {
   const [activeCard, setActiveCard] = useState<Task | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const search = searchParams.get("search") || "";
   const session = useUserStore((state) => state.session);
-
-  const { getParamArrayUpper, areFiltersApplied } = useSetUrlParams();
+  const { areFiltersApplied } = useSetUrlParams();
   const areUrlFiltersApplied = areFiltersApplied();
 
-  const appliedFilters: FiltersState = {
-    status: getParamArrayUpper("status") ?? [],
-    jobType: getParamArrayUpper("jobType") ?? [],
-    date: decodeDate(searchParams),
-  };
-  const { tasks, isPending, isLoading } = useTasks(session?.user?.id!, {
-    search,
-    filters: appliedFilters,
-  });
-  const tasksData = tasks || [];
+  const { tasksData, isLoading, search, isPending } = useJobsViewData();
 
   const queryClient = useQueryClient();
 
   const setJobsData = useJobActionsStore((state) => state.setJobsData);
   const jobs = useJobActionsStore((state) => state.jobsData);
+
+  useEffect(() => {
+    if (tasksData.length > 0) {
+      setJobsData(tasksData);
+    }
+  }, [tasksData, setJobsData]);
 
   const { mutate: updateTaskPositionMutate } = useSupabaseMutation(
     (vars: { id: string; status: string; index_number: number }) =>
@@ -76,12 +66,6 @@ const KanbanBoard = () => {
       },
     },
   );
-
-  useEffect(() => {
-    if (tasksData && tasksData.length > 0) {
-      setJobsData(tasksData);
-    }
-  }, [tasksData, setJobsData]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

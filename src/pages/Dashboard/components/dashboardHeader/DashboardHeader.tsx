@@ -4,6 +4,7 @@ import DashboardToggleView from "./DashboardToggleView";
 import Search from "./Search";
 
 import FiltersLayout from "./FiltersLayout";
+import useBreakpoints from "@src/hooks/useBreakpoints";
 
 export interface Props {
   handleChange: (
@@ -15,19 +16,31 @@ export interface Props {
 }
 
 const DashboardHeader = ({ handleChange, alignment }: Props) => {
+  const { isMediumOnly } = useBreakpoints();
   return (
     <Box width="100%" border="1px solid #000000">
       <Stack
-        flexDirection="row"
-        justifyContent="space-between"
-        alignItems="center"
+        flexDirection={isMediumOnly ? "column" : "row"}
+        justifyContent={isMediumOnly ? "left" : "space-between"}
+        alignItems={isMediumOnly ? "left" : "center"}
         padding={2}
+        gap={isMediumOnly ? 4 : 0}
       >
-        <Box display="flex" gap={2}>
-          <Search />
-          <FiltersLayout />
-        </Box>
-        <Stack gap="25px">
+        {!isMediumOnly ? (
+          <Box display="flex" gap={2}>
+            <Search />
+            <FiltersLayout />
+          </Box>
+        ) : (
+          <>
+            <Search />
+            <Box display="flex" gap={2}>
+              <FiltersLayout />
+            </Box>
+          </>
+        )}
+
+        <Stack gap="25px" sx={{ alignSelf: "end" }}>
           <DashboardActions />
           <Box sx={{ alignSelf: "end" }}>
             <DashboardToggleView
