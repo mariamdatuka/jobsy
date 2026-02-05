@@ -9,8 +9,10 @@ import dayjs from "dayjs";
 import type { Task } from "@src/types/commonTypes";
 import { useUserStore } from "@src/store/userStore";
 import { buildPatchPayload, toCapitalizeFormat } from "@src/helpers/helpers";
-import { useCallback, useEffect, type AnimationEvent } from "react";
+import { useCallback, useEffect, useState, type AnimationEvent } from "react";
 import { RHFDatePicker } from "../general/RHFDatePicker";
+import { GetCountries } from "react-country-state-city";
+import "react-country-state-city/dist/react-country-state-city.css";
 
 interface AddJobFormProps {
   onSubmit: (values: Task, userId: string) => Promise<void> | void;
@@ -25,7 +27,14 @@ const AddJobForm = ({
   onFormStateChange,
   isEditMode = false,
 }: AddJobFormProps) => {
+  const [countries, setCountries] = useState<any>([]);
   const session = useUserStore((state) => state.session);
+
+  useEffect(() => {
+    GetCountries().then((result) => {
+      setCountries(result);
+    });
+  }, []);
 
   const methods = useForm({
     resolver: yupResolver(AddJobSchema),
@@ -123,9 +132,16 @@ const AddJobForm = ({
             options={VacancyTypeOptions}
             width="100%"
           />
-          <Input label="Country" name="country" />
+          <SelectInput
+            name="country"
+            label="Country"
+            countryOptions={countries}
+            width="100%"
+          />
+          {/* <Input label="Country" name="country" /> */}
           <Input label="Notes" name="notes" multiline rows={2} />
         </Stack>
+        {/* <CountrySelect placeHolder="Select Country" /> */}
       </form>
     </FormProvider>
   );

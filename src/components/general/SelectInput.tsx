@@ -4,15 +4,22 @@ import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import { Controller, useFormContext } from "react-hook-form";
 
+interface Countries {
+  id?: string;
+  name?: string;
+  iso3?: string;
+}
 interface SelectInputProps {
   name: string;
-  options: string[];
+  options?: string[];
+  countryOptions?: Countries[];
   label?: string;
   width?: number | string;
 }
 
 const SelectInput = ({
   name,
+  countryOptions,
   options,
   label,
   width = 200,
@@ -45,13 +52,28 @@ const SelectInput = ({
             inputProps={{ "aria-label": "Without label" }}
             size="small"
             error={!!error}
+            MenuProps={{
+              // disablePortal: true,
+              PaperProps: {
+                style: {
+                  maxHeight: 200,
+                },
+              },
+            }}
             sx={{ width }}
           >
-            {options.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
+            {options &&
+              options.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            {countryOptions &&
+              countryOptions.map((option) => (
+                <MenuItem key={option.name} value={option.name}>
+                  {option.name}
+                </MenuItem>
+              ))}
           </Select>
           // {error && (
           //   <FormHelperText error>{error.message}</FormHelperText>
