@@ -141,12 +141,13 @@ export const updateTaskPosition = async (
   return data;
 };
 
-export const deleteTask = async (taskId: string, userId: string) => {
-  const { error } = await supabase
+export const deleteTask = async (taskId: string) => {
+  const { error, data } = await supabase
     .from("tasks")
     .delete()
     .eq("id", taskId)
-    .eq("user_id", userId);
+    .select();
 
   if (error) throw error;
+  return data;
 };

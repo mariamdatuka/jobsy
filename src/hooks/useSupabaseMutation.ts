@@ -10,10 +10,10 @@ import {
 export function useSupabaseMutation<
   TData = unknown,
   TVariables = void,
-  TError = Error
+  TError = Error,
 >(
   mutationFn: (variables: TVariables) => Promise<TData>,
-  options?: Omit<UseMutationOptions<TData, TError, TVariables>, "mutationFn">
+  options?: Omit<UseMutationOptions<TData, TError, TVariables>, "mutationFn">,
 ): UseMutationResult<TData, TError, TVariables> {
   return useMutation<TData, TError, TVariables>({
     mutationFn: async (variables: TVariables) => {
@@ -25,7 +25,7 @@ export function useSupabaseMutation<
         }
 
         if (error?.message) {
-          throw new Error(error.message);
+          throw new Error("Unexpected error occurred, try again!");
         }
 
         throw new Error("Unexpected error occurred, try again!");
