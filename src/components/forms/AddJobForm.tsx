@@ -138,10 +138,8 @@ const AddJobForm = ({
             countryOptions={countries}
             width="100%"
           />
-          {/* <Input label="Country" name="country" /> */}
           <Input label="Notes" name="notes" multiline rows={2} />
         </Stack>
-        {/* <CountrySelect placeHolder="Select Country" /> */}
       </form>
     </FormProvider>
   );

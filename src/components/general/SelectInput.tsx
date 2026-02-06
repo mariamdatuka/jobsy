@@ -70,7 +70,7 @@ const SelectInput = ({
               ))}
             {countryOptions &&
               countryOptions.map((option) => (
-                <MenuItem key={option.name} value={option.name}>
+                <MenuItem key={option.name} value={option.iso3}>
                   {option.name}
                 </MenuItem>
               ))}
