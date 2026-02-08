@@ -98,8 +98,7 @@ const JobCard = ({ task }: { task: Task }) => {
             {task.date_applied}
           </Text>
         )}
-
-        <CountryTag>{task?.country}</CountryTag>
+        {task?.country && <CountryTag>{task?.country}</CountryTag>}
       </Stack>
     </JobContainer>
   );
@@ -119,8 +118,9 @@ export const CountryTag = styled(Box)(({ theme }) => ({
   backgroundColor: "#F2F4F7",
   color: theme.palette.secondary.dark,
   borderRadius: "50%",
-  width: "32px",
-  height: "32px",
+  minWidth: "32px",
+  minHeight: "32px",
+  padding: "8px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
