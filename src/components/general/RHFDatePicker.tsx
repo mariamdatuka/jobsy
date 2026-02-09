@@ -5,9 +5,15 @@ interface RHFDatePickerProps {
   name: string;
   label?: string;
   width?: number | string;
+  disabled?: boolean;
 }
 
-export function RHFDatePicker({ name, label, width }: RHFDatePickerProps) {
+export function RHFDatePicker({
+  name,
+  label,
+  width,
+  disabled,
+}: RHFDatePickerProps) {
   const { control } = useFormContext();
 
   return (
@@ -18,6 +24,7 @@ export function RHFDatePicker({ name, label, width }: RHFDatePickerProps) {
         <BaseDatePicker
           label={label}
           width={width}
+          disabled={disabled}
           value={field.value ?? null}
           onChange={field.onChange}
           otherProps={{ error: !!error, helperText: error?.message }}

@@ -67,6 +67,22 @@ const AddJobForm = ({
   );
 
   const formValues = methods.watch();
+  const disableDate = formValues.status === "Saved";
+
+  const status = methods.watch("status");
+  const date = methods.watch("date_applied");
+
+  useEffect(() => {
+    if (status === "Saved") {
+      methods.setValue("date_applied", null);
+    } else if (!date) {
+      methods.setValue("date_applied", dayjs(), {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    }
+  }, [status]);
+
   const { isDirty } = methods.formState;
 
   const isSubmittable =
@@ -120,17 +136,19 @@ const AddJobForm = ({
               options={StatusOptions}
               width={200}
             />
-            <RHFDatePicker
-              name="date_applied"
-              label="Date Applied"
+            <SelectInput
+              name="vacancy_type"
+              label="Type"
+              options={VacancyTypeOptions}
               width={200}
             />
           </Stack>
-          <SelectInput
-            name="vacancy_type"
-            label="Type"
-            options={VacancyTypeOptions}
+
+          <RHFDatePicker
+            name="date_applied"
+            label="Date Applied"
             width="100%"
+            disabled={disableDate}
           />
           <SelectInput
             name="country"

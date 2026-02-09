@@ -11,6 +11,7 @@ interface DatePickerBaseProps {
   maxDate?: Dayjs;
   width?: number | string;
   otherProps?: any;
+  disabled?: boolean;
 }
 
 export default function BaseDatepicker({
@@ -20,6 +21,7 @@ export default function BaseDatepicker({
   maxDate = dayjs(),
   otherProps = {},
   width = 200,
+  disabled = false,
 }: DatePickerBaseProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -40,12 +42,16 @@ export default function BaseDatepicker({
           value={value ? dayjs(value) : null}
           maxDate={maxDate}
           onChange={(v) => onChange(v ? v.format("YYYY-MM-DD") : null)}
+          disabled={disabled}
           slotProps={{
             textField: {
               size: "small",
               sx: { width },
               ...otherProps,
             },
+            // actionBar: {
+            //   actions: ["clear", "today"],
+            // },
           }}
         />
       </Stack>

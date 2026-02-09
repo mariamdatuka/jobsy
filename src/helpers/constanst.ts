@@ -34,27 +34,27 @@ export const navItems: NavItems[] = [
 export const columns = [
   {
     id: "SAVED",
-    title: "saved",
+    title: "Saved",
     color: "#e0e0e0",
   },
   {
     id: "APPLIED",
-    title: "applied",
+    title: "Applied",
     color: "#f8a83c ",
   },
   {
     id: "INTERVIEWING",
-    title: "interviewing",
+    title: "Interviewing",
     color: "#65cdfe",
   },
   {
     id: "REJECTED",
-    title: "rejected",
+    title: "Rejected",
     color: "#e2435b",
   },
   {
     id: "OFFERED",
-    title: "offered",
+    title: "Offered",
     color: "#02c575",
   },
 ];

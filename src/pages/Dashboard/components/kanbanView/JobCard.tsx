@@ -6,6 +6,7 @@ import theme from "@src/theme";
 import { CSS } from "@dnd-kit/utilities";
 import type { Task } from "@src/types/commonTypes";
 import EditActions from "./EditActions";
+import dayjs from "dayjs";
 
 const JobCard = ({ task }: { task: Task }) => {
   const {
@@ -95,7 +96,7 @@ const JobCard = ({ task }: { task: Task }) => {
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         {task?.date_applied && (
           <Text variant="caption" color={theme.palette.secondary.dark}>
-            {task.date_applied}
+            Applied: {dayjs(task.date_applied).format("MM.YY")}
           </Text>
         )}
         {task?.country && <CountryTag>{task?.country}</CountryTag>}
