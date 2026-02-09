@@ -1,6 +1,7 @@
 import type { DatePreset, FiltersState } from "@src/store/useFiltersStore";
 import { MULTI_SELECT_KEYS, type Task } from "@src/types/commonTypes";
 import { type DateFilter } from "@src/store/useFiltersStore";
+import dayjs from "dayjs";
 
 export const normalizeText = (value: string) =>
   value.trim().replace(/\s+/g, " ");
@@ -159,4 +160,14 @@ export const countFilters = (filters: FiltersState) => {
   const dateCount = filters.date ? 1 : 0;
 
   return multiCount + dateCount;
+};
+
+export const applyBusinessRules = (task: Task, newStatus: Task["status"]) => {
+  if (newStatus === "SAVED") {
+    return { ...task, date_applied: null };
+  }
+  return {
+    ...task,
+    date_applied: task.date_applied || dayjs().format("YYYY-MM-DD"),
+  };
 };

@@ -126,15 +126,24 @@ export const fetchTasks = async ({
   return data;
 };
 
-export const updateTaskPosition = async (
-  id: string,
-  status: string,
-  index_number: number,
-) => {
+interface UpdateTaskPositionVars {
+  id: string;
+  status: string;
+  index_number: number;
+  date?: string | null; // allow null for "Saved" tasks
+}
+
+export const updateTaskPosition = async ({
+  id,
+  status,
+  index_number,
+  date,
+}: UpdateTaskPositionVars) => {
   const { data, error } = await supabase.rpc("update_task_index", {
     p_task_id: id,
     p_new_status: status.toUpperCase(),
     p_new_index: index_number,
+    p_date_applied: date,
   });
 
   if (error) throw error;

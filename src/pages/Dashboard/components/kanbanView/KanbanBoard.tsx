@@ -20,7 +20,11 @@ import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { updateTaskPosition } from "@src/services/jobs";
 import { useQueryClient } from "@tanstack/react-query";
 import { QKEY_TASKS } from "@src/services/queryKeys";
-import { getIndexForColumnDrop, getNewIndexOrder } from "@src/helpers/helpers";
+import {
+  applyBusinessRules,
+  getIndexForColumnDrop,
+  getNewIndexOrder,
+} from "@src/helpers/helpers";
 import { useSearchParams } from "react-router";
 import { useSetUrlParams } from "@src/hooks/useSetUrlParams";
 import EmptyResultState from "@src/components/general/EmptyResultState";
@@ -48,8 +52,18 @@ const KanbanBoard = () => {
   }, [tasksData, setJobsData]);
 
   const { mutate: updateTaskPositionMutate } = useSupabaseMutation(
-    (vars: { id: string; status: string; index_number: number }) =>
-      updateTaskPosition(vars.id, vars.status, vars.index_number),
+    (vars: {
+      id: string;
+      status: string;
+      index_number: number;
+      date: string | null;
+    }) =>
+      updateTaskPosition({
+        id: vars.id,
+        status: vars.status,
+        index_number: vars.index_number,
+        date: vars?.date,
+      }),
     {
       onSuccess: async (data) => {
         if (data?.rebalanced) {
@@ -131,14 +145,35 @@ const KanbanBoard = () => {
           id: activeTask.id,
           status: activeTask.status,
           index_number: newIndex,
+          date: activeTask.date_applied ?? null,
         });
 
         return;
       }
+      // setJobsData((tasks) =>
+      //   tasks.map((t) =>
+      //     t.id === activeTask.id
+      //       ? { ...t, index_number: newIndex, status: overTask.status }
+      //       : t,
+      //   ),
+      // );
+
+      // updateTaskPositionMutate({
+      //   id: activeTask.id,
+      //   status: overTask.status,
+      //   index_number: newIndex,
+      // });
+      const updatedTask = applyBusinessRules(activeTask, overTask.status);
+
       setJobsData((tasks) =>
         tasks.map((t) =>
           t.id === activeTask.id
-            ? { ...t, index_number: newIndex, status: overTask.status }
+            ? {
+                ...updatedTask,
+                index_number: newIndex,
+                status: overTask.status,
+                date_applied: updatedTask.date_applied ?? undefined,
+              }
             : t,
         ),
       );
@@ -147,6 +182,7 @@ const KanbanBoard = () => {
         id: activeTask.id,
         status: overTask.status,
         index_number: newIndex,
+        date: updatedTask.date_applied ?? null,
       });
 
       return;
@@ -165,10 +201,17 @@ const KanbanBoard = () => {
       const activeTask = jobs[activeIndex];
       const newIndex = getIndexForColumnDrop(columnTasks);
 
+      const updatedTask = applyBusinessRules(activeTask, overId);
+
       setJobsData((tasks) =>
         tasks.map((task) =>
           task.id === activeId
-            ? { ...task, status: overId, index_number: newIndex }
+            ? {
+                ...task,
+                status: overId,
+                index_number: newIndex,
+                date_applied: updatedTask.date_applied ?? undefined,
+              }
             : task,
         ),
       );
@@ -176,6 +219,7 @@ const KanbanBoard = () => {
         id: activeTask.id,
         status: overId,
         index_number: newIndex,
+        date: updatedTask.date_applied ?? null,
       });
     }
   };
