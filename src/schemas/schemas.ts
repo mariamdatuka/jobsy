@@ -2,7 +2,10 @@ import type { Dayjs } from "dayjs";
 import * as yup from "yup";
 
 export const SignInSchema = yup.object().shape({
-  email: yup.string().required("Email is required"),
+  email: yup
+    .string()
+    .required("Email is required")
+    .email("Invalid email format"),
   password: yup.string().required("Password is required"),
 });
 
@@ -21,7 +24,7 @@ export const SignUpSchema = yup.object().shape({
     .max(20, "Password must be at most 20 characters")
     .matches(
       passwordRegex,
-      "only Latin letters and at least one uppercase letter, one number"
+      "only Latin letters and at least one uppercase letter, one number",
     ),
   firstName: yup
     .string()

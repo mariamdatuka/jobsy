@@ -8,7 +8,7 @@ import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";
 import ProtectedRoutes from "./ProtectedRoutes";
 import PublicRoute from "./PublicRoute";
-import { PasswordReset } from "./pages/PasswordReset/PassrodReset";
+import PasswordReset from "./pages/PasswordReset/PassrodReset";
 
 export const routes: RouteObject[] = [
   {

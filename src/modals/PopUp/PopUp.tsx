@@ -99,7 +99,7 @@ const PopUp = ({
       )}
       <DialogContent>
         {description && (
-          <Text variant="body1" color="text.secondary">
+          <Text variant="body1" color="text.secondary" mb={2}>
             {description}
           </Text>
         )}
@@ -107,9 +107,9 @@ const PopUp = ({
       </DialogContent>
       {showActionSection && (
         <DialogActions
-        // sx={{
-        //   width: "100%",
-        // }}
+          sx={{
+            marginTop: "5px",
+          }}
         >
           {actionButtons.map((button, index) => {
             const { label, hidden, buttonSx, ...rest } = button as any;
