@@ -18,7 +18,7 @@ export interface Props {
 const DashboardHeader = ({ handleChange, alignment }: Props) => {
   const { isMediumOnly } = useBreakpoints();
   return (
-    <Box width="100%" border="1px solid #000000">
+    <Box border="1px solid #c1bfbf" borderRadius="8px" padding="10px">
       <Stack
         flexDirection={isMediumOnly ? "column" : "row"}
         justifyContent={isMediumOnly ? "left" : "space-between"}

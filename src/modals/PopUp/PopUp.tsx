@@ -46,13 +46,16 @@ const PopUp = ({
     <Dialog
       open={open}
       onClose={onClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
+      disableScrollLock
       sx={{
         "& .MuiDialogTitle-root, .MuiDialogContent-root": {
           padding: "12px 0px",
         },
         position: "relative",
+
+        // "& .MuiDialog-container": {
+        //   alignItems: isMobile ? "flex-end" : "center",
+        // },
         ...sx,
       }}
       slotProps={{

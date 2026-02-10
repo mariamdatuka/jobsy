@@ -25,7 +25,7 @@ const Dashboard = () => {
   return (
     <>
       {" "}
-      <Stack spacing={10}>
+      <Stack spacing={5}>
         <DashboardHeader alignment={alignment} handleChange={handleChange} />
         <AnimatedView viewKey={alignment}>
           {alignment === "kanban" ? <KanbanBoard /> : <TableView />}
