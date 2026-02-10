@@ -51,14 +51,15 @@ const PopUp = ({
         "& .MuiDialogTitle-root, .MuiDialogContent-root": {
           padding: "12px 0px",
         },
-        position: "relative",
-
-        // "& .MuiDialog-container": {
-        //   alignItems: isMobile ? "flex-end" : "center",
-        // },
+        position: "fixed",
         ...sx,
       }}
       slotProps={{
+        backdrop: {
+          sx: {
+            position: "fixed",
+          },
+        },
         paper: {
           sx: {
             padding: "30px",

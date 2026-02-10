@@ -10,6 +10,8 @@ import { Link } from "react-router";
 import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { loginUser, type LoginUserData } from "@src/services/login";
 import { useNavigate } from "react-router";
+import NiceModal from "@ebay/nice-modal-react";
+import { FORGOT_PASSWORD_MODAL } from "@src/modals/modal_names";
 
 const Login = () => {
   const methods = useForm({
@@ -22,6 +24,9 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
+  const openPasswordResetModal = () => {
+    NiceModal.show(FORGOT_PASSWORD_MODAL);
+  };
 
   const { isPending, isError, error, mutate } = useSupabaseMutation(loginUser, {
     onSuccess: () => {
@@ -67,16 +72,17 @@ const Login = () => {
                 >
                   Sign Up
                 </Link>
-                <Link
-                  to="/passwordrecovery"
+                <Text
                   style={{
                     color: "#FB344F",
                     fontSize: "14px",
                     textDecoration: "none",
+                    cursor: "pointer",
                   }}
+                  onClick={openPasswordResetModal}
                 >
-                  forgot password
-                </Link>
+                  forgot password?
+                </Text>
               </Stack>
               <MainButton
                 title="Login"
@@ -95,7 +101,7 @@ const Login = () => {
 export default Login;
 
 export const Container = styled(Stack)({
-  height: "100vh",
+  minHeight: "100vh",
   alignItems: "center",
   justifyContent: "center",
   gap: "20px",

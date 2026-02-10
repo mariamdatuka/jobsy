@@ -33,6 +33,15 @@ const theme = createTheme({
       xl: 1536,
     },
   },
+  components: {
+    MuiBackdrop: {
+      styleOverrides: {
+        root: {
+          position: "fixed",
+        },
+      },
+    },
+  },
 });
 
 export default theme;
