@@ -13,34 +13,45 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(
   ({ handleSendLink }) => {
     const { visible, hide } = useModal();
 
-    const { isPending, mutate } = useSupabaseMutation(
+    const { isPending, mutate, isSuccess } = useSupabaseMutation(
       (vars: { values: any }) => {
         return resetPassword(vars.values);
       },
+      // {
+      //   onSuccess: async (_data, _vars) => {
+      //     // hide();
+      //     showToast(
+      //       TOAST_TYPE.SUCCESS,
+      //       "Password reset link sent successfully, please check your email.",
+      //     );
+      //   },
       {
-        onSuccess: async (_data, _vars) => {
-          hide();
-          showToast(
-            TOAST_TYPE.SUCCESS,
-            "Password reset link sent successfully",
-          );
-        },
         onError: (error, _vars) => {
           showToast(TOAST_TYPE.ERROR, `Error: ${error.message}`);
         },
       },
     );
 
-    const handleSubmit = async (data: any) => {
-      await mutate({ values: data.email });
+    const handleSubmit = (data: any) => {
+      mutate({ values: data.email });
     };
+
+    const content = isSuccess
+      ? "Password reset link sent successfully, please check your email."
+      : "We'll send a password reset link to your email.";
 
     return (
       <PopUp
-        description="We'll send a password reset link to your email."
+        description={content}
+        iconType={isSuccess ? "success" : undefined}
         open={visible}
-        onClose={hide}
-        children={<EnterEmailForm onSubmitCallback={handleSubmit} />}
+        onClose={isPending ? undefined : hide}
+        children={
+          isSuccess ? undefined : (
+            <EnterEmailForm onSubmitCallback={handleSubmit} />
+          )
+        }
+        showActionSection={isSuccess ? false : true}
         buttons={[
           {
             label: "Cancel",
@@ -48,6 +59,7 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(
             variant: "outlined",
             onClick: hide,
             buttonSx: { width: "150px" },
+            disabled: isPending,
           },
           {
             label: "Send Link",
@@ -55,6 +67,9 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(
             type: "submit",
             color: "primary",
             onClick: () => {},
+            loading: isPending,
+            loadingPosition: "start",
+            disabled: isPending,
             buttonSx: { width: "150px" },
           },
         ]}

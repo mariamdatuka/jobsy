@@ -99,7 +99,12 @@ const PopUp = ({
       )}
       <DialogContent>
         {description && (
-          <Text variant="body1" color="text.secondary" mb={2}>
+          <Text
+            variant="body1"
+            color="text.secondary"
+            mb={2}
+            sx={{ wordBreak: "break-word" }}
+          >
             {description}
           </Text>
         )}
