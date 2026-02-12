@@ -2,7 +2,7 @@ import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import PopUp from "../PopUp/PopUp";
 import EnterEmailForm from "@src/components/forms/EnterEmailForm";
 import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
-import { resetPassword } from "@src/services/passwortReset";
+import { resetPasswordLink } from "@src/services/passwortResetLink";
 import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
 
 interface PasswordModalProps {
@@ -15,7 +15,7 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(
 
     const { isPending, mutate, isSuccess } = useSupabaseMutation(
       (vars: { values: any }) => {
-        return resetPassword(vars.values);
+        return resetPasswordLink(vars.values);
       },
       // {
       //   onSuccess: async (_data, _vars) => {

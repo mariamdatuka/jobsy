@@ -5,6 +5,7 @@ import { Box, CircularProgress } from "@mui/material";
 const PublicRoute = () => {
   const session = useUserStore((state) => state.session);
   const isLoading = useUserStore((state) => state.isLoading);
+  const isRecoveryMode = useUserStore((state) => state.isRecoveryMode);
 
   // Wait for auth initialization to complete
   if (isLoading) {
@@ -21,9 +22,9 @@ const PublicRoute = () => {
       </Box>
     );
   }
+  if (isRecoveryMode) return <Outlet />;
 
   return <>{session ? <Navigate to="/dashboard" replace /> : <Outlet />}</>;
 };
 
 export default PublicRoute;
-
