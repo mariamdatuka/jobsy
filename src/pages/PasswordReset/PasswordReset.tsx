@@ -1,32 +1,14 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "@src/components/general/Input";
-import * as yup from "yup";
 import { FormProvider, useForm } from "react-hook-form";
 import { Stack } from "@mui/material";
 import MainButton from "@src/components/general/Button";
 import Text from "@src/components/general/Text";
-import { passwordRegex } from "@src/schemas/schemas";
+import { resetPasswordSchema } from "@src/schemas/schemas";
 import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { updatePassword } from "@src/services/newPassword";
-
-const resetPasswordSchema = yup.object().shape({
-  password: yup
-    .string()
-    .required("Password is required")
-    .min(8, "Password must be at least 8 characters")
-    .max(20, "Password must be at most 20 characters")
-    .matches(
-      passwordRegex,
-      "Only Latin letters and at least one uppercase letter and one number",
-    ),
-
-  repeatPassword: yup
-    .string()
-    .required("Repeat password is required")
-    .test("password-match", "Passwords must match", function (value) {
-      return value === this.parent.password;
-    }),
-});
+import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
+import { useNavigate } from "react-router";
 
 const PasswordReset = () => {
   const methods = useForm({
@@ -38,42 +20,64 @@ const PasswordReset = () => {
     mode: "all",
   });
 
-  const { mutate, isPending } = useSupabaseMutation(updatePassword, {
+  const { mutate, isPending, isSuccess } = useSupabaseMutation(updatePassword, {
     onSuccess: () => {
-      console.log("Password updated successfully");
+      methods.reset();
     },
-    onError: (err) => {
-      console.error("Error updating password:", err);
+    onError: (error) => {
+      showToast(TOAST_TYPE.ERROR, `Error: ${error.message}`);
     },
   });
 
   const onSubmit = (data: any) => {
     mutate(data.password);
   };
+
+  const navigate = useNavigate();
+  const goToLogin = () => {
+    navigate("/");
+  };
   return (
     <>
-      <Stack height="100vh" alignItems="center" gap={2} justifyContent="center">
-        <Text variant="h6">Please enter new password</Text>
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <Stack alignItems="center" gap={2} justifyContent="center">
-              <Input label="Password" name="password" type="password" />
-              <Input
-                label="Repeat Password"
-                name="repeatPassword"
-                type="password"
-              />
-              <MainButton
-                title="Reset Password"
-                disabled={isPending}
-                type="submit"
-                loading={isPending}
-                loadingPosition="start"
-              />
-            </Stack>
-          </form>
-        </FormProvider>
-      </Stack>
+      {isSuccess ? (
+        <Stack
+          alignItems="center"
+          gap={2}
+          justifyContent="center"
+          height="100vh"
+        >
+          <Text variant="h6">Password updated successfully!</Text>
+          <MainButton title="Go to Login" onClick={goToLogin} />
+        </Stack>
+      ) : (
+        <Stack
+          height="100vh"
+          alignItems="center"
+          gap={2}
+          justifyContent="center"
+        >
+          <Text variant="h6">Please enter new password</Text>
+          <FormProvider {...methods}>
+            <form onSubmit={methods.handleSubmit(onSubmit)}>
+              <Stack alignItems="center" gap={2} justifyContent="center">
+                <Input label="Password" name="password" type="password" />
+                <Input
+                  label="Repeat Password"
+                  name="repeatPassword"
+                  type="password"
+                />
+                <MainButton
+                  title="Reset Password"
+                  disabled={isPending}
+                  type="submit"
+                  loading={isPending}
+                  loadingPosition="start"
+                />
+              </Stack>
+            </form>
+          </FormProvider>
+        </Stack>
+      )}
     </>
   );
 };
