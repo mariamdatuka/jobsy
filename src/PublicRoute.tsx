@@ -22,7 +22,7 @@ const PublicRoute = () => {
       </Box>
     );
   }
-  if (isRecoveryMode) return <Outlet />;
+  // if (isRecoveryMode) return <Outlet />;
 
   return <>{session ? <Navigate to="/dashboard" replace /> : <Outlet />}</>;
 };

@@ -57,7 +57,6 @@ export const useUserStore = create<UserStore>((set) => ({
 
     const params = new URLSearchParams(window.location.hash.substring(1));
     const isRecovery = params.get("type") === "recovery";
-    console.log("Recovery mode:", isRecovery);
 
     try {
       // Get initial session
@@ -74,7 +73,7 @@ export const useUserStore = create<UserStore>((set) => ({
       // Listen for auth state changes
       const {
         data: { subscription },
-      } = supabase.auth.onAuthStateChange((event, session) => {
+      } = supabase.auth.onAuthStateChange((_event, session) => {
         useUserStore.getState().setAuthState(session, isRecovery);
       });
 

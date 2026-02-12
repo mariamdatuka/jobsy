@@ -48,9 +48,7 @@ const PasswordReset = () => {
   });
 
   const onSubmit = (data: any) => {
-    console.log(data);
     mutate(data.password);
-    console.log("Password reset submitted");
   };
   return (
     <>

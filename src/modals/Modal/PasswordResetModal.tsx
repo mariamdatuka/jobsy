@@ -13,7 +13,7 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(
   ({ handleSendLink }) => {
     const { visible, hide } = useModal();
 
-    const { isPending, mutate, isSuccess } = useSupabaseMutation(
+    const { isPending, mutate, isSuccess, reset } = useSupabaseMutation(
       (vars: { values: any }) => {
         return resetPasswordLink(vars.values);
       },
@@ -36,6 +36,11 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(
       mutate({ values: data.email });
     };
 
+    const handleModalClose = () => {
+      reset();
+      hide();
+    };
+
     const content = isSuccess
       ? "Password reset link sent successfully, please check your email."
       : "We'll send a password reset link to your email.";
@@ -45,7 +50,7 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(
         description={content}
         iconType={isSuccess ? "success" : undefined}
         open={visible}
-        onClose={isPending ? undefined : hide}
+        onClose={isPending ? undefined : handleModalClose}
         children={
           isSuccess ? undefined : (
             <EnterEmailForm onSubmitCallback={handleSubmit} />
@@ -57,7 +62,7 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(
             label: "Cancel",
             color: "primary",
             variant: "outlined",
-            onClick: hide,
+            onClick: handleModalClose,
             buttonSx: { width: "150px" },
             disabled: isPending,
           },
