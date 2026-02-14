@@ -9,6 +9,7 @@ import Profile from "./pages/Profile";
 import ProtectedRoutes from "./ProtectedRoutes";
 import PublicRoute from "./PublicRoute";
 import PasswordReset from "./pages/PasswordReset/PasswordReset";
+import RecoveryRoute from "./RecoveryRoute";
 
 export const routes: RouteObject[] = [
   {
@@ -23,11 +24,11 @@ export const routes: RouteObject[] = [
         path: "/signup",
         Component: SignUp,
       },
-      {
-        path: "/passwordreset",
-        Component: PasswordReset,
-      },
     ],
+  },
+  {
+    Component: RecoveryRoute,
+    children: [{ path: "/passwordreset", Component: PasswordReset }],
   },
   {
     Component: ProtectedRoutes,
