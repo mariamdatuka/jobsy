@@ -10,6 +10,8 @@ import { updatePassword } from "@src/services/newPassword";
 import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
 import { useNavigate } from "react-router";
 
+import { supabase } from "@src/supabase-client";
+
 const PasswordReset = () => {
   const methods = useForm({
     resolver: yupResolver(resetPasswordSchema),
@@ -34,7 +36,14 @@ const PasswordReset = () => {
   };
 
   const navigate = useNavigate();
-  const goToLogin = () => {
+  const goToLogin = async () => {
+    // Clear recovery mode from localStorage
+    localStorage.removeItem("isRecoveryMode");
+
+    // Sign out the user
+    await supabase.auth.signOut();
+
+    // Navigate to login
     navigate("/");
   };
   return (

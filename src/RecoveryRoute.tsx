@@ -4,26 +4,25 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
 
 const RecoveryRoute = () => {
-  // const isRecovery = useUserStore((s) => s.isRecoveryMode);
-  // const isLoading = useUserStore((s) => s.isLoading);
-  const status = useUserStore((state) => state.status);
+  const isRecovery = useUserStore((s) => s.isRecoveryMode);
+  const isLoading = useUserStore((s) => s.isLoading);
 
-  // if (isLoading) {
-  //   return (
-  //     <Box
-  //       sx={{
-  //         display: "flex",
-  //         justifyContent: "center",
-  //         alignItems: "center",
-  //         height: "100vh",
-  //       }}
-  //     >
-  //       <CircularProgress />
-  //     </Box>
-  //   );
-  // }
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
-  return status === "recovery" ? <Outlet /> : <Navigate to="/" replace />;
+  return isRecovery ? <Outlet /> : <Navigate to="/" replace />;
 };
 
 export default RecoveryRoute;
