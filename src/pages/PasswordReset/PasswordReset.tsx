@@ -11,8 +11,11 @@ import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
 import { useNavigate } from "react-router";
 
 import { supabase } from "@src/supabase-client";
+import { PASSWORD_RESET_SUCCESS_MODAL } from "@src/modals/modal_names";
+import NiceModal, { hide } from "@ebay/nice-modal-react";
 
 const PasswordReset = () => {
+  const navigate = useNavigate();
   const methods = useForm({
     resolver: yupResolver(resetPasswordSchema),
     defaultValues: {
@@ -22,9 +25,20 @@ const PasswordReset = () => {
     mode: "all",
   });
 
-  const { mutate, isPending, isSuccess } = useSupabaseMutation(updatePassword, {
+  const goToLogin = async () => {
+    NiceModal.hide(PASSWORD_RESET_SUCCESS_MODAL);
+    localStorage.removeItem("isRecoveryMode");
+
+    await supabase.auth.signOut();
+    navigate("/");
+  };
+
+  const { mutate, isPending } = useSupabaseMutation(updatePassword, {
     onSuccess: () => {
       methods.reset();
+      NiceModal.show(PASSWORD_RESET_SUCCESS_MODAL, {
+        onNavigate: goToLogin,
+      });
     },
     onError: (error) => {
       showToast(TOAST_TYPE.ERROR, `Error: ${error.message}`);
@@ -35,54 +49,31 @@ const PasswordReset = () => {
     mutate(data.password);
   };
 
-  const navigate = useNavigate();
-  const goToLogin = async () => {
-    localStorage.removeItem("isRecoveryMode");
-
-    await supabase.auth.signOut();
-    navigate("/");
-  };
   return (
     <>
-      {isSuccess ? (
-        <Stack
-          alignItems="center"
-          gap={2}
-          justifyContent="center"
-          height="100vh"
-        >
-          <Text variant="h6">Password updated successfully!</Text>
-          <MainButton title="Go to Login" onClick={goToLogin} />
-        </Stack>
-      ) : (
-        <Stack
-          height="100vh"
-          alignItems="center"
-          gap={2}
-          justifyContent="center"
-        >
-          <Text variant="h6">Please enter new password</Text>
-          <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(onSubmit)}>
-              <Stack alignItems="center" gap={2} justifyContent="center">
-                <Input label="Password" name="password" type="password" />
-                <Input
-                  label="Repeat Password"
-                  name="repeatPassword"
-                  type="password"
-                />
-                <MainButton
-                  title="Reset Password"
-                  disabled={isPending}
-                  type="submit"
-                  loading={isPending}
-                  loadingPosition="start"
-                />
-              </Stack>
-            </form>
-          </FormProvider>
-        </Stack>
-      )}
+      <Stack height="100vh" alignItems="center" gap={2} justifyContent="center">
+        <Text variant="h6">Please enter new password</Text>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)}>
+            <Stack alignItems="center" gap={2} justifyContent="center">
+              <Input label="Password" name="password" type="password" />
+              <Input
+                label="Repeat Password"
+                name="repeatPassword"
+                type="password"
+              />
+              <MainButton
+                title="Reset Password"
+                disabled={isPending}
+                type="submit"
+                loading={isPending}
+                loadingPosition="start"
+              />
+            </Stack>
+          </form>
+        </FormProvider>
+      </Stack>
+      )
     </>
   );
 };
