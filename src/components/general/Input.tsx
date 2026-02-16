@@ -4,9 +4,12 @@ import {
   type TextFieldProps,
   type TextFieldVariants,
   InputAdornment,
+  IconButton,
 } from "@mui/material";
-import type { JSX } from "react";
+import { useState, type JSX } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 type InputProps = TextFieldProps & {
   label?: string;
@@ -19,6 +22,7 @@ type InputProps = TextFieldProps & {
   multiline?: boolean;
   rows?: number;
   slotProps?: any;
+  type?: string;
 };
 
 const Input = ({
@@ -31,8 +35,13 @@ const Input = ({
   rightContent,
   multiline = false,
   rows,
+  type = "text",
   slotProps,
 }: InputProps) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const isPassword = type === "password";
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
   const {
     control,
     formState: { errors },
@@ -45,11 +54,19 @@ const Input = ({
       <InputAdornment position="start">{leftContent}</InputAdornment>
     );
   }
-  if (rightContent) {
-    inputSlotProps.endAdornment = (
-      <InputAdornment position="end">{rightContent}</InputAdornment>
-    );
-  }
+
+  inputSlotProps.endAdornment = (
+    <InputAdornment position="end">
+      {isPassword ? (
+        <IconButton onClick={handleClickShowPassword} edge="end">
+          {showPassword ? <VisibilityOff /> : <Visibility />}
+        </IconButton>
+      ) : (
+        rightContent
+      )}
+    </InputAdornment>
+  );
+
   return (
     <Stack gap={0.5}>
       {label && (
@@ -76,6 +93,7 @@ const Input = ({
             helperText={error?.message}
             multiline={multiline}
             rows={rows}
+            type={isPassword && !showPassword ? "password" : "text"}
             slotProps={{
               input: {
                 ...inputSlotProps,

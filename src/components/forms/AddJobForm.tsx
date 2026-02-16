@@ -121,9 +121,9 @@ const AddJobForm = ({
               input: { onAnimationStart: onUserNameAnimationStart },
             }}
           />
-          <Input label="Position" name="position" />
-          <Input label="Link to vacancy" name="link" />
-          <Input label="Salary" name="salary" />
+          <Input label="Position" name="position" sx={{ width: "100%" }} />
+          <Input label="Link to vacancy" name="link" sx={{ width: "100%" }} />
+          <Input label="Salary" name="salary" sx={{ width: "100%" }} />
           <Stack
             direction="row"
             alignItems="center"
@@ -156,7 +156,13 @@ const AddJobForm = ({
             countryOptions={countries}
             width="100%"
           />
-          <Input label="Notes" name="notes" multiline rows={2} />
+          <Input
+            label="Notes"
+            name="notes"
+            multiline
+            rows={2}
+            sx={{ width: "100%" }}
+          />
         </Stack>
       </form>
     </FormProvider>

@@ -68,7 +68,7 @@ const Login = () => {
             <Stack gap="15px">
               {isError && <Text color="error">{error?.message}</Text>}
               <Input label="Email" name="email" />
-              <Input label="Password" name="password" />
+              <Input label="Password" name="password" type="password" />
               <Stack direction="row" justifyContent="space-between">
                 <Link
                   to="/signup"

@@ -37,13 +37,9 @@ const PasswordReset = () => {
 
   const navigate = useNavigate();
   const goToLogin = async () => {
-    // Clear recovery mode from localStorage
     localStorage.removeItem("isRecoveryMode");
 
-    // Sign out the user
     await supabase.auth.signOut();
-
-    // Navigate to login
     navigate("/");
   };
   return (
