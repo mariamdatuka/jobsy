@@ -1,5 +1,37 @@
+import { Avatar, Stack } from "@mui/material";
+import Text from "@src/components/general/Text";
+import FiltersLayout from "@src/pages/Dashboard/components/dashboardHeader/FiltersLayout";
+import { useUserStore } from "@src/store/userStore";
+
 const AnalyticsHeader = () => {
-  return <div>AnalyticsHeader</div>;
+  const user = useUserStore((state) => state.user);
+  return (
+    <Stack
+      direction="row"
+      alignItems="center"
+      justifyContent="space-between"
+      p={3}
+      border="1px solid #752f2f"
+    >
+      <FiltersLayout width="180px" />
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap={2}
+        justifyContent="center"
+      >
+        <Avatar sx={{ width: 54, height: 54 }} />
+        <Stack alignItems="flex-start" justifyContent="center">
+          <Text variant="body1" fontWeight={500} color="secondary.main">
+            {user?.firstName} {user?.lastName}
+          </Text>
+          <Text variant="body1" color="secondary.light">
+            {user?.email}
+          </Text>
+        </Stack>
+      </Stack>
+    </Stack>
+  );
 };
 
 export default AnalyticsHeader;

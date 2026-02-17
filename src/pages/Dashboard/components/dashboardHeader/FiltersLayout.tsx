@@ -6,7 +6,7 @@ import { useSetUrlParams } from "@src/hooks/useSetUrlParams";
 import { useFiltersStore } from "@src/store/useFiltersStore";
 import { countFilters, isFiltersEmpty } from "@src/helpers/helpers";
 
-const FiltersLayout = () => {
+const FiltersLayout = ({ width }: { width?: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleDrawer = () => {
     setIsOpen((prev) => !prev);
@@ -31,7 +31,12 @@ const FiltersLayout = () => {
 
   return (
     <>
-      <MainButton title="Filters" startIcon={<Menu />} onClick={toggleDrawer} />
+      <MainButton
+        title="Filters"
+        startIcon={<Menu />}
+        onClick={toggleDrawer}
+        sx={{ width }}
+      />
       {areUrlFiltersApplied && (
         <MainButton
           title={`Clear Filters (${urlFiltersCounter})`}

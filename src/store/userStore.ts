@@ -5,6 +5,7 @@ import { create } from "zustand";
 interface User {
   firstName: string;
   lastName: string;
+  email: string;
 }
 
 interface UserStore {
@@ -31,6 +32,7 @@ export const useUserStore = create<UserStore>((set) => ({
         user: {
           firstName: session?.user?.user_metadata.first_name || "",
           lastName: session?.user?.user_metadata.last_name || "",
+          email: session?.user?.email || "",
         },
         isLoading: false,
       });
