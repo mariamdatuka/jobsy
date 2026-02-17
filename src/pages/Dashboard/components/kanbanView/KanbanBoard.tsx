@@ -251,7 +251,7 @@ const KanbanBoard = () => {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <Stack direction="row" spacing={2} border="1px solid #02c575">
+        <Stack direction="row" spacing={2}>
           {columns.map((col) => (
             <ColumnContainer
               key={col.id}
