@@ -4,7 +4,7 @@ import Login from "./pages/Login";
 import ErrorPage from "./pages/ErrorPage";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import MainLayout from "./components/layouts/MainLayout";
-import Analytics from "./pages/Analytics";
+import Analytics from "./pages/Analytics/Analytics";
 import Profile from "./pages/Profile";
 import ProtectedRoutes from "./ProtectedRoutes";
 import PublicRoute from "./PublicRoute";

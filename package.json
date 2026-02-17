@@ -21,6 +21,7 @@
     "@mui/material": "^7.2.0",
     "@mui/x-date-pickers": "^8.21.0",
     "@phosphor-icons/react": "^2.1.10",
+    "@recharts/devtools": "^0.0.8",
     "@supabase/supabase-js": "^2.52.1",
     "@tailwindcss/vite": "^4.1.14",
     "@tanstack/react-query": "^5.84.2",
@@ -32,6 +33,7 @@
     "react-hook-form": "^7.60.0",
     "react-router": "^7.7.0",
     "react-toastify": "^11.0.5",
+    "recharts": "^3.7.0",
     "tailwindcss": "^4.1.14",
     "yup": "^1.6.1",
     "zustand": "^5.0.7"
