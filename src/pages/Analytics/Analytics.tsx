@@ -5,9 +5,7 @@ const Analytics = () => {
   return (
     <>
       <AnalyticsHeader />
-      <Stack bgcolor="#f3f0f8">
-        <div>hi</div>
-      </Stack>
+      <Stack pt={3}></Stack>
     </>
   );
 };

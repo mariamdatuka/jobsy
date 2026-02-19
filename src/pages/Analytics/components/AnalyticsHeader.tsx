@@ -11,7 +11,10 @@ const AnalyticsHeader = () => {
       alignItems="center"
       justifyContent="space-between"
       p={3}
-      border="1px solid #752f2f"
+      borderRadius="12px"
+      sx={{
+        boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+      }}
     >
       <FiltersLayout width="180px" />
       <Stack
