@@ -5,7 +5,6 @@ const Analytics = () => {
   return (
     <>
       <AnalyticsHeader />
-      <Stack pt={3}></Stack>
     </>
   );
 };
