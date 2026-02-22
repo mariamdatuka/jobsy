@@ -116,6 +116,7 @@ const AddJobForm = ({
         <Stack spacing={1.5}>
           <Input
             label="Company Name"
+            sx={{ width: "100%" }}
             name="company_name"
             slotProps={{
               input: { onAnimationStart: onUserNameAnimationStart },
