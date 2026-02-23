@@ -1,10 +1,7 @@
 import { Stack } from "@mui/material";
 import Text from "@src/components/general/Text";
 import SummuryCard from "./SummuryCard";
-import { useTasks } from "@src/hooks/useTasks";
-import { useUserStore } from "@src/store/userStore";
 import { columns } from "@src/helpers/constanst";
-import { useMemo } from "react";
 import type { Task, Status } from "@src/types/commonTypes";
 import useBreakpoints from "@src/hooks/useBreakpoints";
 
@@ -16,19 +13,12 @@ const SummeryCardLabels: Record<Status, string> = {
   SAVED: "Saved Applications",
 };
 
-const SummerySection = () => {
-  const session = useUserStore((state) => state.session);
+const SummerySection = ({
+  tasksByStatus,
+}: {
+  tasksByStatus: Record<string, Task[]>;
+}) => {
   const { isTabletOnly } = useBreakpoints();
-  const { tasks } = useTasks(session?.user?.id!);
-  const tasksByStatus = useMemo(() => {
-    return columns.reduce(
-      (acc, col) => {
-        acc[col.id] = tasks?.filter((task) => task.status === col.id);
-        return acc;
-      },
-      {} as Record<string, Task[]>,
-    );
-  }, [tasks, columns]);
 
   return (
     <Stack gap={4}>
