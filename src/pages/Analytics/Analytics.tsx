@@ -7,6 +7,7 @@ import type { Task } from "@src/types/commonTypes";
 
 import BarChartComponent from "./components/BarChartComponent";
 import { useJobsViewData } from "@src/hooks/useJobsDataView";
+import { toCapitalize } from "@src/helpers/helpers";
 
 const Analytics = () => {
   const { tasksData } = useJobsViewData();
@@ -19,12 +20,19 @@ const Analytics = () => {
       {} as Record<string, Task[]>,
     );
   }, [tasksData, columns]);
+
+  const chartData = useMemo(() => {
+    return Object.entries(tasksByStatus).map(([status, tasks]) => ({
+      status: toCapitalize(status),
+      amount: tasks?.length ?? 0,
+    }));
+  }, [tasksByStatus]);
   return (
     <>
       <AnalyticsHeader />
       <Stack pt={5} gap={10}>
         <SummerySection tasksByStatus={tasksByStatus} />
-        <BarChartComponent />
+        <BarChartComponent chartData={chartData} />
       </Stack>
     </>
   );

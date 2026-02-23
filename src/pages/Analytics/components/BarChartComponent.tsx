@@ -8,13 +8,7 @@ import {
   Legend,
 } from "recharts";
 
-const data = [
-  { status: "Applied", count: 12 },
-  { status: "Saved", count: 5 },
-  { status: "Offered", count: 2 },
-];
-
-const BarChartComponent = () => {
+const BarChartComponent = ({ chartData }: { chartData: any[] }) => {
   return (
     <BarChart
       style={{
@@ -24,7 +18,7 @@ const BarChartComponent = () => {
         aspectRatio: 1.618,
       }}
       responsive
-      data={data}
+      data={chartData}
       margin={{
         top: 5,
         right: 0,
@@ -38,7 +32,7 @@ const BarChartComponent = () => {
       <Tooltip />
       <Legend />
       <Bar
-        dataKey="count"
+        dataKey="amount"
         fill="#82ca9d"
         activeBar={{ fill: "gold", stroke: "purple" }}
         radius={[10, 10, 0, 0]}

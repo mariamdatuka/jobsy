@@ -6,7 +6,7 @@ import type { Task, Status } from "@src/types/commonTypes";
 import useBreakpoints from "@src/hooks/useBreakpoints";
 
 const SummeryCardLabels: Record<Status, string> = {
-  APPLIED: "Total Applied Jobs",
+  APPLIED: "Applied",
   INTERVIEWING: "Interviews",
   OFFERED: "Offers Received",
   REJECTED: "Rejected",
