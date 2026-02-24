@@ -1,12 +1,4 @@
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 
 const BarChartComponent = ({ chartData }: { chartData: any[] }) => {
   return (
@@ -30,7 +22,6 @@ const BarChartComponent = ({ chartData }: { chartData: any[] }) => {
       <XAxis dataKey="status" />
       <YAxis width="auto" />
       <Tooltip />
-      <Legend />
       <Bar
         dataKey="amount"
         fill="#82ca9d"

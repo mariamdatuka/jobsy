@@ -4,10 +4,11 @@ import SummerySection from "./components/SummerySection";
 import { columns } from "@src/helpers/constanst";
 import { useMemo } from "react";
 import type { Task } from "@src/types/commonTypes";
-
 import BarChartComponent from "./components/BarChartComponent";
 import { useJobsViewData } from "@src/hooks/useJobsDataView";
 import { toCapitalize } from "@src/helpers/helpers";
+import MaxStreak from "./components/MaxStreak";
+import { useAppStreak } from "@src/hooks/useAppStreak";
 
 const Analytics = () => {
   const { tasksData } = useJobsViewData();
@@ -27,12 +28,19 @@ const Analytics = () => {
       amount: tasks?.length ?? 0,
     }));
   }, [tasksByStatus]);
+
+  const { data } = useAppStreak();
+  console.log("App Streak Data:", data);
+
   return (
     <>
       <AnalyticsHeader />
       <Stack pt={5} gap={10}>
         <SummerySection tasksByStatus={tasksByStatus} />
-        <BarChartComponent chartData={chartData} />
+        <Stack direction="row" flexWrap="wrap" gap="50px">
+          <BarChartComponent chartData={chartData} />
+          <MaxStreak {...data} />
+        </Stack>
       </Stack>
     </>
   );

@@ -26,7 +26,7 @@ const SummerySection = ({
         Summary
       </Text>
       <Stack
-        gap={2}
+        gap={3}
         direction="row"
         flexWrap={isTabletOnly ? "wrap" : "nowrap"}
       >

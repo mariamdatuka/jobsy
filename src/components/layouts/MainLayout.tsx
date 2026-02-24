@@ -12,7 +12,7 @@ const MainLayout = () => {
         <Box
           sx={{
             flex: 1,
-            px: 3,
+            px: 8,
             py: 6,
             marginLeft: open ? "220px" : "80px",
             transition: "margin-left 0.3s ease",
