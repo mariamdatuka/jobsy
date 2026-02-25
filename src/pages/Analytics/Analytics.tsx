@@ -30,7 +30,6 @@ const Analytics = () => {
   }, [tasksByStatus]);
 
   const { data } = useAppStreak();
-  console.log("App Streak Data:", data);
 
   return (
     <>

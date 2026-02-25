@@ -46,7 +46,7 @@ const MaxStreak = ({
           : `${longest_streak} Days`}
       </Text>
       <Text variant="body2" color="secondary.light">
-        {startDateFormatted && endDateFormatted}
+        {startDateFormatted} - {endDateFormatted}
       </Text>
     </Stack>
   );
