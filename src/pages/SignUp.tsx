@@ -11,7 +11,6 @@ import { createUser, type CreateUserData } from "@src/services/createUser";
 import NiceModal from "@ebay/nice-modal-react";
 import { SIGNUP_SUCCESS_MODAL } from "@src/modals/modal_names";
 import { useNavigate } from "react-router";
-import { Box } from "@mui/material";
 import Text from "@src/components/general/Text";
 
 const SignUp = () => {
@@ -39,7 +38,7 @@ const SignUp = () => {
       onError: (error: Error) => {
         console.error("Error creating user:", error.message);
       },
-    }
+    },
   );
 
   const onSubmit = async (userData: CreateUserData) => {
