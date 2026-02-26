@@ -104,7 +104,7 @@ const Input = ({
               "& .MuiInputBase-input": {
                 padding: !leftContent ? "8px 14px" : "8px 14px 8px 0px",
               },
-              width: "250px",
+              // width: "250px",
               borderRadius: "50%",
               "& .MuiInputBase-input::placeholder": {
                 fontSize: "12px",

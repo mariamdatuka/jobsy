@@ -28,6 +28,7 @@ const theme = createTheme({
     values: {
       xs: 0,
       sm: 600,
+      tablet: 832,
       md: 980,
       lg: 1150,
       xl: 1536,

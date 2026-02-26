@@ -5,7 +5,9 @@ import { FormProvider, useForm } from "react-hook-form";
 import Input from "@src/components/general/Input";
 import { Divider, Stack } from "@mui/material";
 import EditInfo from "./EditInfo";
+import useBreakpoints from "@src/hooks/useBreakpoints";
 const PersonalInfo = () => {
+  const { isReallyTablet } = useBreakpoints();
   const methods = useForm({
     resolver: yupResolver(SignUpSchema),
     defaultValues: {
@@ -31,13 +33,21 @@ const PersonalInfo = () => {
               <Input label="First Name" name="firstName" />
               <Input label="Last Name" name="lastName" />
             </Stack>
-            <Input label="Email" name="email" sx={{ width: "515px" }} />
+            <Input
+              label="Email"
+              name="email"
+              sx={{ width: isReallyTablet ? "100%" : "485px" }}
+            />
             <Stack direction="row" gap={2}>
               <Input label="Password" name="password" />
               <Input label="Confirm Password" name="confirmPassword" />
             </Stack>
 
-            <MainButton title="save" type="submit" sx={{ width: "515px" }} />
+            <MainButton
+              title="save"
+              type="submit"
+              sx={{ width: isReallyTablet ? "100%" : "485px" }}
+            />
           </Stack>
         </form>
       </FormProvider>
