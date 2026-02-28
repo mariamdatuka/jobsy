@@ -3,11 +3,9 @@ import { supabase } from "@src/supabase-client";
 export const uploadImage = async (file: File, userId: string) => {
   const filePath = `${userId}/avatar.jpg`;
 
-  const { data: URL, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from("Avatars")
     .upload(filePath, file, { upsert: true });
-
-  console.log(URL);
 
   if (error) throw error;
 
