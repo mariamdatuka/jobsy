@@ -2,7 +2,7 @@ import { supabase } from "@src/supabase-client";
 
 export const uploadImage = async (file: File, userId: string) => {
   const fileExt = file.name.split(".").pop();
-  const filePath = `${userId}/avatar.${fileExt}`;
+  const filePath = `${userId}/avatar-${Date.now()}.${fileExt}`;
 
   const { error } = await supabase.storage
     .from("Avatars")
@@ -10,7 +10,10 @@ export const uploadImage = async (file: File, userId: string) => {
       upsert: true,
     });
 
-  if (error) throw error;
+  if (error) {
+    console.log("error", error);
+    throw error;
+  }
 
   const { data } = supabase.storage.from("Avatars").getPublicUrl(filePath);
 

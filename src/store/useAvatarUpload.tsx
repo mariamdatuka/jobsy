@@ -2,14 +2,13 @@ import { create } from "zustand";
 
 interface AvatarUploadState {
   previewUrl: string | null;
-  setPreview: (file: File) => void;
+  setPreview: (url: string) => void;
   clearPreview: () => void;
 }
 
 export const useAvatarStore = create<AvatarUploadState>((set) => ({
   previewUrl: null,
-  setPreview: (file: File) => {
-    const url = URL.createObjectURL(file);
+  setPreview: (url: string) => {
     set({ previewUrl: url });
   },
   clearPreview: () => {
