@@ -5,12 +5,22 @@ import { uploadImage } from "@src/services/uploadImage";
 import { useAvatarStore } from "@src/store/useAvatarUpload";
 import { useUserStore } from "@src/store/userStore";
 import { supabase } from "@src/supabase-client";
-import { useQueryClient } from "@tanstack/react-query";
+
 import { useRef } from "react";
 
-const UploadAvatar = () => {
+interface UserInfo {
+  email: string;
+  avatar_url?: string;
+  first_Name: string;
+  last_Name: string;
+}
+interface UploadAvatarProps {
+  userInfo: UserInfo;
+}
+
+const UploadAvatar = ({ userInfo }: UploadAvatarProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const queryClient = useQueryClient();
+
   const userId = useUserStore((state) => state.session!.user.id);
 
   const uploadMutation = useSupabaseMutation<
@@ -27,10 +37,10 @@ const UploadAvatar = () => {
 
       if (error) {
         console.log(error);
-        console.log("hi");
+
         throw Error;
       }
-      console.log("bla");
+
       return publicUrl;
     },
     {
@@ -39,7 +49,6 @@ const UploadAvatar = () => {
           URL.revokeObjectURL(previewUrl);
         }
         setPreview(publicUrl);
-        // queryClient.invalidateQueries({ queryKey: ["user", userId] });
       },
     },
   );
@@ -60,6 +69,8 @@ const UploadAvatar = () => {
     uploadMutation.mutate({ file, userId });
   };
 
+  const avatarUrl = userInfo?.avatar_url;
+
   return (
     <>
       <Stack
@@ -68,7 +79,10 @@ const UploadAvatar = () => {
         direction="row"
         p={3}
       >
-        <Avatar sx={{ width: 60, height: 60 }} src={previewUrl ?? undefined} />
+        <Avatar
+          sx={{ width: 60, height: 60 }}
+          src={previewUrl || avatarUrl || undefined}
+        />
         <Stack direction="row" gap={3}>
           <MainButton
             title="upload picture"

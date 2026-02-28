@@ -1,11 +1,19 @@
 import UploadAvatar from "./UploadAvatar";
 import PersonalInfo from "./PersonalInfo";
 import AppPreferences from "./AppPreferences";
+import { useUserStore } from "@src/store/userStore";
+import { getUserData } from "@src/services/getUserData";
+import { useSupabaseQuery } from "@src/hooks/useSupabaseQuery";
+import { QKEY_USERS } from "@src/services/queryKeys";
 
 const AccountSettings = () => {
+  const userId = useUserStore((state) => state.session!.user.id);
+  const { data } = useSupabaseQuery([QKEY_USERS, userId], () =>
+    getUserData(userId),
+  );
   return (
     <>
-      <UploadAvatar />
+      <UploadAvatar userInfo={data} />
       <PersonalInfo />
       <AppPreferences />
     </>
