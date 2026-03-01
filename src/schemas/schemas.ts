@@ -85,3 +85,18 @@ export const resetPasswordSchema = yup.object().shape({
       return value === this.parent.password;
     }),
 });
+
+export const PersonalInfoSchema = yup.object().shape({
+  email: yup
+    .string()
+    .required("Email is required")
+    .email("Invalid email format"),
+  firstName: yup
+    .string()
+    .required("First name is required")
+    .matches(nameRegex, "Only Latin letters are allowed"),
+  lastName: yup
+    .string()
+    .required("Last name is required")
+    .matches(nameRegex, "Only Latin letters are allowed"),
+});

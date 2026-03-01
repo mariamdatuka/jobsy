@@ -1,20 +1,26 @@
 import MainButton from "@src/components/general/Button";
-import { SignUpSchema } from "@src/schemas/schemas";
+import { PersonalInfoSchema } from "@src/schemas/schemas";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
 import Input from "@src/components/general/Input";
 import { Divider, Stack } from "@mui/material";
 import EditInfo from "./EditInfo";
 import useBreakpoints from "@src/hooks/useBreakpoints";
-const PersonalInfo = () => {
+import type { UserDataProps } from "./UploadAvatar";
+import { useState } from "react";
+const PersonalInfo = ({ userInfo }: UserDataProps) => {
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const toggleEditMode = () => {
+    setIsEditMode((prev) => !prev);
+  };
   const { isReallyTablet } = useBreakpoints();
   const methods = useForm({
-    resolver: yupResolver(SignUpSchema),
+    resolver: yupResolver(PersonalInfoSchema),
     defaultValues: {
-      email: "",
-      password: "",
-      firstName: "",
-      lastName: "",
+      email: userInfo?.email || "",
+      firstName: userInfo?.first_name || "",
+      lastName: userInfo?.last_name || "",
     },
     mode: "all",
   });
@@ -24,28 +30,30 @@ const PersonalInfo = () => {
   };
   return (
     <>
-      <EditInfo />
+      <EditInfo toggleEditMode={toggleEditMode} title="Personal Information" />
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Stack gap={3}>
             <Stack direction="row" gap={2}>
               {" "}
-              <Input label="First Name" name="firstName" />
-              <Input label="Last Name" name="lastName" />
+              <Input
+                label="First Name"
+                name="firstName"
+                disabled={!isEditMode}
+              />
+              <Input label="Last Name" name="lastName" disabled={!isEditMode} />
             </Stack>
             <Input
               label="Email"
               name="email"
+              disabled={!isEditMode}
               sx={{ width: isReallyTablet ? "100%" : "485px" }}
             />
-            <Stack direction="row" gap={2}>
-              <Input label="Password" name="password" />
-              <Input label="Confirm Password" name="confirmPassword" />
-            </Stack>
 
             <MainButton
               title="save"
               type="submit"
+              disabled={!isEditMode}
               sx={{ width: isReallyTablet ? "100%" : "485px" }}
             />
           </Stack>

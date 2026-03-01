@@ -14,14 +14,14 @@ import { useRef } from "react";
 interface UserInfo {
   email: string;
   avatar_url?: string;
-  first_Name: string;
-  last_Name: string;
+  first_name: string;
+  last_name: string;
 }
-interface UploadAvatarProps {
+export interface UserDataProps {
   userInfo: UserInfo;
 }
 
-const UploadAvatar = ({ userInfo }: UploadAvatarProps) => {
+const UploadAvatar = ({ userInfo }: UserDataProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const queryClient = useQueryClient();
 

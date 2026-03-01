@@ -14,7 +14,7 @@ const AccountSettings = () => {
   return (
     <>
       <UploadAvatar userInfo={data} />
-      <PersonalInfo />
+      <PersonalInfo userInfo={data} />
       <AppPreferences />
     </>
   );

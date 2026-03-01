@@ -23,6 +23,7 @@ type InputProps = TextFieldProps & {
   rows?: number;
   slotProps?: any;
   type?: string;
+  disabled?: boolean;
 };
 
 const Input = ({
@@ -36,6 +37,7 @@ const Input = ({
   multiline = false,
   rows,
   type = "text",
+  disabled = false,
   slotProps,
 }: InputProps) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -92,6 +94,7 @@ const Input = ({
             error={!!error}
             helperText={error?.message}
             multiline={multiline}
+            disabled={disabled}
             rows={rows}
             type={isPassword && !showPassword ? "password" : "text"}
             slotProps={{
