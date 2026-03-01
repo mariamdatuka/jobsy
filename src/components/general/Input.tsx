@@ -77,6 +77,7 @@ const Input = ({
             marginLeft: "10px",
             fontSize: "14px",
             color: fieldError ? "#FB344F" : "#240854",
+            opacity: disabled ? 0.75 : 1,
           }}
         >
           {label}
