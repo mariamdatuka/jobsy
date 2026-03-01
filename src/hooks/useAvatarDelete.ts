@@ -4,6 +4,7 @@ import { supabase } from "@src/supabase-client";
 
 import { useSupabaseMutation } from "./useSupabaseMutation";
 import { QKEY_USERS } from "@src/services/queryKeys";
+import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
 
 function getStoragePathFromUrl(url?: string | null) {
   if (!url) return null;
@@ -19,35 +20,43 @@ function getStoragePathFromUrl(url?: string | null) {
 export const useAvatarDelete = (userId: string, avatarUrl?: string) => {
   const queryClient = useQueryClient();
 
-  const deleteAvatarMutation = useSupabaseMutation(async () => {
-    if (!avatarUrl) return;
+  const deleteAvatarMutation = useSupabaseMutation(
+    async () => {
+      if (!avatarUrl) return;
 
-    const filePath = getStoragePathFromUrl(avatarUrl);
+      const filePath = getStoragePathFromUrl(avatarUrl);
 
-    if (filePath) {
-      const { error } = await supabase.storage
-        .from("Avatars")
-        .remove([filePath]);
+      if (filePath) {
+        const { error } = await supabase.storage
+          .from("Avatars")
+          .remove([filePath]);
+
+        if (error) {
+          throw error;
+        }
+      }
+
+      const { error } = await supabase
+        .from("users")
+        .update({ avatar_url: null })
+        .eq("id", userId);
 
       if (error) {
         throw error;
       }
-    }
-
-    const { error } = await supabase
-      .from("users")
-      .update({ avatar_url: null })
-      .eq("id", userId);
-
-    if (error) {
-      throw error;
-    }
-
-    // Sync cache
-    queryClient.invalidateQueries({
-      queryKey: [QKEY_USERS, userId],
-    });
-  });
+    },
+    {
+      onSuccess: () => {
+        showToast(TOAST_TYPE.SUCCESS, "Avatar deleted successfully!");
+        queryClient.invalidateQueries({
+          queryKey: [QKEY_USERS, userId],
+        });
+      },
+      onError: () => {
+        showToast(TOAST_TYPE.ERROR, "Error deleting avatar, try again!");
+      },
+    },
+  );
 
   return {
     deleteAvatar: () => deleteAvatarMutation.mutate(),

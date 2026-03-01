@@ -1,5 +1,6 @@
-import { Avatar, Divider, Stack } from "@mui/material";
+import { Avatar, CircularProgress, Divider, Stack, Box } from "@mui/material";
 import MainButton from "@src/components/general/Button";
+import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
 import { useAvatarDelete } from "@src/hooks/useAvatarDelete";
 import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { QKEY_USERS } from "@src/services/queryKeys";
@@ -29,9 +30,7 @@ const UploadAvatar = ({ userInfo }: UploadAvatarProps) => {
   const previewUrl = useAvatarStore((state) => state.previewUrl);
   const clearPreview = useAvatarStore((state) => state.clearPreview);
 
-  console.log(previewUrl, "preview");
-
-  const uploadMutation = useSupabaseMutation<
+  const { mutate, isPending: isUploading } = useSupabaseMutation<
     string,
     { file: File; userId: string }
   >(
@@ -44,20 +43,25 @@ const UploadAvatar = ({ userInfo }: UploadAvatarProps) => {
         .eq("id", userId);
 
       if (error) {
-        console.log(error);
-
-        throw Error;
+        throw error;
       }
 
       return publicUrl;
     },
     {
       onSuccess: (publicUrl) => {
+        showToast(TOAST_TYPE.SUCCESS, "Image uploaded successfull");
         if (previewUrl?.startsWith("blob:")) {
           URL.revokeObjectURL(previewUrl);
         }
         setPreview(publicUrl);
         queryClient.invalidateQueries({ queryKey: [QKEY_USERS, userId] });
+      },
+      onError: () => {
+        if (previewUrl?.startsWith("blob:")) {
+          URL.revokeObjectURL(previewUrl);
+        }
+        showToast(TOAST_TYPE.ERROR, "Error uploading avatar, try again!");
       },
     },
   );
@@ -72,15 +76,14 @@ const UploadAvatar = ({ userInfo }: UploadAvatarProps) => {
 
     const url = URL.createObjectURL(file);
     setPreview(url);
-    uploadMutation.mutate({ file, userId });
+    mutate({ file, userId });
   };
   const avatarUrl = userInfo?.avatar_url;
-  const { deleteAvatar } = useAvatarDelete(userId, avatarUrl);
+  const { deleteAvatar, isDeleting } = useAvatarDelete(userId, avatarUrl);
 
   const handleAvatarDelete = () => {
-    if (previewUrl && !avatarUrl) {
+    if (previewUrl) {
       clearPreview();
-      return;
     }
     deleteAvatar();
   };
@@ -93,20 +96,50 @@ const UploadAvatar = ({ userInfo }: UploadAvatarProps) => {
         direction="row"
         p={3}
       >
-        <Avatar
-          sx={{ width: 60, height: 60 }}
-          src={previewUrl || avatarUrl || undefined}
-        />
+        <Box
+          sx={{
+            position: "relative",
+            width: 60,
+            height: 60,
+          }}
+        >
+          <Avatar
+            src={previewUrl || avatarUrl || undefined}
+            sx={{
+              width: 60,
+              height: 60,
+              opacity: isUploading || isDeleting ? 0.75 : 1,
+              transition: "opacity 0.2s ease",
+            }}
+          />
+          {(isDeleting || isUploading) && (
+            <Box
+              sx={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "rgba(255,255,255,0.5)",
+                borderRadius: "50%",
+              }}
+            >
+              <CircularProgress size={26} />
+            </Box>
+          )}
+        </Box>
         <Stack direction="row" gap={3}>
           <MainButton
             title="upload picture"
             variant="outlined"
             onClick={handleOpenFileDialog}
+            disabled={isDeleting || isUploading}
           />
-          {(previewUrl || avatarUrl) && (
+          {avatarUrl && (
             <MainButton
               title="delete"
               variant="text"
+              disabled={isDeleting}
               onClick={handleAvatarDelete}
             />
           )}
