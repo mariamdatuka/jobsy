@@ -48,7 +48,7 @@ const Input = ({
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const {
     control,
-    formState: { errors },
+    formState: { errors, defaultValues },
   } = useFormContext();
 
   const fieldError = errors[name]?.message;
@@ -96,7 +96,13 @@ const Input = ({
               field.onChange(trimValue ? e.target.value.trim() : e.target.value)
             }
             onBlur={() => {
-              field.onChange(field.value.trim().replace(/\s+/g, " "));
+              const value = field.value;
+              if (!value) {
+                const original = defaultValues?.[name] ?? "";
+                field.onChange(original);
+                return;
+              }
+              field.onChange(value.trim().replace(/\s+/g, " "));
 
               field.onBlur();
             }}

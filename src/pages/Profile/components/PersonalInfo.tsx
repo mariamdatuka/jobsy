@@ -7,7 +7,7 @@ import { Divider, Stack } from "@mui/material";
 import EditInfo from "./EditInfo";
 import useBreakpoints from "@src/hooks/useBreakpoints";
 import type { UserDataProps } from "./UploadAvatar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type PersonalInfoFields = "email" | "firstName" | "lastName";
 const PersonalInfo = ({ userInfo }: UserDataProps) => {
@@ -26,6 +26,16 @@ const PersonalInfo = ({ userInfo }: UserDataProps) => {
     },
     mode: "all",
   });
+
+  useEffect(() => {
+    if (userInfo) {
+      methods.reset({
+        email: userInfo.email || "",
+        firstName: userInfo.first_name || "",
+        lastName: userInfo.last_name || "",
+      });
+    }
+  }, [userInfo]);
 
   const isFormDirty = Object.keys(methods.formState.dirtyFields).some((key) => {
     const field = key as PersonalInfoFields;
