@@ -8,6 +8,8 @@ import EditInfo from "./EditInfo";
 import useBreakpoints from "@src/hooks/useBreakpoints";
 import type { UserDataProps } from "./UploadAvatar";
 import { useState } from "react";
+
+type PersonalInfoFields = "email" | "firstName" | "lastName";
 const PersonalInfo = ({ userInfo }: UserDataProps) => {
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -25,7 +27,14 @@ const PersonalInfo = ({ userInfo }: UserDataProps) => {
     mode: "all",
   });
 
-  const onSubmit = async (data: any) => {
+  const isFormDirty = Object.keys(methods.formState.dirtyFields).some((key) => {
+    const field = key as PersonalInfoFields;
+    const current = methods.getValues(field);
+    const original = methods.formState.defaultValues?.[field] ?? "";
+    return current.trim() !== String(original).trim();
+  });
+
+  const onSubmit = (data: any) => {
     console.log("Personal info submitted:", data);
   };
   return (
@@ -39,6 +48,7 @@ const PersonalInfo = ({ userInfo }: UserDataProps) => {
               <Input
                 label="First Name"
                 name="firstName"
+                trimValue
                 disabled={!isEditMode}
               />
               <Input label="Last Name" name="lastName" disabled={!isEditMode} />
@@ -47,13 +57,14 @@ const PersonalInfo = ({ userInfo }: UserDataProps) => {
               label="Email"
               name="email"
               disabled={!isEditMode}
+              trimValue
               sx={{ width: isReallyTablet ? "100%" : "485px" }}
             />
 
             <MainButton
               title="save"
               type="submit"
-              disabled={!isEditMode}
+              disabled={!isEditMode || !isFormDirty}
               sx={{ width: isReallyTablet ? "100%" : "485px" }}
             />
           </Stack>

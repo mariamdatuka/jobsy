@@ -24,6 +24,7 @@ type InputProps = TextFieldProps & {
   slotProps?: any;
   type?: string;
   disabled?: boolean;
+  trimValue?: boolean;
 };
 
 const Input = ({
@@ -39,6 +40,7 @@ const Input = ({
   type = "text",
   disabled = false,
   slotProps,
+  trimValue = false,
 }: InputProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === "password";
@@ -77,7 +79,7 @@ const Input = ({
             marginLeft: "10px",
             fontSize: "14px",
             color: fieldError ? "#FB344F" : "#240854",
-            opacity: disabled ? 0.75 : 1,
+            opacity: disabled ? 0.5 : 1,
           }}
         >
           {label}
@@ -90,6 +92,14 @@ const Input = ({
         render={({ field, fieldState: { error } }) => (
           <TextField
             {...field}
+            onChange={(e) =>
+              field.onChange(trimValue ? e.target.value.trim() : e.target.value)
+            }
+            onBlur={() => {
+              field.onChange(field.value.trim().replace(/\s+/g, " "));
+
+              field.onBlur();
+            }}
             placeholder={placeholder}
             variant={variant}
             error={!!error}

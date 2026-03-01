@@ -11,11 +11,13 @@ export const SignInSchema = yup.object().shape({
 
 export const passwordRegex = /^(?=.*[0-9])(?=.*[A-Z])[a-zA-Z0-9]{8,20}$/;
 const nameRegex = /^[a-zA-Z]+$/;
+const lastNameRegex = /^[a-zA-Z]+(\s+[a-zA-Z]+)*$/;
 
 export const SignUpSchema = yup.object().shape({
   email: yup
     .string()
     .required("Email is required")
+    .trim()
     .email("Invalid email format"),
   password: yup
     .string()
@@ -29,11 +31,17 @@ export const SignUpSchema = yup.object().shape({
   firstName: yup
     .string()
     .required("First name is required")
+    .min(2, "at least 2 characters")
+    .max(20, "at most 20 characters")
+    .trim()
     .matches(nameRegex, "Only Latin letters are allowed"),
   lastName: yup
     .string()
     .required("Last name is required")
-    .matches(nameRegex, "Only Latin letters are allowed"),
+    .min(2, "at least 2 characters")
+    .max(30, "at most 30 characters")
+    .trim()
+    .matches(lastNameRegex, "Only Latin letters are allowed"),
 });
 
 export const AddJobSchema = yup.object().shape({
@@ -90,13 +98,20 @@ export const PersonalInfoSchema = yup.object().shape({
   email: yup
     .string()
     .required("Email is required")
+    .trim()
     .email("Invalid email format"),
   firstName: yup
     .string()
     .required("First name is required")
+    .min(2, "at least 2 characters")
+    .max(20, "at most 20 characters")
+    .trim()
     .matches(nameRegex, "Only Latin letters are allowed"),
   lastName: yup
     .string()
     .required("Last name is required")
-    .matches(nameRegex, "Only Latin letters are allowed"),
+    .min(2, "at least 2 characters")
+    .max(30, "at most 30 characters")
+    .trim()
+    .matches(lastNameRegex, "Only Latin letters are allowed"),
 });
