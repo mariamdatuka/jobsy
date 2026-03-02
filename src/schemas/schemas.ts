@@ -1,6 +1,10 @@
 import type { Dayjs } from "dayjs";
 import * as yup from "yup";
 
+export const passwordRegex = /^(?=.*[0-9])(?=.*[A-Z])[a-zA-Z0-9]{8,20}$/;
+const nameRegex = /^[a-zA-Z]+$/;
+const lastNameRegex = /^[a-zA-Z]+(\s+[a-zA-Z]+)*$/;
+
 export const SignInSchema = yup.object().shape({
   email: yup
     .string()
@@ -8,10 +12,6 @@ export const SignInSchema = yup.object().shape({
     .email("Invalid email format"),
   password: yup.string().required("Password is required"),
 });
-
-export const passwordRegex = /^(?=.*[0-9])(?=.*[A-Z])[a-zA-Z0-9]{8,20}$/;
-const nameRegex = /^[a-zA-Z]+$/;
-const lastNameRegex = /^[a-zA-Z]+(\s+[a-zA-Z]+)*$/;
 
 export const SignUpSchema = yup.object().shape({
   email: yup
@@ -114,4 +114,8 @@ export const PersonalInfoSchema = yup.object().shape({
     .max(30, "at most 30 characters")
     .trim()
     .matches(lastNameRegex, "Only Latin letters are allowed"),
+});
+
+export const ExtendedResetPasswordSchema = resetPasswordSchema.shape({
+  currentPassword: yup.string().required("can not be empty"),
 });
