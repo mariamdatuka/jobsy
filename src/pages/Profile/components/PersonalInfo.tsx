@@ -8,10 +8,14 @@ import EditInfo from "./EditInfo";
 import useBreakpoints from "@src/hooks/useBreakpoints";
 import type { UserDataProps } from "./UploadAvatar";
 import { useEffect, useState } from "react";
+import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
+import { updateUserProfile } from "@src/services/updateUser";
+import { useUserStore } from "@src/store/userStore";
 
 type PersonalInfoFields = "email" | "firstName" | "lastName";
 const PersonalInfo = ({ userInfo }: UserDataProps) => {
   const [isEditMode, setIsEditMode] = useState(false);
+  const userId = useUserStore((state) => state.session?.user.id);
 
   const toggleEditMode = () => {
     setIsEditMode((prev) => !prev);
@@ -44,8 +48,15 @@ const PersonalInfo = ({ userInfo }: UserDataProps) => {
     return current.trim() !== String(original).trim();
   });
 
-  const onSubmit = (data: any) => {
+  const { mutate } = useSupabaseMutation(updateUserProfile, {
+    onSuccess: () => {
+      console.log("updated");
+    },
+  });
+
+  const onSubmit = async (data: any) => {
     console.log("Personal info submitted:", data);
+    mutate({ ...data, userId, currentEmail: userInfo.email });
   };
   return (
     <>

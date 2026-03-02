@@ -94,7 +94,8 @@ const UploadAvatar = ({ userInfo }: UserDataProps) => {
         alignItems="center"
         justifyContent="space-between"
         direction="row"
-        p={3}
+        px={3}
+        py={1}
       >
         <Box
           sx={{

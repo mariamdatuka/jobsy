@@ -11,7 +11,7 @@ const EditInfo = ({
   title: string;
 }) => {
   return (
-    <Stack direction="row" gap={2} my={6}>
+    <Stack direction="row" gap={2} my={3}>
       <Text variant="h5" fontWeight={600} color="secondary.main">
         {title}
       </Text>

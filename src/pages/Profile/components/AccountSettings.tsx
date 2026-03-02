@@ -5,6 +5,7 @@ import { useUserStore } from "@src/store/userStore";
 import { getUserData } from "@src/services/getUserData";
 import { useSupabaseQuery } from "@src/hooks/useSupabaseQuery";
 import { QKEY_USERS } from "@src/services/queryKeys";
+import ChangePassword from "./ChangePassword";
 
 const AccountSettings = () => {
   const userId = useUserStore((state) => state.session!.user.id);
@@ -15,7 +16,8 @@ const AccountSettings = () => {
     <>
       <UploadAvatar userInfo={data} />
       <PersonalInfo userInfo={data} />
-      <AppPreferences />
+      <ChangePassword />
+      {/* <AppPreferences /> */}
     </>
   );
 };
