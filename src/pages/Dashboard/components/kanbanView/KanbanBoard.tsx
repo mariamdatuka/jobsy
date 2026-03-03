@@ -52,18 +52,7 @@ const KanbanBoard = () => {
   }, [tasksData, setJobsData]);
 
   const { mutate: updateTaskPositionMutate } = useSupabaseMutation(
-    (vars: {
-      id: string;
-      status: string;
-      index_number: number;
-      date: string | null;
-    }) =>
-      updateTaskPosition({
-        id: vars.id,
-        status: vars.status,
-        index_number: vars.index_number,
-        date: vars?.date,
-      }),
+    updateTaskPosition,
     {
       onSuccess: async (data) => {
         if (data?.rebalanced) {

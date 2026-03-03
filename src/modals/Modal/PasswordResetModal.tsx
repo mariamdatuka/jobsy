@@ -14,9 +14,8 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(
     const { visible, hide } = useModal();
 
     const { isPending, mutate, isSuccess, reset } = useSupabaseMutation(
-      (vars: { values: any }) => {
-        return resetPasswordLink(vars.values);
-      },
+      resetPasswordLink,
+
       // {
       //   onSuccess: async (_data, _vars) => {
       //     // hide();
@@ -33,7 +32,7 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(
     );
 
     const handleSubmit = (data: any) => {
-      mutate({ values: data.email });
+      mutate(data.email);
     };
 
     const handleModalClose = () => {
