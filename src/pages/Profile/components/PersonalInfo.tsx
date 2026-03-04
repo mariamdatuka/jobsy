@@ -49,9 +49,9 @@ const PersonalInfo = ({ userInfo }: UserDataProps) => {
     return current.trim() !== String(original).trim();
   });
 
-  const { mutate } = useSupabaseMutation(updateUserProfile, {
+  const { mutate, isPending } = useSupabaseMutation(updateUserProfile, {
     onSuccess: () => {
-      showToast(TOAST_TYPE.SUCCESS, "Personal Information updated!");
+      // showToast(TOAST_TYPE.SUCCESS, "Personal Information updated!");
     },
     onError: () => {
       showToast(
@@ -91,7 +91,7 @@ const PersonalInfo = ({ userInfo }: UserDataProps) => {
             <MainButton
               title="save"
               type="submit"
-              disabled={!isEditMode || !isFormDirty}
+              disabled={!isEditMode || !isFormDirty || isPending}
               sx={{ width: isReallyTablet ? "100%" : "485px" }}
             />
           </Stack>

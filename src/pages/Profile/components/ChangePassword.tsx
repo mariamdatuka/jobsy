@@ -14,6 +14,9 @@ const ChangePassword = () => {
   const [isEditMode, setIsEditMode] = useState(false);
 
   const toggleEditMode = () => {
+    if (isEditMode) {
+      methods.reset();
+    }
     setIsEditMode((prev) => !prev);
   };
   const { isReallyTablet } = useBreakpoints();
