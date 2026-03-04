@@ -9,25 +9,19 @@ type UpdateUserProfileParams = {
 };
 
 export const updateUserProfile = async (userData: UpdateUserProfileParams) => {
-  // Normalize values
   const normalizedEmail = userData.email.trim();
   const normalizedFirstName = userData.firstName.trim();
   const normalizedLastName = userData.lastName.trim();
 
   // 1 Update Auth (only if email changed)
   if (normalizedEmail !== userData.currentEmail) {
-    const { error: authError } = await supabase.auth.updateUser(
-      {
-        email: normalizedEmail,
-        data: {
-          first_name: normalizedFirstName,
-          last_name: normalizedLastName,
-        },
+    const { error: authError } = await supabase.auth.updateUser({
+      email: normalizedEmail,
+      data: {
+        first_name: normalizedFirstName,
+        last_name: normalizedLastName,
       },
-      // {
-      //   emailRedirectTo: "http://localhost:5173",
-      // },
-    );
+    });
 
     if (authError) throw authError;
   } else {
