@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { updateUserProfile } from "@src/services/updateUser";
 import { useUserStore } from "@src/store/userStore";
+import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
 
 type PersonalInfoFields = "email" | "firstName" | "lastName";
 const PersonalInfo = ({ userInfo }: UserDataProps) => {
@@ -50,12 +51,17 @@ const PersonalInfo = ({ userInfo }: UserDataProps) => {
 
   const { mutate } = useSupabaseMutation(updateUserProfile, {
     onSuccess: () => {
-      console.log("updated");
+      showToast(TOAST_TYPE.SUCCESS, "Personal Information updated!");
+    },
+    onError: () => {
+      showToast(
+        TOAST_TYPE.ERROR,
+        "Error updating personal information, try again!",
+      );
     },
   });
 
   const onSubmit = async (data: any) => {
-    console.log("Personal info submitted:", data);
     mutate({ ...data, userId, currentEmail: userInfo.email });
   };
   return (

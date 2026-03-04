@@ -7,13 +7,12 @@ import { ExtendedResetPasswordSchema } from "@src/schemas/schemas";
 import Input from "@src/components/general/Input";
 import useBreakpoints from "@src/hooks/useBreakpoints";
 import MainButton from "@src/components/general/Button";
-import { useUserStore } from "@src/store/userStore";
-import { supabase } from "@src/supabase-client";
+import { useChangePassword } from "@src/hooks/useChangePassword";
+import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
 
 const ChangePassword = () => {
   const [isEditMode, setIsEditMode] = useState(false);
-  //   const userEmail = useUserStore((state) => state.user?.email);
-  //   console.log(userEmail);
+
   const toggleEditMode = () => {
     setIsEditMode((prev) => !prev);
   };
@@ -28,34 +27,30 @@ const ChangePassword = () => {
     mode: "all",
   });
 
+  const { mutate, isPending } = useChangePassword();
+
   const onSubmit = async (data: any) => {
-    const { data: userData } = await supabase.auth.getUser();
-    const email = userData.user?.email;
-
-    if (!email) return;
-
-    // 1️⃣ Verify current password
-    const { error: verifyError } = await supabase.auth.signInWithPassword({
-      email,
-      password: data.currentPassword,
-    });
-
-    if (verifyError) {
-      methods.setError("currentPassword", {
-        type: "manual",
-        message: "Current password is incorrect",
-      });
-      return;
-    }
-
-    // 2️⃣ Update password
-    const { error: updateError } = await supabase.auth.updateUser({
-      password: data.password,
-    });
-
-    if (!updateError) {
-      console.log("Password updated successfully");
-    }
+    mutate(
+      {
+        currentPassword: data.currentPassword,
+        newPassword: data.password,
+      },
+      {
+        onSuccess: () => {
+          methods.reset();
+          showToast(TOAST_TYPE.SUCCESS, "Password changed successfully!");
+        },
+        onError: (error) => {
+          console.log(error);
+          if (error.message === "CURRENT_PASSWORD_INCORRECT") {
+            methods.setError("currentPassword", {
+              type: "manual",
+              message: "Current password is incorrect",
+            });
+          }
+        },
+      },
+    );
   };
   return (
     <>
@@ -68,21 +63,28 @@ const ChangePassword = () => {
                 label="Current Password"
                 name="currentPassword"
                 trimValue
-                sx={{ width: isReallyTablet ? "100%" : "485px" }}
+                sx={{ width: isReallyTablet ? "100%" : "550px" }}
+                type="password"
               />
               <Stack gap={3} direction="row">
-                <Input label="New Password" name="password" trimValue />
+                <Input
+                  label="New Password"
+                  name="password"
+                  trimValue
+                  type="password"
+                />
                 <Input
                   label="Repeat Password"
                   name="repeatPassword"
+                  type="password"
                   trimValue
                 />
               </Stack>
               <MainButton
                 title="save"
                 type="submit"
-                disabled={!isEditMode}
-                sx={{ width: isReallyTablet ? "100%" : "485px" }}
+                disabled={!isEditMode || isPending}
+                sx={{ width: isReallyTablet ? "100%" : "550px" }}
               />
             </Stack>
           </form>
