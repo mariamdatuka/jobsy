@@ -8,14 +8,12 @@ import { resetPasswordSchema } from "@src/schemas/schemas";
 import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { updatePassword } from "@src/services/newPassword";
 import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
-import { useNavigate } from "react-router";
 
 import { supabase } from "@src/supabase-client";
 import { PASSWORD_RESET_SUCCESS_MODAL } from "@src/modals/modal_names";
 import NiceModal from "@ebay/nice-modal-react";
 
 const PasswordReset = () => {
-  const navigate = useNavigate();
   const methods = useForm({
     resolver: yupResolver(resetPasswordSchema),
     defaultValues: {
@@ -25,20 +23,17 @@ const PasswordReset = () => {
     mode: "all",
   });
 
-  const goToLogin = async () => {
-    NiceModal.hide(PASSWORD_RESET_SUCCESS_MODAL);
-    localStorage.removeItem("isRecoveryMode");
-
-    await supabase.auth.signOut();
-    navigate("/");
-  };
+  // const goToLogin = async () => {
+  //   NiceModal.hide(PASSWORD_RESET_SUCCESS_MODAL);
+  //   navigate("/");
+  // };
 
   const { mutate, isPending } = useSupabaseMutation(updatePassword, {
-    onSuccess: () => {
+    onSuccess: async () => {
+      localStorage.removeItem("isRecoveryMode");
+      await supabase.auth.signOut();
       methods.reset();
-      NiceModal.show(PASSWORD_RESET_SUCCESS_MODAL, {
-        onNavigate: goToLogin,
-      });
+      NiceModal.show(PASSWORD_RESET_SUCCESS_MODAL);
     },
     onError: (error) => {
       showToast(TOAST_TYPE.ERROR, `Error: ${error.message}`);
