@@ -101,6 +101,7 @@ const PopUp = ({
         {description && (
           <Text
             variant="body1"
+            textAlign="center"
             color="text.secondary"
             mb={2}
             sx={{ wordBreak: "break-word" }}

@@ -15,15 +15,6 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(
 
     const { isPending, mutate, isSuccess, reset } = useSupabaseMutation(
       resetPasswordLink,
-
-      // {
-      //   onSuccess: async (_data, _vars) => {
-      //     // hide();
-      //     showToast(
-      //       TOAST_TYPE.SUCCESS,
-      //       "Password reset link sent successfully, please check your email.",
-      //     );
-      //   },
       {
         onError: (error, _vars) => {
           showToast(TOAST_TYPE.ERROR, `Error: ${error.message}`);
@@ -41,7 +32,7 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(
     };
 
     const content = isSuccess
-      ? "Password reset link sent successfully, please check your email."
+      ? "If an account with this email exists, we have sent a password reset link. Please check your inbox."
       : "We'll send a password reset link to your email.";
 
     return (
