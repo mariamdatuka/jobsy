@@ -23,11 +23,6 @@ const PasswordReset = () => {
     mode: "all",
   });
 
-  // const goToLogin = async () => {
-  //   NiceModal.hide(PASSWORD_RESET_SUCCESS_MODAL);
-  //   navigate("/");
-  // };
-
   const { mutate, isPending } = useSupabaseMutation(updatePassword, {
     onSuccess: async () => {
       localStorage.removeItem("isRecoveryMode");
