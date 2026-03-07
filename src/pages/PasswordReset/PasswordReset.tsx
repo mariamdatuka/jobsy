@@ -45,11 +45,17 @@ const PasswordReset = () => {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Stack alignItems="center" gap={2} justifyContent="center">
-            <Input label="Password" name="password" type="password" />
+            <Input
+              label="Password"
+              name="password"
+              type="password"
+              sx={{ width: "250px" }}
+            />
             <Input
               label="Repeat Password"
               name="repeatPassword"
               type="password"
+              sx={{ width: "250px" }}
             />
             <MainButton
               title="Reset Password"

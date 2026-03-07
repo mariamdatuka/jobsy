@@ -22,7 +22,7 @@ const RecoveryRoute = () => {
     );
   }
 
-  return isRecovery ? <Outlet /> : <Navigate to="/" replace />;
+  return !isRecovery ? <Outlet /> : <Navigate to="/" replace />;
 };
 
 export default RecoveryRoute;

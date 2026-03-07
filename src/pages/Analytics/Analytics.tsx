@@ -9,10 +9,12 @@ import { useJobsViewData } from "@src/hooks/useJobsDataView";
 import { toCapitalize } from "@src/helpers/helpers";
 import MaxStreak from "./components/MaxStreak";
 import { useAppStreak } from "@src/hooks/useAppStreak";
+import AnalyticsPageSkeleton from "@src/components/skeletons/AnalyticsPageSkeleton";
 
 const Analytics = () => {
-  const { tasksData } = useJobsViewData();
+  const { tasksData, isPending: isTasksLoading } = useJobsViewData();
   const tasksByStatus = useMemo(() => {
+    if (!tasksData) return {};
     return columns.reduce(
       (acc, col) => {
         acc[col.id] = tasksData?.filter((task) => task.status === col.id);
@@ -29,7 +31,18 @@ const Analytics = () => {
     }));
   }, [tasksByStatus]);
 
-  const { data } = useAppStreak();
+  const { data, isPending: isStreakLoading } = useAppStreak();
+
+  const isLoading = isStreakLoading || isTasksLoading;
+
+  if (isLoading) {
+    return (
+      <>
+        <AnalyticsHeader />
+        <AnalyticsPageSkeleton />
+      </>
+    );
+  }
 
   return (
     <>

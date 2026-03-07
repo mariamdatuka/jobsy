@@ -14,7 +14,7 @@ export const useAppStreak = () => {
 
   const finalEndDate = dateTo ?? null;
 
-  const { data, isLoading } = useSupabaseQuery(
+  const { data, isLoading, isPending } = useSupabaseQuery(
     ["app-streak", finalStartDate, finalEndDate],
     () => getAppStreak({ startDate: finalStartDate, endDate: finalEndDate }),
   );
@@ -22,5 +22,6 @@ export const useAppStreak = () => {
   return {
     data,
     isLoading,
+    isPending,
   };
 };

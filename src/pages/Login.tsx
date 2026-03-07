@@ -67,8 +67,13 @@ const Login = () => {
           <form onSubmit={methods.handleSubmit(handleUserLogin)}>
             <Stack gap="15px">
               {isError && <Text color="error">{error?.message}</Text>}
-              <Input label="Email" name="email" />
-              <Input label="Password" name="password" type="password" />
+              <Input label="Email" name="email" trimValue />
+              <Input
+                label="Password"
+                name="password"
+                type="password"
+                trimValue
+              />
               <Stack direction="row" justifyContent="space-between">
                 <Link
                   to="/signup"

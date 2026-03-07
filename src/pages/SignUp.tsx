@@ -50,10 +50,10 @@ const SignUp = () => {
       {/* <img src={bgImage} alt="bgImage" width="50%" /> */}
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Input label="First Name" name="firstName" />
-          <Input label="Last Name" name="lastName" />
-          <Input label="Email" name="email" />
-          <Input label="Password" name="password" />
+          <Input label="First Name" name="firstName" sx={{ width: "250px" }} />
+          <Input label="Last Name" name="lastName" sx={{ width: "250px" }} />
+          <Input label="Email" name="email" sx={{ width: "250px" }} />
+          <Input label="Password" name="password" sx={{ width: "250px" }} />
           <MainButton title="sign Up" type="submit" disabled={isPending} />
         </form>
       </FormProvider>
