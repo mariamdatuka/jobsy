@@ -10,9 +10,18 @@ import { toCapitalize } from "@src/helpers/helpers";
 import MaxStreak from "./components/MaxStreak";
 import { useAppStreak } from "@src/hooks/useAppStreak";
 import AnalyticsPageSkeleton from "@src/components/skeletons/AnalyticsPageSkeleton";
+import { useSupabaseQuery } from "@src/hooks/useSupabaseQuery";
+import { getUserData } from "@src/services/getUserData";
+import { QKEY_USERS } from "@src/services/queryKeys";
+import { useUserStore } from "@src/store/userStore";
 
 const Analytics = () => {
   const { tasksData, isPending: isTasksLoading } = useJobsViewData();
+  const userId = useUserStore((state) => state.session?.user.id!);
+  const { data: userData, isPending: isDataPending } = useSupabaseQuery(
+    [QKEY_USERS, userId],
+    () => getUserData(userId),
+  );
   const tasksByStatus = useMemo(() => {
     if (!tasksData) return {};
     return columns.reduce(
@@ -38,7 +47,7 @@ const Analytics = () => {
   if (isLoading) {
     return (
       <>
-        <AnalyticsHeader />
+        <AnalyticsHeader userInfo={userData} isDataLoading={isDataPending} />
         <AnalyticsPageSkeleton />
       </>
     );
@@ -46,7 +55,7 @@ const Analytics = () => {
 
   return (
     <>
-      <AnalyticsHeader />
+      <AnalyticsHeader userInfo={userData} isDataLoading={isDataPending} />
       <Stack pt={5} gap={10}>
         <SummerySection tasksByStatus={tasksByStatus} />
         <Stack direction="row" flexWrap="wrap" gap="50px">
