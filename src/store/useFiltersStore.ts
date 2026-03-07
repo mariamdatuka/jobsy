@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export type DatePreset = "7d" | "30d";
 
@@ -38,59 +39,64 @@ interface FilterStore extends Filters {
   clearDate: () => void;
 }
 
-export const useFiltersStore = create<FilterStore>((set) => ({
-  filters: initialFilters,
-  toggleFilter: (key, value) =>
-    set((state) => {
-      const values = state.filters[key];
-      const exists = values.includes(value);
+export const useFiltersStore = create<FilterStore>()(
+  persist(
+    (set) => ({
+      filters: initialFilters,
 
-      return {
-        filters: {
-          ...state.filters,
-          [key]: exists
-            ? values.filter((v) => v !== value)
-            : [...values, value],
-        },
-      };
+      toggleFilter: (key, value) =>
+        set((state) => {
+          const values = state.filters[key];
+          const exists = values.includes(value);
+
+          return {
+            filters: {
+              ...state.filters,
+              [key]: exists
+                ? values.filter((v) => v !== value)
+                : [...values, value],
+            },
+          };
+        }),
+
+      setPresetDate: (preset) =>
+        set((state) => ({
+          filters: {
+            ...state.filters,
+            date: {
+              type: "preset",
+              preset,
+            },
+          },
+        })),
+
+      setCustomDate: (from, to) =>
+        set((state) => ({
+          filters: {
+            ...state.filters,
+            date: {
+              type: "range",
+              from,
+              to,
+            },
+          },
+        })),
+
+      resetFilters: () =>
+        set({
+          filters: initialFilters,
+        }),
+
+      clearDate: () =>
+        set((state) => ({
+          filters: {
+            ...state.filters,
+            date: null,
+          },
+        })),
     }),
-
-  setPresetDate: (preset) =>
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        date: {
-          type: "preset",
-          preset,
-        },
-      },
-    })),
-
-  setCustomDate: (from, to) =>
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        date: {
-          type: "range",
-          from,
-          to,
-        },
-      },
-    })),
-
-  resetFilters: () =>
-    set({
-      filters: {
-        status: [],
-        jobType: [],
-        date: null,
-      },
-    }),
-  clearDate: () =>
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        date: null,
-      },
-    })),
-}));
+    {
+      name: "filters-storage", // key in localStorage
+    },
+  ),
+);

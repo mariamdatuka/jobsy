@@ -9,8 +9,10 @@ import { useSetUrlParams } from "@src/hooks/useSetUrlParams";
 const FiltersDrawer = ({
   open,
   toggleDrawer,
+  isDirty,
 }: {
   open: boolean;
+  isDirty: boolean;
   toggleDrawer: () => void;
 }) => {
   const [from, setFrom] = useState<string | null>(null);
@@ -21,7 +23,14 @@ const FiltersDrawer = ({
   const clearFilters = useFiltersStore((state) => state.resetFilters);
   const allFilters = useFiltersStore((state) => state.filters);
 
-  const { onApply, clearFilters: clearUrlFilters } = useSetUrlParams();
+  // useEffect(() => {
+  //   if (open) {
+  //     snapshotRef.current = allFilters;
+  //     console.log(snapshotRef.current);
+  //   }
+  // }, [open]);
+
+  const { onApply, clearUrlFilters } = useSetUrlParams();
 
   const handleApplyingFilters = () => {
     let filtersToApply = { ...allFilters };
@@ -89,12 +98,14 @@ const FiltersDrawer = ({
         showCustomInputs={showCustomInputs}
         setShowCustomInputs={setShowCustomInputs}
         dateError={dateError}
+        setDateError={setDateError}
       />
       <FilterActions
         handleApplyingFilters={handleApplyingFilters}
         handleClearAllFilters={handleClearAllFilters}
         from={from}
         to={to}
+        isDirty={isDirty}
       />
     </Drawer>
   );

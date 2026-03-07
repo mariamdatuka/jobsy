@@ -64,6 +64,7 @@ type DateFilterProps = {
   setFrom: (date: string | null) => void;
   setTo: (date: string | null) => void;
   dateError?: string;
+  setDateError?: any;
 };
 
 export const DateFilter = ({
@@ -75,6 +76,7 @@ export const DateFilter = ({
   setFrom,
   setTo,
   dateError,
+  setDateError,
 }: DateFilterProps) => {
   const setPresetDate = useFiltersStore((state) => state.setPresetDate);
   const clearDate = useFiltersStore((state) => state.clearDate);
@@ -92,6 +94,9 @@ export const DateFilter = ({
   };
 
   const handleCustomClick = () => {
+    if (dateError) {
+      setDateError("");
+    }
     // If switching from preset, clear and show inputs
     if (currentDate?.type === "preset") {
       clearDate();

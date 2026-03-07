@@ -1,57 +1,41 @@
 import Menu from "@src/assets/icons/Menu";
 import MainButton from "@src/components/general/Button";
 import FiltersDrawer from "./FiltersDrawer";
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useSetUrlParams } from "@src/hooks/useSetUrlParams";
-import { useFiltersStore } from "@src/store/useFiltersStore";
-import { countFilters, isFiltersEmpty } from "@src/helpers/helpers";
+import { useFiltersStore, type FiltersState } from "@src/store/useFiltersStore";
+import { isEqual } from "lodash";
 
 const FiltersLayout = ({ width }: { width?: string }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const allFilters = useFiltersStore((state) => state.filters);
+
+  const snapshotRef = useRef<FiltersState | null>(null);
   const toggleDrawer = () => {
+    snapshotRef.current = structuredClone(allFilters);
     setIsOpen((prev) => !prev);
   };
-  const clearFilters = useFiltersStore((state) => state.resetFilters);
-  const allFilters = useFiltersStore((state) => state.filters);
-  const AreDraftFiltersApplied = isFiltersEmpty(allFilters);
-  const {
-    clearFilters: clearUrlFilters,
-    areFiltersApplied,
-    urlFilterCounter,
-  } = useSetUrlParams();
-  const handleClearFilters = () => {
-    clearFilters();
-    clearUrlFilters();
-  };
+  const isDirty = useMemo(() => {
+    return !isEqual(allFilters, snapshotRef.current);
+  }, [allFilters]);
+  const { areUrlFiltersApplied, urlFilterCounter } = useSetUrlParams();
 
+  const areFiltersinUrl = areUrlFiltersApplied();
   const urlFiltersCounter = urlFilterCounter();
-  const draftFiltersCounter = countFilters(allFilters);
-
-  const areUrlFiltersApplied = areFiltersApplied();
 
   return (
     <>
       <MainButton
-        title="Filters"
+        title={areFiltersinUrl ? `Filters (${urlFiltersCounter})` : "Filters"}
         startIcon={<Menu />}
         onClick={toggleDrawer}
         sx={{ width }}
       />
-      {areUrlFiltersApplied && (
-        <MainButton
-          title={`Clear Filters (${urlFiltersCounter})`}
-          onClick={handleClearFilters}
-          variant="outlined"
-        />
-      )}
-      {!AreDraftFiltersApplied && !areUrlFiltersApplied && (
-        <MainButton
-          title={`Draft Filters (${draftFiltersCounter})`}
-          onClick={() => setIsOpen(true)}
-          variant="outlined"
-        />
-      )}
-      <FiltersDrawer open={isOpen} toggleDrawer={toggleDrawer} />
+      <FiltersDrawer
+        open={isOpen}
+        toggleDrawer={toggleDrawer}
+        isDirty={isDirty}
+      />
     </>
   );
 };

@@ -16,7 +16,7 @@ const AnalyticsHeader = () => {
         boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
       }}
     >
-      <FiltersLayout width="180px" />
+      <FiltersLayout />
       <Stack
         direction="row"
         alignItems="center"

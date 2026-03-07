@@ -35,8 +35,8 @@ const KanbanBoard = () => {
   const [activeCard, setActiveCard] = useState<Task | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const session = useUserStore((state) => state.session);
-  const { areFiltersApplied } = useSetUrlParams();
-  const areUrlFiltersApplied = areFiltersApplied();
+  const { areUrlFiltersApplied } = useSetUrlParams();
+  const areFiltersInUrl = areUrlFiltersApplied();
 
   const { tasksData, isLoading, search, isPending } = useJobsViewData();
 
@@ -215,7 +215,7 @@ const KanbanBoard = () => {
 
   const showSkeleton = tasksData.length === 0 && isPending && !search; // first load only
   const showEmptyState =
-    (search || areUrlFiltersApplied) && !isLoading && tasksData.length === 0;
+    (search || areFiltersInUrl) && !isLoading && tasksData.length === 0;
   const showSpinner = isLoading && (search || areUrlFiltersApplied);
   const handleClearSearch = () => {
     searchParams.delete("search");

@@ -53,11 +53,11 @@ export const useSetUrlParams = () => {
     if (!value) return [];
     return value.split(",").map((s) => s.toUpperCase());
   };
-  const areFiltersApplied = () => {
+  const areUrlFiltersApplied = () => {
     return FILTER_PARAM_KEYS.some((key) => searchParams.has(key));
   };
-  const clearFilters = () => {
-    const areFiltersInURL = areFiltersApplied();
+  const clearUrlFilters = () => {
+    const areFiltersInURL = areUrlFiltersApplied();
     if (!areFiltersInURL) return;
     const params = Object.fromEntries(searchParams);
     const search = params.search;
@@ -89,8 +89,8 @@ export const useSetUrlParams = () => {
     searchParams,
     setSearchParams,
     getParamArrayUpper,
-    clearFilters,
-    areFiltersApplied,
+    clearUrlFilters,
+    areUrlFiltersApplied,
     urlFilterCounter,
   };
 };
