@@ -12,9 +12,10 @@ import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { updateUserProfile } from "@src/services/updateUser";
 import { useUserStore } from "@src/store/userStore";
 import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
+import LoadingOverlaySpinner from "@src/components/animations/LoadingOverlaySpinner";
 
 type PersonalInfoFields = "email" | "firstName" | "lastName";
-const PersonalInfo = ({ userInfo }: UserDataProps) => {
+const PersonalInfo = ({ userInfo, isDataLoading }: UserDataProps) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const userId = useUserStore((state) => state.session?.user.id);
 
@@ -67,36 +68,43 @@ const PersonalInfo = ({ userInfo }: UserDataProps) => {
   return (
     <>
       <EditInfo toggleEditMode={toggleEditMode} title="Personal Information" />
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Stack gap={3}>
-            <Stack direction="row" gap={2}>
-              {" "}
+      <LoadingOverlaySpinner loading={isDataLoading}>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)}>
+            <Stack gap={3}>
+              <Stack direction="row" gap={2}>
+                {" "}
+                <Input
+                  label="First Name"
+                  name="firstName"
+                  trimValue
+                  disabled={!isEditMode}
+                />
+                <Input
+                  label="Last Name"
+                  name="lastName"
+                  disabled={!isEditMode}
+                />
+              </Stack>
               <Input
-                label="First Name"
-                name="firstName"
-                trimValue
+                label="Email"
+                name="email"
                 disabled={!isEditMode}
+                trimValue
+                sx={{ width: isReallyTablet ? "100%" : "485px" }}
               />
-              <Input label="Last Name" name="lastName" disabled={!isEditMode} />
-            </Stack>
-            <Input
-              label="Email"
-              name="email"
-              disabled={!isEditMode}
-              trimValue
-              sx={{ width: isReallyTablet ? "100%" : "485px" }}
-            />
 
-            <MainButton
-              title="save"
-              type="submit"
-              disabled={!isEditMode || !isFormDirty || isPending}
-              sx={{ width: isReallyTablet ? "100%" : "485px" }}
-            />
-          </Stack>
-        </form>
-      </FormProvider>
+              <MainButton
+                title="save"
+                type="submit"
+                disabled={!isEditMode || !isFormDirty || isPending}
+                sx={{ width: isReallyTablet ? "100%" : "485px" }}
+              />
+            </Stack>
+          </form>
+        </FormProvider>
+      </LoadingOverlaySpinner>
+
       <Divider sx={{ my: 4 }} />
     </>
   );

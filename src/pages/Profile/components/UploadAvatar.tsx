@@ -19,6 +19,7 @@ interface UserInfo {
 }
 export interface UserDataProps {
   userInfo: UserInfo;
+  isDataLoading: boolean;
 }
 
 const UploadAvatar = ({ userInfo }: UserDataProps) => {

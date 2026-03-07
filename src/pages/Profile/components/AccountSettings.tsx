@@ -9,13 +9,13 @@ import ChangePassword from "./ChangePassword";
 
 const AccountSettings = () => {
   const userId = useUserStore((state) => state.session!.user.id);
-  const { data } = useSupabaseQuery([QKEY_USERS, userId], () =>
+  const { data, isPending } = useSupabaseQuery([QKEY_USERS, userId], () =>
     getUserData(userId),
   );
   return (
     <>
-      <UploadAvatar userInfo={data} />
-      <PersonalInfo userInfo={data} />
+      <UploadAvatar userInfo={data} isDataLoading={isPending} />
+      <PersonalInfo userInfo={data} isDataLoading={isPending} />
       <ChangePassword />
       {/* <AppPreferences /> */}
     </>

@@ -12,6 +12,7 @@ import { CountryTag } from "../kanbanView/JobCard";
 import { useJobsViewData } from "@src/hooks/useJobsDataView";
 import { useState } from "react";
 import { TablePagination } from "@mui/material";
+import TableViewSkeleton from "@src/components/skeletons/TableSkeleton";
 
 const Header = [
   "Company Name",
@@ -36,7 +37,11 @@ const CustomizedTables = () => {
     setPage(0);
   };
 
-  const { tasksData } = useJobsViewData();
+  const { tasksData, isPending } = useJobsViewData();
+
+  if (isPending) {
+    return <TableViewSkeleton />;
+  }
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -102,7 +107,7 @@ const CustomizedTables = () => {
 
 export default CustomizedTables;
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#f1f7fa",
     color: theme.palette.info.main,
@@ -112,7 +117,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-const StyledTableRow = styled(TableRow)(() => ({
+export const StyledTableRow = styled(TableRow)(() => ({
   // "&:nth-of-type(odd)": {
   //   backgroundColor: theme.palette.action.hover,
   // },
