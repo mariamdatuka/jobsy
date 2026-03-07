@@ -1,14 +1,17 @@
 import { Avatar, Stack } from "@mui/material";
 import Text from "@src/components/general/Text";
+import useBreakpoints from "@src/hooks/useBreakpoints";
 import FiltersLayout from "@src/pages/Dashboard/components/dashboardHeader/FiltersLayout";
 import { useUserStore } from "@src/store/userStore";
 
 const AnalyticsHeader = () => {
   const user = useUserStore((state) => state.user);
+  const { isReallyTablet } = useBreakpoints();
   return (
     <Stack
-      direction="row"
-      alignItems="center"
+      direction={isReallyTablet ? "column" : "row"}
+      alignItems={isReallyTablet ? "start" : "center"}
+      gap={isReallyTablet ? 5 : 0}
       justifyContent="space-between"
       p={3}
       borderRadius="12px"
