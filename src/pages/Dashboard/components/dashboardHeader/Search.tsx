@@ -9,12 +9,13 @@ const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const methods = useForm({
     defaultValues: {
-      search_term: "",
+      search_term: searchParams.get("search") || "",
     },
     mode: "all",
   });
 
   const searchTerm = methods.watch("search_term");
+  const searchParam = searchParams.get("search");
   const debouncedSearch = useDebounce(searchTerm, 400);
 
   useEffect(() => {
@@ -29,6 +30,12 @@ const Search = () => {
       search: debouncedSearch,
     });
   }, [debouncedSearch]);
+
+  useEffect(() => {
+    if (!searchParam) {
+      methods.setValue("search_term", "");
+    }
+  }, [searchParam, methods.setValue]);
 
   return (
     <FormProvider {...methods}>

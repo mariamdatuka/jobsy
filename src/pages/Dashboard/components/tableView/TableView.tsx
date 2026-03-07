@@ -9,10 +9,12 @@ import Paper from "@mui/material/Paper";
 import EditActions from "../kanbanView/EditActions";
 import StatusColor, { type Status } from "@src/components/general/StatusColor";
 import { CountryTag } from "../kanbanView/JobCard";
-import { useJobsViewData } from "@src/hooks/useJobsDataView";
 import { useState } from "react";
 import { TablePagination } from "@mui/material";
 import TableViewSkeleton from "@src/components/skeletons/TableSkeleton";
+import EmptyResultState from "@src/components/general/EmptyResultState";
+import Spinner from "@src/components/animations/Spinner";
+import { useTasksViewState } from "@src/hooks/useTasksViewState";
 
 const Header = [
   "Company Name",
@@ -28,6 +30,15 @@ const CustomizedTables = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const {
+    handleClearSearch,
+    showEmptyState,
+    showSpinner,
+    showSkeleton,
+    tasksData,
+    search,
+  } = useTasksViewState();
+
   const handleChangePage = (_: any, newPage: number) => {
     setPage(newPage);
   };
@@ -37,11 +48,18 @@ const CustomizedTables = () => {
     setPage(0);
   };
 
-  const { tasksData, isPending } = useJobsViewData();
+  if (showSkeleton) return <TableViewSkeleton />;
 
-  if (isPending) {
-    return <TableViewSkeleton />;
-  }
+  if (showEmptyState)
+    return (
+      <EmptyResultState
+        searchTerm={search}
+        message={`No Results${search ? ` for:` : ""}`}
+        handleClearSearch={handleClearSearch}
+      />
+    );
+
+  if (showSpinner) return <Spinner />;
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>

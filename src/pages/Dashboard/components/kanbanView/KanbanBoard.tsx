@@ -25,20 +25,22 @@ import {
   getIndexForColumnDrop,
   getNewIndexOrder,
 } from "@src/helpers/helpers";
-import { useSearchParams } from "react-router";
-import { useSetUrlParams } from "@src/hooks/useSetUrlParams";
 import EmptyResultState from "@src/components/general/EmptyResultState";
 import Spinner from "@src/components/animations/Spinner";
-import { useJobsViewData } from "@src/hooks/useJobsDataView";
+import { useTasksViewState } from "@src/hooks/useTasksViewState";
 
 const KanbanBoard = () => {
   const [activeCard, setActiveCard] = useState<Task | null>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const session = useUserStore((state) => state.session);
-  const { areUrlFiltersApplied } = useSetUrlParams();
-  const areFiltersInUrl = areUrlFiltersApplied();
+  const {
+    handleClearSearch,
+    showEmptyState,
+    showSpinner,
+    showSkeleton,
+    tasksData,
+    search,
+  } = useTasksViewState();
 
-  const { tasksData, isLoading, search, isPending } = useJobsViewData();
+  const session = useUserStore((state) => state.session);
 
   const queryClient = useQueryClient();
 
@@ -211,15 +213,6 @@ const KanbanBoard = () => {
         date: updatedTask.date_applied ?? null,
       });
     }
-  };
-
-  const showSkeleton = tasksData.length === 0 && isPending && !search; // first load only
-  const showEmptyState =
-    (search || areFiltersInUrl) && !isLoading && tasksData.length === 0;
-  const showSpinner = isLoading && (search || areUrlFiltersApplied);
-  const handleClearSearch = () => {
-    searchParams.delete("search");
-    setSearchParams(searchParams);
   };
 
   if (showEmptyState)
