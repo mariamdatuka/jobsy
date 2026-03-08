@@ -13,6 +13,8 @@ import { updateUserProfile } from "@src/services/updateUser";
 import { useUserStore } from "@src/store/userStore";
 import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
 import LoadingOverlaySpinner from "@src/components/animations/LoadingOverlaySpinner";
+import NiceModal from "@ebay/nice-modal-react";
+import { SUCCESS_MODAL } from "@src/modals/modal_names";
 
 type PersonalInfoFields = "email" | "firstName" | "lastName";
 const PersonalInfo = ({ userInfo, isDataLoading }: UserDataProps) => {
@@ -51,8 +53,16 @@ const PersonalInfo = ({ userInfo, isDataLoading }: UserDataProps) => {
   });
 
   const { mutate, isPending } = useSupabaseMutation(updateUserProfile, {
-    onSuccess: () => {
-      // showToast(TOAST_TYPE.SUCCESS, "Personal Information updated!");
+    onSuccess: (_, vars) => {
+      if (vars.email === userInfo.email) {
+        showToast(TOAST_TYPE.SUCCESS, "Personal Information updated!");
+      } else {
+        methods.setValue("email", userInfo.email);
+        NiceModal.show(SUCCESS_MODAL, {
+          title: "Check your new email",
+          description: "We will send a link to confirm your email",
+        });
+      }
     },
     onError: () => {
       showToast(
@@ -65,6 +75,7 @@ const PersonalInfo = ({ userInfo, isDataLoading }: UserDataProps) => {
   const onSubmit = async (data: any) => {
     mutate({ ...data, userId, currentEmail: userInfo.email });
   };
+
   return (
     <>
       <EditInfo toggleEditMode={toggleEditMode} title="Personal Information" />
@@ -91,7 +102,9 @@ const PersonalInfo = ({ userInfo, isDataLoading }: UserDataProps) => {
                 name="email"
                 disabled={!isEditMode}
                 trimValue
-                sx={{ width: isReallyTablet ? "100%" : "485px" }}
+                sx={{
+                  width: isReallyTablet ? "100%" : "485px",
+                }}
               />
 
               <MainButton

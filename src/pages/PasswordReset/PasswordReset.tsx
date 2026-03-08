@@ -10,7 +10,7 @@ import { updatePassword } from "@src/services/newPassword";
 import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
 
 import { supabase } from "@src/supabase-client";
-import { PASSWORD_RESET_SUCCESS_MODAL } from "@src/modals/modal_names";
+import { SUCCESS_MODAL } from "@src/modals/modal_names";
 import NiceModal from "@ebay/nice-modal-react";
 
 const PasswordReset = () => {
@@ -28,7 +28,7 @@ const PasswordReset = () => {
       localStorage.removeItem("isRecoveryMode");
       await supabase.auth.signOut();
       methods.reset();
-      NiceModal.show(PASSWORD_RESET_SUCCESS_MODAL);
+      NiceModal.show(SUCCESS_MODAL);
     },
     onError: (error) => {
       showToast(TOAST_TYPE.ERROR, `Error: ${error.message}`);
