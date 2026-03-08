@@ -15,7 +15,7 @@ const FilterActions = ({
   handleClearAllFilters: () => void;
   from: string | null;
   to: string | null;
-  isDirty: boolean;
+  isDirty?: boolean;
 }) => {
   const allFilters = useFiltersStore((state) => state.filters);
   const { areUrlFiltersApplied } = useSetUrlParams();
@@ -31,7 +31,7 @@ const FilterActions = ({
     >
       <MainButton
         title="Apply"
-        disabled={isEmpty}
+        disabled={!isDirty}
         sx={{ px: 4 }}
         id="apply-button"
         onClick={handleApplyingFilters}

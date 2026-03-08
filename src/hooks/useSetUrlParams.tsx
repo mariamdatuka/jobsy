@@ -1,3 +1,4 @@
+import { decodeDate } from "@src/helpers/helpers";
 import type {
   FiltersState,
   MultiSelectFilterKey,
@@ -53,6 +54,18 @@ export const useSetUrlParams = () => {
     if (!value) return [];
     return value.split(",").map((s) => s.toUpperCase());
   };
+
+  const getParamArrayLowercase = (key: MultiSelectFilterKey): string[] => {
+    const value = searchParams.get(key);
+    if (!value) return [];
+    return value.split(",").map((s) => s.toLowerCase());
+  };
+  const appliedFilters: FiltersState = {
+    status: getParamArrayLowercase("status") ?? [],
+    jobType: getParamArrayLowercase("jobType") ?? [],
+    date: decodeDate(searchParams),
+  };
+
   const areUrlFiltersApplied = () => {
     return FILTER_PARAM_KEYS.some((key) => searchParams.has(key));
   };
@@ -92,5 +105,6 @@ export const useSetUrlParams = () => {
     clearUrlFilters,
     areUrlFiltersApplied,
     urlFilterCounter,
+    appliedFilters,
   };
 };

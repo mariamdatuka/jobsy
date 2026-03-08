@@ -12,7 +12,7 @@ const FiltersDrawer = ({
   isDirty,
 }: {
   open: boolean;
-  isDirty: boolean;
+  isDirty?: boolean;
   toggleDrawer: () => void;
 }) => {
   const [from, setFrom] = useState<string | null>(null);
@@ -22,13 +22,6 @@ const FiltersDrawer = ({
   const setCustomDate = useFiltersStore((state) => state.setCustomDate);
   const clearFilters = useFiltersStore((state) => state.resetFilters);
   const allFilters = useFiltersStore((state) => state.filters);
-
-  // useEffect(() => {
-  //   if (open) {
-  //     snapshotRef.current = allFilters;
-  //     console.log(snapshotRef.current);
-  //   }
-  // }, [open]);
 
   const { onApply, clearUrlFilters } = useSetUrlParams();
 
