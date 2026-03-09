@@ -5,7 +5,6 @@ import { Box, CircularProgress } from "@mui/material";
 const ProtectedRoutes = () => {
   const session = useUserStore((state) => state.session);
   const isLoading = useUserStore((state) => state.isLoading);
-  const isRecoveryMode = useUserStore((state) => state.isRecoveryMode);
 
   // Wait for auth initialization to complete
   if (isLoading) {
@@ -23,9 +22,7 @@ const ProtectedRoutes = () => {
     );
   }
 
-  return (
-    <>{session && !isRecoveryMode ? <Outlet /> : <Navigate to="/" replace />}</>
-  );
+  return <>{session ? <Outlet /> : <Navigate to="/" replace />}</>;
 };
 
 export default ProtectedRoutes;

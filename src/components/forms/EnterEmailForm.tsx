@@ -24,10 +24,7 @@ const EnterEmailForm = ({ onSubmitCallback }: { onSubmitCallback?: any }) => {
   };
   return (
     <FormProvider {...methods}>
-      <form
-        id="send-password-link-form"
-        onSubmit={methods.handleSubmit(onSubmit)}
-      >
+      <form id="send-otp" onSubmit={methods.handleSubmit(onSubmit)}>
         <Input name="email" label="Email" />
       </form>
     </FormProvider>

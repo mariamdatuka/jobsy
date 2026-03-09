@@ -76,6 +76,7 @@ export const AddJobSchema = yup.object().shape({
 });
 
 export const resetPasswordSchema = yup.object().shape({
+  code: yup.string().required("please enter code"),
   password: yup
     .string()
     .required("Password is required")

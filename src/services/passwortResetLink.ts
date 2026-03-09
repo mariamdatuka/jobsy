@@ -1,9 +1,7 @@
 import { supabase } from "@src/supabase-client";
 
 export const resetPasswordLink = async (email: string) => {
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `http://localhost:5173/passwordreset`,
-  });
+  const { error } = await supabase.auth.resetPasswordForEmail(email);
 
   if (error) {
     throw error.message;

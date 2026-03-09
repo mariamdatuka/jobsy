@@ -12,7 +12,6 @@ interface UserStore {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
-  isRecoveryMode?: boolean;
   setAuthState: (session: Session | null, isRecoveryMode?: boolean) => void;
   clearUser: () => void;
   logout: () => Promise<void>;
@@ -24,11 +23,10 @@ export const useUserStore = create<UserStore>((set) => ({
   session: null,
   isLoading: true,
   isRecoveryMode: false,
-  setAuthState: (session, isRecoveryMode = false) => {
+  setAuthState: (session) => {
     if (session) {
       set({
         session,
-        isRecoveryMode,
         user: {
           firstName: session?.user?.user_metadata.first_name || "",
           lastName: session?.user?.user_metadata.last_name || "",
@@ -41,7 +39,6 @@ export const useUserStore = create<UserStore>((set) => ({
         session: null,
         user: null,
         isLoading: false,
-        isRecoveryMode: false,
       });
     }
   },
@@ -57,14 +54,14 @@ export const useUserStore = create<UserStore>((set) => ({
   initializeAuth: async () => {
     set({ isLoading: true });
 
-    const params = new URLSearchParams(window.location.hash.substring(1));
-    const isRecovery = params.get("type") === "recovery";
+    // const params = new URLSearchParams(window.location.hash.substring(1));
+    // const isRecovery = params.get("type") === "recovery";
 
-    if (isRecovery) {
-      localStorage.setItem("isRecoveryMode", "true");
-    }
+    // if (isRecovery) {
+    //   localStorage.setItem("isRecoveryMode", "true");
+    // }
 
-    set({ isRecoveryMode: isRecovery });
+    // set({ isRecoveryMode: isRecovery });
 
     try {
       // Get initial session
@@ -76,16 +73,17 @@ export const useUserStore = create<UserStore>((set) => ({
         return undefined;
       }
 
-      useUserStore.getState().setAuthState(data?.session, isRecovery);
+      useUserStore.getState().setAuthState(data?.session);
 
       // Listen for auth state changes
       const {
         data: { subscription },
-      } = supabase.auth.onAuthStateChange((_event, session) => {
-        const storedRecoveryMode =
-          localStorage.getItem("isRecoveryMode") === "true";
+      } = supabase.auth.onAuthStateChange((event, session) => {
+        if (event !== "PASSWORD_RECOVERY") {
+          localStorage.removeItem("isRecoveryMode");
+        }
 
-        useUserStore.getState().setAuthState(session, storedRecoveryMode);
+        useUserStore.getState().setAuthState(session);
       });
 
       return () => subscription.unsubscribe();

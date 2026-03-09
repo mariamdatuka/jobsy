@@ -4,8 +4,8 @@ import EnterEmailForm from "@src/components/forms/EnterEmailForm";
 import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { resetPasswordLink } from "@src/services/passwortResetLink";
 import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
-import { useEffect } from "react";
 import { supabase } from "@src/supabase-client";
+import PasswordResetWithOTP from "@src/components/forms/PasswordResetWithOTP";
 
 interface PasswordModalProps {
   handleSendLink?: any;
@@ -32,21 +32,21 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
     hide();
   };
 
-  useEffect(() => {
-    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
-      if (session) {
-        handleModalClose();
-      }
-    });
+  // useEffect(() => {
+  //   const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
+  //     if (session) {
+  //       handleModalClose();
+  //     }
+  //   });
 
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-  }, []);
+  //   return () => {
+  //     listener.subscription.unsubscribe();
+  //   };
+  // }, []);
 
   const content = isSuccess
-    ? "If an account with this email exists, we have sent a password reset link. Please check your inbox."
-    : "We'll send a password reset link to your email.";
+    ? "Please check your inbox and enter one time password"
+    : "We'll send one time password to your email";
 
   return (
     <PopUp
@@ -55,7 +55,9 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
       open={visible}
       onClose={isPending ? undefined : handleModalClose}
       children={
-        isSuccess ? undefined : (
+        !isSuccess ? (
+          <PasswordResetWithOTP />
+        ) : (
           <EnterEmailForm onSubmitCallback={handleSubmit} />
         )
       }
@@ -70,8 +72,8 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
           disabled: isPending,
         },
         {
-          label: "Send Link",
-          form: "send-password-link-form",
+          label: "Send",
+          form: !isSuccess ? "submit-new-password" : "send-otp",
           type: "submit",
           color: "primary",
           onClick: () => {},
