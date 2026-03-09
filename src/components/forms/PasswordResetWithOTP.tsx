@@ -2,17 +2,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "@src/components/general/Input";
 import { FormProvider, useForm } from "react-hook-form";
 import { Stack } from "@mui/material";
-import Text from "@src/components/general/Text";
 import { resetPasswordSchema } from "@src/schemas/schemas";
-import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
-import { updatePassword } from "@src/services/newPassword";
 import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
-import { supabase } from "@src/supabase-client";
-import { SUCCESS_MODAL } from "@src/modals/modal_names";
+import { FORGOT_PASSWORD_MODAL, SUCCESS_MODAL } from "@src/modals/modal_names";
 import NiceModal from "@ebay/nice-modal-react";
 import OTP from "./OTP";
+import { useResetPasswordWithOtp } from "@src/hooks/useResetPasswordWithOtp";
 
-const PasswordResetWithOTP = () => {
+const PasswordResetWithOTP = ({ email }: { email: string }) => {
   const methods = useForm({
     resolver: yupResolver(resetPasswordSchema),
     defaultValues: {
@@ -23,19 +20,26 @@ const PasswordResetWithOTP = () => {
     mode: "all",
   });
 
-  const { mutate, isPending } = useSupabaseMutation(updatePassword, {
-    onSuccess: async () => {
-      // await supabase.auth.signOut();
-      // methods.reset();
-      // NiceModal.show(SUCCESS_MODAL);
-    },
-    onError: (error) => {
-      showToast(TOAST_TYPE.ERROR, `Error: ${error.message}`);
-    },
-  });
+  const { mutate } = useResetPasswordWithOtp();
 
   const onSubmit = (data: any) => {
-    mutate(data.password);
+    mutate(
+      {
+        email: email!,
+        code: data.code,
+        password: data.password,
+      },
+      {
+        onSuccess: () => {
+          methods.reset();
+          NiceModal.hide(FORGOT_PASSWORD_MODAL);
+          NiceModal.show(SUCCESS_MODAL);
+        },
+        onError: (error) => {
+          showToast(TOAST_TYPE.ERROR, `Error: ${error.message}`);
+        },
+      },
+    );
   };
   return (
     <FormProvider {...methods}>

@@ -1,6 +1,6 @@
 import { supabase } from "@src/supabase-client";
 
-export const resetPasswordLink = async (email: string) => {
+export const passwordResetOTP = async (email: string) => {
   const { error } = await supabase.auth.resetPasswordForEmail(email);
 
   if (error) {

@@ -23,13 +23,6 @@ export function useSupabaseMutation<
         if (error instanceof TypeError) {
           throw new Error("Please check your internet connection.");
         }
-
-        // if (error?.message) {
-        //   if (error.message === "CURRENT_PASSWORD_INCORRECT") {
-        //     throw new Error("CURRENT_PASSWORD_INCORRECT");
-        //   }
-        //   throw new Error("Unexpected error occurred, try again!");
-        // }
         if (error instanceof Error) {
           throw error;
         }

@@ -12,7 +12,7 @@ export const getAppStreak = async ({
     end_date: endDate,
   });
   if (error) {
-    throw new Error(error.message);
+    throw error.message;
   }
   return data;
 };
