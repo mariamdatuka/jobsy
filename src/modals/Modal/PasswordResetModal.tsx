@@ -12,9 +12,14 @@ interface PasswordModalProps {
   handleSendLink?: any;
 }
 
+const OTP_VALID_TIME = 1 * 60 * 1000;
+type ResetStep = "email" | "otp";
+
 const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
   const [email, setEmail] = useState("");
-  const [coolDown, setCoolDown] = useState(30);
+  const [coolDown, setCoolDown] = useState(0);
+  const [otpSentAt, setOtpSentAt] = useState<number | null>(null);
+  const [step, setStep] = useState<ResetStep>("email");
   const { visible, hide } = useModal();
 
   const { isPending: isConfirming } = useResetPasswordWithOtp();
@@ -23,8 +28,10 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
     passwordResetOTP,
     {
       onSuccess: (_, email) => {
-        setCoolDown(120);
+        setCoolDown(30);
         setEmail(email);
+        setStep("otp");
+        setOtpSentAt(Date.now());
       },
       onError: (error) => {
         showToast(TOAST_TYPE.ERROR, `Error: ${error.message}`);
@@ -35,7 +42,6 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
   useEffect(() => {
     if (coolDown === 0) return;
     const timer = setTimeout(() => {
-      console.log("tick");
       setCoolDown((prev) => prev - 1);
     }, 1000);
     return () => clearTimeout(timer);
@@ -45,18 +51,33 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
     mutate(data.email);
   };
 
+  useEffect(() => {
+    if (!visible) return;
+
+    if (otpSentAt && Date.now() - otpSentAt < OTP_VALID_TIME) {
+      setStep("otp");
+    } else {
+      setStep("email");
+    }
+  }, [visible]);
+
   const handleResendOtp = () => {
-    mutate(email);
-    setCoolDown(120);
+    mutate(email, {
+      onSuccess: () => {
+        showToast(TOAST_TYPE.SUCCESS, "New code is sent to email");
+      },
+    });
+    setCoolDown(30);
   };
 
   const handleModalClose = () => {
     hide();
   };
 
-  const content = isSuccess
-    ? `Enter the code sent to ${email}`
-    : "We'll send one time password to your email";
+  const content =
+    step === "otp"
+      ? `Enter the code sent to ${email}`
+      : "We'll send one time password to your email";
 
   return (
     <PopUp
@@ -65,7 +86,7 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
       open={visible}
       onClose={isPending || isConfirming ? undefined : handleModalClose}
       children={
-        !isSuccess ? (
+        step === "otp" ? (
           <PasswordResetWithOTP
             email={email}
             coolDown={coolDown}
