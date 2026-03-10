@@ -8,8 +8,17 @@ import { FORGOT_PASSWORD_MODAL, SUCCESS_MODAL } from "@src/modals/modal_names";
 import NiceModal from "@ebay/nice-modal-react";
 import OTP from "./OTP";
 import { useResetPasswordWithOtp } from "@src/hooks/useResetPasswordWithOtp";
+import ResendCode from "./ResendCode";
 
-const PasswordResetWithOTP = ({ email }: { email: string }) => {
+const PasswordResetWithOTP = ({
+  email,
+  coolDown,
+  handleResendOtp,
+}: {
+  email: string;
+  coolDown: number;
+  handleResendOtp: any;
+}) => {
   const methods = useForm({
     resolver: yupResolver(resetPasswordSchema),
     defaultValues: {
@@ -46,6 +55,7 @@ const PasswordResetWithOTP = ({ email }: { email: string }) => {
       <form onSubmit={methods.handleSubmit(onSubmit)} id="submit-new-password">
         <Stack alignItems="center" gap={2} justifyContent="center">
           <OTP />
+          <ResendCode coolDown={coolDown} handleResendOtp={handleResendOtp} />
           <Input
             label="Password"
             name="password"

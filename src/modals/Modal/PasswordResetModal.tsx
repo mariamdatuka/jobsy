@@ -6,7 +6,7 @@ import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
 import PasswordResetWithOTP from "@src/components/forms/PasswordResetWithOTP";
 import { passwordResetOTP } from "@src/services/passwortResetOTP";
 import { useResetPasswordWithOtp } from "@src/hooks/useResetPasswordWithOtp";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface PasswordModalProps {
   handleSendLink?: any;
@@ -14,41 +14,45 @@ interface PasswordModalProps {
 
 const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
   const [email, setEmail] = useState("");
+  const [coolDown, setCoolDown] = useState(30);
   const { visible, hide } = useModal();
 
   const { isPending: isConfirming } = useResetPasswordWithOtp();
 
-  const { isPending, mutate, isSuccess, reset } = useSupabaseMutation(
+  const { isPending, mutate, isSuccess } = useSupabaseMutation(
     passwordResetOTP,
     {
-      onError: (error, _vars) => {
+      onSuccess: (_, email) => {
+        setCoolDown(120);
+        setEmail(email);
+      },
+      onError: (error) => {
         showToast(TOAST_TYPE.ERROR, `Error: ${error.message}`);
       },
     },
   );
 
+  useEffect(() => {
+    if (coolDown === 0) return;
+    const timer = setTimeout(() => {
+      console.log("tick");
+      setCoolDown((prev) => prev - 1);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [coolDown]);
+
   const handleSubmit = (data: any) => {
-    setEmail(data.email);
     mutate(data.email);
   };
 
-  const handleModalClose = () => {
-    reset();
-    setEmail("");
-    hide();
+  const handleResendOtp = () => {
+    mutate(email);
+    setCoolDown(120);
   };
 
-  // useEffect(() => {
-  //   const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
-  //     if (session) {
-  //       handleModalClose();
-  //     }
-  //   });
-
-  //   return () => {
-  //     listener.subscription.unsubscribe();
-  //   };
-  // }, []);
+  const handleModalClose = () => {
+    hide();
+  };
 
   const content = isSuccess
     ? `Enter the code sent to ${email}`
@@ -61,8 +65,12 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
       open={visible}
       onClose={isPending || isConfirming ? undefined : handleModalClose}
       children={
-        isSuccess ? (
-          <PasswordResetWithOTP email={email} />
+        !isSuccess ? (
+          <PasswordResetWithOTP
+            email={email}
+            coolDown={coolDown}
+            handleResendOtp={handleResendOtp}
+          />
         ) : (
           <EnterEmailForm onSubmitCallback={handleSubmit} />
         )

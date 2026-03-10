@@ -154,3 +154,9 @@ export const applyBusinessRules = (task: Task, newStatus: Task["status"]) => {
     date_applied: task.date_applied || dayjs().format("YYYY-MM-DD"),
   };
 };
+
+export const formatTime = (seconds: number) => {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${s.toString().padStart(2, "0")}`;
+};
