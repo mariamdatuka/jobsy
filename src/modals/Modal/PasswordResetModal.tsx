@@ -66,6 +66,14 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
       onSuccess: () => {
         showToast(TOAST_TYPE.SUCCESS, "New code is sent to email");
       },
+      // onError: (error) => {
+      //   if (error?.status === 429) {
+      //     showToast(
+      //       TOAST_TYPE.ERROR,
+      //       "Too many attempts. Please wait before requesting another code.",
+      //     );
+      //   }
+      // },
     });
     setCoolDown(30);
   };

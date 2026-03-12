@@ -12,7 +12,6 @@ import { loginUser, type LoginUserData } from "@src/services/login";
 import { useNavigate } from "react-router";
 import NiceModal from "@ebay/nice-modal-react";
 import { FORGOT_PASSWORD_MODAL } from "@src/modals/modal_names";
-import { useUserStore } from "@src/store/userStore";
 
 const Login = () => {
   const methods = useForm({
@@ -29,13 +28,11 @@ const Login = () => {
     NiceModal.show(FORGOT_PASSWORD_MODAL);
   };
 
-  const isRecoveryMode = useUserStore((state) => state.isRecoveryMode);
   const { isPending, isError, error, mutate } = useSupabaseMutation(loginUser, {
     onSuccess: () => {
       methods.reset();
-      if (!isRecoveryMode) {
-        navigate("/dashboard");
-      }
+
+      navigate("/dashboard");
     },
   });
 

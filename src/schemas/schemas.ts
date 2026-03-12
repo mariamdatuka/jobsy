@@ -26,8 +26,15 @@ export const SignUpSchema = yup.object().shape({
     .max(20, "Password must be at most 20 characters")
     .matches(
       passwordRegex,
-      "only Latin letters and at least one uppercase letter, one number",
+      "Only Latin letters and at least one uppercase letter and one number",
     ),
+
+  repeatPassword: yup
+    .string()
+    .required("Repeat password is required")
+    .test("password-match", "Passwords must match", function (value) {
+      return value === this.parent.password;
+    }),
   firstName: yup
     .string()
     .required("First name is required")
