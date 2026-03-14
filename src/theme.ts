@@ -31,7 +31,8 @@ const theme = createTheme({
       tablet: 832,
       md: 980,
       lg: 1150,
-      xl: 1536,
+      xl: 1380,
+      xxl: 1536,
     },
   },
   components: {

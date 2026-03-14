@@ -8,12 +8,15 @@ import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { createUser, type CreateUserData } from "@src/services/createUser";
 import NiceModal from "@ebay/nice-modal-react";
 import { SIGNUP_SUCCESS_MODAL } from "@src/modals/modal_names";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Text from "@src/components/general/Text";
 import { Box, Stack, styled } from "@mui/material";
+import { motion } from "framer-motion";
+import useBreakpoints from "@src/hooks/useBreakpoints";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const { isDesktop, isTabletOnly } = useBreakpoints();
   const methods = useForm({
     resolver: yupResolver(SignUpSchema),
     defaultValues: {
@@ -25,6 +28,16 @@ const SignUp = () => {
     },
     mode: "all",
   });
+
+  const Container = styled(Stack)({
+    position: "relative",
+    marginLeft: isDesktop ? "20px" : "170px",
+    alignItems: "center",
+    justifyContent: "center",
+  });
+
+  const MotionStack = motion(Stack);
+  const MotionContainer = motion(Container);
 
   const { mutate, isPending, isError, error } = useSupabaseMutation(
     createUser,
@@ -46,13 +59,25 @@ const SignUp = () => {
   };
 
   return (
-    <Stack direction="row" height="100vh" gap={10}>
-      <Stack
+    <Stack
+      direction={isTabletOnly ? "column" : "row"}
+      height="100vh"
+      gap={10}
+      alignItems={isTabletOnly ? "center" : "normal"}
+      justifyContent={isTabletOnly ? "center" : "normal"}
+    >
+      <MotionStack
         width="500px"
         alignItems="center"
         justifyContent="center"
         gap={5}
-        backgroundColor="primary.main"
+        sx={{
+          backgroundColor: isTabletOnly ? "none" : "primary.main",
+          display: isTabletOnly ? "none" : "flex",
+        }}
+        initial={{ x: isTabletOnly ? -100 : -80, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <Box
           component="img"
@@ -69,12 +94,16 @@ const SignUp = () => {
           variant="h6"
           color="text.primary"
           fontFamily="Viga"
-          sx={{ mt: "10px" }}
+          sx={{ mt: "10px", display: isTabletOnly ? "none" : "block" }}
         >
           Your Orginized Job Search
         </Text>
-      </Stack>
-      <Container>
+      </MotionStack>
+      <MotionContainer
+        initial={{ x: 80, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+      >
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <Stack gap={2}>
@@ -108,7 +137,27 @@ const SignUp = () => {
                 type="password"
                 trimValue
               />
-              <MainButton title="sign Up" type="submit" disabled={isPending} />
+              <MainButton
+                title="sign Up"
+                type="submit"
+                disabled={isPending}
+                sx={{ mt: 2 }}
+              />
+              <Stack
+                direction="row"
+                gap={1}
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Text variant="body2" color="secondary.light">
+                  Already have an account?
+                </Text>
+                <Link to="/">
+                  <Text variant="body2" color="error">
+                    Sign In
+                  </Text>
+                </Link>
+              </Stack>
             </Stack>
           </form>
         </FormProvider>
@@ -117,15 +166,9 @@ const SignUp = () => {
             {error.message}
           </Text>
         )}
-      </Container>
+      </MotionContainer>
     </Stack>
   );
 };
 
 export default SignUp;
-
-const Container = styled(Stack)({
-  marginLeft: "170px",
-  alignItems: "center",
-  justifyContent: "center",
-});
