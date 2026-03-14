@@ -154,7 +154,7 @@ const UploadAvatar = ({ userInfo }: UserDataProps) => {
         hidden
         onChange={handleFileChange}
       />
-      <Divider />
+      <Divider sx={{ my: 2 }} />
     </>
   );
 };

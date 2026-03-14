@@ -118,7 +118,7 @@ const PersonalInfo = ({ userInfo, isDataLoading }: UserDataProps) => {
         </FormProvider>
       </LoadingOverlaySpinner>
 
-      <Divider sx={{ my: 4 }} />
+      <Divider sx={{ mt: 4, mb: 4 }} />
     </>
   );
 };
