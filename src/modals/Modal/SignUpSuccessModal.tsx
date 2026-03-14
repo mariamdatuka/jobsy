@@ -12,7 +12,7 @@ const SignUpSuccessModal = NiceModal.create<SignUpSuccessModalProps>(
     return (
       <PopUp
         title="Congratulations!"
-        description="check your email to verify your account"
+        description="if account with this email does not already exist, you will receive a link to confirm your email"
         open={visible}
         onClose={hide}
         iconType="success"
@@ -26,7 +26,7 @@ const SignUpSuccessModal = NiceModal.create<SignUpSuccessModalProps>(
         ]}
       />
     );
-  }
+  },
 );
 
 export default SignUpSuccessModal;

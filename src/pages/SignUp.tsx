@@ -13,6 +13,7 @@ import Text from "@src/components/general/Text";
 import { Box, Stack, styled } from "@mui/material";
 import { motion } from "framer-motion";
 import useBreakpoints from "@src/hooks/useBreakpoints";
+import { showToast, TOAST_TYPE } from "@src/helpers/showToast";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -29,30 +30,17 @@ const SignUp = () => {
     mode: "all",
   });
 
-  const Container = styled(Stack)({
-    position: "relative",
-    marginLeft: isDesktop ? "20px" : "170px",
-    alignItems: "center",
-    justifyContent: "center",
-  });
-
-  const MotionStack = motion(Stack);
-  const MotionContainer = motion(Container);
-
-  const { mutate, isPending, isError, error } = useSupabaseMutation(
-    createUser,
-    {
-      onSuccess: () => {
-        methods.reset();
-        NiceModal.show(SIGNUP_SUCCESS_MODAL, {
-          onNavigate: () => navigate("/login"),
-        });
-      },
-      onError: (error: Error) => {
-        console.error("Error creating user:", error.message);
-      },
+  const { mutate, isPending } = useSupabaseMutation(createUser, {
+    onSuccess: () => {
+      methods.reset();
+      NiceModal.show(SIGNUP_SUCCESS_MODAL, {
+        onNavigate: () => navigate("/login"),
+      });
     },
-  );
+    onError: (error) => {
+      showToast(TOAST_TYPE.ERROR, error.message);
+    },
+  });
 
   const onSubmit = async (userData: CreateUserData) => {
     mutate(userData);
@@ -100,6 +88,7 @@ const SignUp = () => {
         </Text>
       </MotionStack>
       <MotionContainer
+        isDesktop={isDesktop}
         initial={{ x: 80, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
@@ -161,14 +150,26 @@ const SignUp = () => {
             </Stack>
           </form>
         </FormProvider>
-        {isError && (
+        {/* {isError && (
           <Text variant="body2" color="error" sx={{ mt: 2 }}>
             {error.message}
           </Text>
-        )}
+        )} */}
       </MotionContainer>
     </Stack>
   );
 };
 
 export default SignUp;
+
+const Container = styled(Stack, {
+  shouldForwardProp: (prop) => prop !== "isDesktop",
+})<{ isDesktop: boolean }>(({ isDesktop }) => ({
+  position: "relative",
+  marginLeft: isDesktop ? "170px" : "20px",
+  alignItems: "center",
+  justifyContent: "center",
+}));
+
+const MotionStack = motion(Stack);
+const MotionContainer = motion(Container);
