@@ -17,8 +17,8 @@ const DeleteAccount = () => {
         title: "Account deleted",
         description: "Redirecting to login page in seconds...",
         isRedirecting: true,
+        onNavigate: () => navigate("/"),
       });
-      navigate("/");
     },
     onError: (error: Error) => {
       showToast(TOAST_TYPE.ERROR, error.message);

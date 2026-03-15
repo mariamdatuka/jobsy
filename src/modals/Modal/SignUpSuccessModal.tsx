@@ -9,6 +9,11 @@ const SignUpSuccessModal = NiceModal.create<SignUpSuccessModalProps>(
   ({ onNavigate }) => {
     const { visible, hide } = useModal();
 
+    const handleNavigate = () => {
+      hide();
+      onNavigate();
+    };
+
     return (
       <PopUp
         title="Congratulations!"
@@ -20,7 +25,7 @@ const SignUpSuccessModal = NiceModal.create<SignUpSuccessModalProps>(
           {
             label: "Login",
             color: "primary",
-            onClick: onNavigate,
+            onClick: handleNavigate,
             buttonSx: { width: "100%" },
           },
         ]}

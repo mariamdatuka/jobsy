@@ -1,24 +1,24 @@
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import PopUp from "../PopUp/PopUp";
 import { useEffect } from "react";
-import { useNavigate } from "react-router";
+
 interface Props {
   title?: string;
   description?: string;
   isRedirecting?: boolean;
+  onNavigate?: any;
 }
 
 const SuccessModal = NiceModal.create(
-  ({ title, description, isRedirecting }: Props) => {
+  ({ title, description, isRedirecting, onNavigate }: Props) => {
     const { visible, hide } = useModal();
-    const navigate = useNavigate();
+
     useEffect(() => {
-      if (!isRedirecting) {
-        return;
-      }
+      if (!isRedirecting) return;
       const timer = setTimeout(() => {
-        navigate("/");
-      }, 4000);
+        onNavigate?.();
+        hide();
+      }, 2000);
       return () => clearTimeout(timer);
     }, []);
 
