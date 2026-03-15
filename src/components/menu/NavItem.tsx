@@ -4,23 +4,17 @@ import type { NavItems } from "@src/helpers/constanst";
 import { useSidebarStore } from "@src/store/useSidebar";
 import NiceModal from "@ebay/nice-modal-react";
 import { LOGOUT_MODAL } from "@src/modals/modal_names";
-import { useUserStore } from "@src/store/userStore";
 
 const NavItem = ({ link, name, Icon }: NavItems) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { open } = useSidebarStore((state) => state);
   const isActive = link && location.pathname === link;
-  const logout = useUserStore((state) => state.logout);
 
   const handleClick = () => {
     if (!link) {
       NiceModal.show(LOGOUT_MODAL, {
-        handleLogout: async () => {
-          await logout();
-          NiceModal.hide(LOGOUT_MODAL);
-          navigate("/");
-        },
+        onNavigate: () => navigate("/"),
       });
     } else {
       navigate(link);

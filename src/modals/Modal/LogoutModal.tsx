@@ -1,24 +1,36 @@
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import PopUp from "../PopUp/PopUp";
+import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
+import { logout } from "@src/services/logout";
 
 interface LogoutModalProps {
-  handleLogout: any;
+  onNavigate: any;
 }
 
-const LogoutModal = NiceModal.create<LogoutModalProps>(({ handleLogout }) => {
+const LogoutModal = NiceModal.create<LogoutModalProps>(({ onNavigate }) => {
   const { visible, hide } = useModal();
+  const { mutate, isPending } = useSupabaseMutation(logout, {
+    onSuccess: () => {
+      hide();
+      onNavigate();
+    },
+  });
+  const handleLogout = () => {
+    mutate();
+  };
 
   return (
     <PopUp
       title="Logout"
       description="Are you sure you want to logout?"
       open={visible}
-      onClose={hide}
+      onClose={isPending ? undefined : hide}
       buttons={[
         {
           label: "Cancel",
           color: "primary",
           variant: "outlined",
+          disabled: isPending,
           onClick: hide,
           buttonSx: { width: "150px" },
         },
@@ -26,6 +38,9 @@ const LogoutModal = NiceModal.create<LogoutModalProps>(({ handleLogout }) => {
           label: "Logout",
           color: "primary",
           onClick: handleLogout,
+          loading: isPending,
+          loadingPosition: "start",
+          disabled: isPending,
           buttonSx: { width: "150px" },
         },
       ]}
