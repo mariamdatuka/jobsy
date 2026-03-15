@@ -12,6 +12,7 @@ const AccountSettings = () => {
   const { data, isPending } = useSupabaseQuery([QKEY_USERS, userId], () =>
     getUserData(userId),
   );
+
   return (
     <>
       <UploadAvatar userInfo={data} isDataLoading={isPending} />
