@@ -25,7 +25,7 @@ const AnalyticsHeader = ({ userInfo }: UserDataProps) => {
         gap={2}
         justifyContent="center"
       >
-        <Avatar sx={{ width: 54, height: 54 }} src={userInfo.avatar_url} />
+        <Avatar sx={{ width: 54, height: 54 }} src={userInfo?.avatar_url} />
         <Stack alignItems="flex-start" justifyContent="center">
           <Text variant="body1" fontWeight={500} color="secondary.main">
             {userInfo?.first_name} {userInfo?.last_name}

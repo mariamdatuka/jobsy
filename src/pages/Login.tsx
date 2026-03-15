@@ -11,7 +11,7 @@ import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { loginUser, type LoginUserData } from "@src/services/login";
 import { useNavigate } from "react-router";
 import NiceModal from "@ebay/nice-modal-react";
-import { FORGOT_PASSWORD_MODAL } from "@src/modals/modal_names";
+import { FORGOT_PASSWORD_MODAL, QUOTE_MODAL } from "@src/modals/modal_names";
 
 const Login = () => {
   const methods = useForm({
@@ -31,8 +31,8 @@ const Login = () => {
   const { isPending, isError, error, mutate } = useSupabaseMutation(loginUser, {
     onSuccess: () => {
       methods.reset();
-
       navigate("/dashboard");
+      NiceModal.show(QUOTE_MODAL);
     },
   });
 

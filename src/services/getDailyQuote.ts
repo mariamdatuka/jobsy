@@ -2,7 +2,7 @@ import { supabase } from "@src/supabase-client";
 
 const CACHE_KEY = "daily_quotes_cache";
 
-export const getMotivationQuote = async () => {
+export const getDailyQuote = async () => {
   const cached = localStorage.getItem(CACHE_KEY);
   if (cached) {
     const { quote, date } = JSON.parse(cached);
