@@ -34,7 +34,7 @@ const SignUp = () => {
     onSuccess: () => {
       methods.reset();
       NiceModal.show(SIGNUP_SUCCESS_MODAL, {
-        onNavigate: () => navigate("/login"),
+        onNavigate: () => navigate("/"),
       });
     },
     onError: (error) => {
