@@ -1,55 +1,80 @@
 import type { RouteObject } from "react-router";
-import SignUp from "./pages/SignUp";
-import Login from "./pages/Login";
 import ErrorPage from "./pages/ErrorPage";
-import Dashboard from "./pages/Dashboard/Dashboard";
 import MainLayout from "./components/layouts/MainLayout";
-import Analytics from "./pages/Analytics/Analytics";
-import Profile from "./pages/Profile/Profile";
 import ProtectedRoutes from "./ProtectedRoutes";
 import PublicRoute from "./PublicRoute";
-import PasswordReset from "./pages/PasswordReset/PasswordReset";
-import RecoveryRoute from "./RecoveryRoute";
+import { lazy, Suspense } from "react";
+import Spinner from "./components/animations/Spinner";
+import NotFoundPage from "./components/general/NotFoundPage";
+
+// lazy load all pages
+const SignUp = lazy(() => import("./pages/SignUp"));
+const Login = lazy(() => import("./pages/Login"));
+const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
+const Analytics = lazy(() => import("./pages/Analytics/Analytics"));
+const Profile = lazy(() => import("./pages/Profile/Profile"));
 
 export const routes: RouteObject[] = [
   {
     Component: PublicRoute,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
-        Component: Login,
-        errorElement: <ErrorPage />,
+        element: (
+          <Suspense fallback={<Spinner />}>
+            <Login />
+          </Suspense>
+        ),
       },
       {
         path: "/signup",
-        Component: SignUp,
+        element: (
+          <Suspense fallback={<Spinner />}>
+            <SignUp />
+          </Suspense>
+        ),
       },
     ],
   },
-  {
-    Component: RecoveryRoute,
-    children: [{ path: "/passwordreset", Component: PasswordReset }],
-  },
+
   {
     Component: ProtectedRoutes,
+    errorElement: <ErrorPage />,
     children: [
       {
         Component: MainLayout,
         children: [
           {
             path: "/dashboard",
-            Component: Dashboard,
+            element: (
+              <Suspense fallback={<Spinner />}>
+                <Dashboard />
+              </Suspense>
+            ),
           },
           {
             path: "/analytics",
-            Component: Analytics,
+            element: (
+              <Suspense fallback={<Spinner />}>
+                <Analytics />
+              </Suspense>
+            ),
           },
           {
             path: "/profile",
-            Component: Profile,
+            element: (
+              <Suspense fallback={<Spinner />}>
+                <Profile />
+              </Suspense>
+            ),
           },
         ],
       },
     ],
+  },
+  {
+    path: "*",
+    Component: NotFoundPage,
   },
 ];
