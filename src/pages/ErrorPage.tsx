@@ -1,10 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import MainButton from "@src/components/general/Button";
-import { useNavigate, useRouteError } from "react-router";
+import { useNavigate } from "react-router";
 
 const ErrorPage = () => {
   const navigate = useNavigate();
-  const error = useRouteError() as any; // react router hook to get the error
 
   return (
     <Box
