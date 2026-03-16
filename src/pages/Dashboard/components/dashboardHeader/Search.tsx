@@ -19,7 +19,8 @@ const Search = () => {
   const debouncedSearch = useDebounce(searchTerm, 400);
 
   useEffect(() => {
-    if (!debouncedSearch) {
+    const trimmed = debouncedSearch.trim();
+    if (!trimmed) {
       searchParams.delete("search");
       setSearchParams(searchParams);
       return;
@@ -39,7 +40,7 @@ const Search = () => {
 
   return (
     <FormProvider {...methods}>
-      <form>
+      <form onSubmit={(e) => e.preventDefault()}>
         <Input
           placeholder="search by company name, position"
           name="search_term"
