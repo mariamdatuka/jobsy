@@ -4,6 +4,12 @@ import {
   type UseMutationResult,
 } from "@tanstack/react-query";
 
+const NETWORK_ERROR_MESSAGES = [
+  "Failed to fetch", // Chrome
+  "NetworkError when attempting to fetch resource", // Firefox
+  "Load failed", // Safari
+];
+
 // TData = mutation result type
 // TVariables = mutation input type
 // TError = error type (optional)
@@ -20,8 +26,11 @@ export function useSupabaseMutation<
       try {
         return await mutationFn(variables);
       } catch (error: any) {
-        if (error instanceof TypeError) {
-          throw new Error("Please check your internet connection.");
+        if (
+          error instanceof TypeError &&
+          NETWORK_ERROR_MESSAGES.some((msg) => error.message.includes(msg))
+        ) {
+          throw new Error("Please check your internet connection");
         }
         if (error instanceof Error) {
           throw error;

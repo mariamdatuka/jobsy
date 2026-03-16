@@ -37,7 +37,16 @@ const SignUp = () => {
         onNavigate: () => navigate("/"),
       });
     },
-    onError: (error) => {
+    onError: (error, variables) => {
+      if (error.message === "Please check your internet connection") {
+        NiceModal.show(SIGNUP_SUCCESS_MODAL, {
+          email: variables.email,
+          networkUncertain: true,
+          onNavigate: () => navigate("/"),
+          onReset: () => methods.reset(),
+        });
+        return;
+      }
       showToast(TOAST_TYPE.ERROR, error.message);
     },
   });

@@ -22,7 +22,7 @@ const ErrorPage = () => {
         Something went wrong
       </Typography>
       <Typography variant="body2" color="text.secondary">
-        {error?.message || "An unexpected error occurred"}
+        An unexpected error occurred
       </Typography>
       <MainButton
         title="Go Home"

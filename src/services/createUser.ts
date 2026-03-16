@@ -35,3 +35,13 @@ export const createUser = async (userData: CreateUserData) => {
     session: data.session,
   };
 };
+
+export const resendEmailConfirmationLink = async (email: string) => {
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email: email,
+  });
+  if (error) {
+    throw error.message;
+  }
+};

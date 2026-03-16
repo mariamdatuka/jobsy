@@ -6,7 +6,6 @@ export const updatePassword = async (newPassword: string) => {
   });
 
   if (error) {
-    console.log(error.message);
     throw new Error(error.message);
   }
 
