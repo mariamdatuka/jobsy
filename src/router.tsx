@@ -4,7 +4,6 @@ import MainLayout from "./components/layouts/MainLayout";
 import ProtectedRoutes from "./ProtectedRoutes";
 import PublicRoute from "./PublicRoute";
 import { lazy, Suspense } from "react";
-import Spinner from "./components/animations/Spinner";
 import NotFoundPage from "./components/general/NotFoundPage";
 
 // lazy load all pages
@@ -22,7 +21,7 @@ export const routes: RouteObject[] = [
       {
         path: "/",
         element: (
-          <Suspense fallback={<Spinner />}>
+          <Suspense fallback={null}>
             <Login />
           </Suspense>
         ),
@@ -30,7 +29,7 @@ export const routes: RouteObject[] = [
       {
         path: "/signup",
         element: (
-          <Suspense fallback={<Spinner />}>
+          <Suspense fallback={null}>
             <SignUp />
           </Suspense>
         ),
@@ -48,7 +47,7 @@ export const routes: RouteObject[] = [
           {
             path: "/dashboard",
             element: (
-              <Suspense fallback={<Spinner />}>
+              <Suspense fallback={null}>
                 <Dashboard />
               </Suspense>
             ),
@@ -56,7 +55,7 @@ export const routes: RouteObject[] = [
           {
             path: "/analytics",
             element: (
-              <Suspense fallback={<Spinner />}>
+              <Suspense fallback={null}>
                 <Analytics />
               </Suspense>
             ),
@@ -64,7 +63,7 @@ export const routes: RouteObject[] = [
           {
             path: "/profile",
             element: (
-              <Suspense fallback={<Spinner />}>
+              <Suspense fallback={null}>
                 <Profile />
               </Suspense>
             ),
