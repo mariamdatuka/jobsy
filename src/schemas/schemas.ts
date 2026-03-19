@@ -124,6 +124,22 @@ export const PersonalInfoSchema = yup.object().shape({
     .matches(lastNameRegex, "Only Latin letters are allowed"),
 });
 
-export const ExtendedResetPasswordSchema = resetPasswordSchema.shape({
+export const ExtendedResetPasswordSchema = yup.object().shape({
   currentPassword: yup.string().required("can not be empty"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .max(20, "Password must be at most 20 characters")
+    .matches(
+      passwordRegex,
+      "Only Latin letters and at least one uppercase letter and one number",
+    ),
+
+  repeatPassword: yup
+    .string()
+    .required("Repeat password is required")
+    .test("password-match", "Passwords must match", function (value) {
+      return value === this.parent.password;
+    }),
 });
