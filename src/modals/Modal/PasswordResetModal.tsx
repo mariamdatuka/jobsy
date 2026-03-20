@@ -12,7 +12,7 @@ interface PasswordModalProps {
   handleSendLink?: any;
 }
 
-const OTP_VALID_TIME = 1 * 60 * 1000;
+const OTP_VALID_TIME = 3 * 60 * 1000;
 type ResetStep = "email" | "otp";
 
 const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
@@ -28,7 +28,7 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
     passwordResetOTP,
     {
       onSuccess: (_, email) => {
-        setCoolDown(30);
+        setCoolDown(180);
         setEmail(email);
         setStep("otp");
         setOtpSentAt(Date.now());
