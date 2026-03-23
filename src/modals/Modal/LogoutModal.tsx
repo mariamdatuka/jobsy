@@ -2,6 +2,7 @@ import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import PopUp from "../PopUp/PopUp";
 import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { logout } from "@src/services/logout";
+import { useFiltersStore } from "@src/store/useFiltersStore";
 
 interface LogoutModalProps {
   onNavigate: any;
@@ -9,8 +10,10 @@ interface LogoutModalProps {
 
 const LogoutModal = NiceModal.create<LogoutModalProps>(({ onNavigate }) => {
   const { visible, hide } = useModal();
+  const resetFilters = useFiltersStore((state) => state.resetFilters);
   const { mutate, isPending } = useSupabaseMutation(logout, {
     onSuccess: () => {
+      resetFilters();
       hide();
       onNavigate();
     },
