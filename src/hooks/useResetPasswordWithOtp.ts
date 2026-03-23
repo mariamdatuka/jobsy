@@ -1,3 +1,4 @@
+import { useUserStore } from "@src/store/userStore";
 import { useSupabaseMutation } from "@src/hooks/useSupabaseMutation";
 import { supabase } from "@src/supabase-client";
 
@@ -8,36 +9,48 @@ interface ResetPasswordParams {
 }
 
 export const useResetPasswordWithOtp = () => {
+  const setResetFlow = useUserStore((s) => s.setResetFlow);
+
   return useSupabaseMutation(
     async ({ email, code, password }: ResetPasswordParams) => {
-      //  Verify OTP
-      const { data: otpData, error: otpError } = await supabase.auth.verifyOtp({
-        email,
-        token: code,
-        type: "recovery",
-      });
+      setResetFlow(true);
 
-      if (otpError) {
-        throw new Error("incorrect code");
+      try {
+        const { data: otpData, error: otpError } =
+          await supabase.auth.verifyOtp({
+            email,
+            token: code,
+            type: "recovery",
+          });
+
+        if (otpError) {
+          throw new Error("Incorrect code");
+        }
+
+        if (!otpData.session) {
+          throw new Error("Something went wrong, try again!");
+        }
+
+        const { error: updateError } = await supabase.auth.updateUser({
+          password,
+        });
+
+        if (updateError) {
+          await supabase.auth.signOut();
+          throw new Error(updateError.message);
+        }
+
+        // success
+        await supabase.auth.signOut();
+
+        return true;
+      } catch (error) {
+        // optional: ensure session is cleared on ANY failure
+        await supabase.auth.signOut();
+        throw error;
+      } finally {
+        setResetFlow(false);
       }
-
-      if (!otpData.session) {
-        throw new Error("Something went wrong, try again!");
-      }
-
-      //  Update password
-      const { error: updateError } = await supabase.auth.updateUser({
-        password,
-      });
-
-      if (updateError) {
-        throw new Error(updateError.message);
-      }
-
-      // Sign out the temporary session
-      await supabase.auth.signOut();
-
-      return true; // success
     },
   );
 };
