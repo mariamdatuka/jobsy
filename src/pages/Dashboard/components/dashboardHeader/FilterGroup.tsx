@@ -79,6 +79,7 @@ export const DateFilter = ({
   setDateError,
 }: DateFilterProps) => {
   const setPresetDate = useFiltersStore((state) => state.setPresetDate);
+  const setCustomDate = useFiltersStore((state) => state.setCustomDate);
   const clearDate = useFiltersStore((state) => state.clearDate);
   const currentDate = useFiltersStore((state) => state.filters.date);
 
@@ -113,6 +114,18 @@ export const DateFilter = ({
     }
 
     setShowCustomInputs((prev: boolean) => !prev);
+  };
+
+  const handleFromChange = (date: string | null) => {
+    if (!date) return;
+    setFrom(date);
+    if (to) setCustomDate(date, to);
+  };
+
+  const handleToChange = (date: string | null) => {
+    if (!date) return;
+    setTo(date);
+    if (from) setCustomDate(from, date);
   };
 
   const isPresetActive = (preset: DatePreset) => {
@@ -156,13 +169,17 @@ export const DateFilter = ({
         <Stack spacing={1} mt={1}>
           <BaseDatepicker
             label="From"
-            value={from}
-            onChange={(date) => setFrom(date)}
+            value={
+              from || (currentDate?.type === "range" ? currentDate.from : null)
+            }
+            onChange={(date) => handleFromChange(date)}
           />
           <BaseDatepicker
             label="To"
-            value={to}
-            onChange={(date) => setTo(date)}
+            value={
+              to || (currentDate?.type === "range" ? currentDate.to : null)
+            }
+            onChange={(date) => handleToChange(date)}
           />
           {dateError && (
             <Text variant="caption" color="error.main">
