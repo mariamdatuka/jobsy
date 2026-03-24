@@ -16,6 +16,8 @@ interface UserStore {
   clearUser: () => void;
   logout: () => Promise<void>;
   initializeAuth: () => Promise<(() => void) | undefined>;
+  isResetFlow: boolean;
+  setResetFlow: (value: boolean) => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -23,6 +25,8 @@ export const useUserStore = create<UserStore>((set) => ({
   session: null,
   isLoading: true,
   isRecoveryMode: false,
+  isResetFlow: false,
+  setResetFlow: (value) => set({ isResetFlow: value }),
   setAuthState: (session) => {
     if (session) {
       set({
@@ -54,15 +58,6 @@ export const useUserStore = create<UserStore>((set) => ({
   initializeAuth: async () => {
     set({ isLoading: true });
 
-    // const params = new URLSearchParams(window.location.hash.substring(1));
-    // const isRecovery = params.get("type") === "recovery";
-
-    // if (isRecovery) {
-    //   localStorage.setItem("isRecoveryMode", "true");
-    // }
-
-    // set({ isRecoveryMode: isRecovery });
-
     try {
       // Get initial session
       const { data, error } = await supabase.auth.getSession();
@@ -72,17 +67,14 @@ export const useUserStore = create<UserStore>((set) => ({
         set({ isLoading: false });
         return undefined;
       }
-
       useUserStore.getState().setAuthState(data?.session);
 
       // Listen for auth state changes
       const {
         data: { subscription },
-      } = supabase.auth.onAuthStateChange((event, session) => {
-        if (event !== "PASSWORD_RECOVERY") {
-          localStorage.removeItem("isRecoveryMode");
-        }
-
+      } = supabase.auth.onAuthStateChange((_, session) => {
+        const { isResetFlow } = useUserStore.getState();
+        if (isResetFlow) return;
         useUserStore.getState().setAuthState(session);
       });
 
