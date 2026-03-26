@@ -16,9 +16,18 @@ const OTP_VALID_TIME = 3 * 60 * 1000;
 type ResetStep = "email" | "otp";
 
 const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
-  const [email, setEmail] = useState("");
-  const [coolDown, setCoolDown] = useState(0);
-  const [otpSentAt, setOtpSentAt] = useState<number | null>(null);
+  const [email, setEmail] = useState(
+    () => localStorage.getItem("resetEmail") || "",
+  );
+  const [_, setOtpSentAt] = useState<number | null>(() => {
+    const saved = localStorage.getItem("otpSentAt");
+    return saved ? Number(saved) : null;
+  });
+  const [coolDown, setCoolDown] = useState<number>(() => {
+    const saved = localStorage.getItem("coolDown");
+    return saved ? Number(saved) : 0;
+  });
+
   const [step, setStep] = useState<ResetStep>("email");
   const { visible, hide } = useModal();
 
@@ -31,7 +40,11 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
         setCoolDown(180);
         setEmail(email);
         setStep("otp");
-        setOtpSentAt(Date.now());
+        const now = Date.now();
+        setOtpSentAt(now);
+        localStorage.setItem("resetEmail", email);
+        localStorage.setItem("otpSentAt", String(now));
+        localStorage.setItem("coolDown", String(180));
       },
       onError: (error) => {
         showToast(TOAST_TYPE.ERROR, `Error: ${error.message}`);
@@ -54,7 +67,9 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
   useEffect(() => {
     if (!visible) return;
 
-    if (otpSentAt && Date.now() - otpSentAt < OTP_VALID_TIME) {
+    const savedOtpSentAt = Number(localStorage.getItem("otpSentAt"));
+
+    if (savedOtpSentAt && Date.now() - savedOtpSentAt < OTP_VALID_TIME) {
       setStep("otp");
     } else {
       setStep("email");
@@ -79,6 +94,12 @@ const PasswordResetModal = NiceModal.create<PasswordModalProps>(() => {
   };
 
   const handleModalClose = () => {
+    if (coolDown === 0) {
+      localStorage.removeItem("resetEmail");
+      localStorage.removeItem("otpSentAt");
+      localStorage.removeItem("coolDown");
+    }
+
     hide();
   };
 

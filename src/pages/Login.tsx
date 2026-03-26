@@ -31,6 +31,9 @@ const Login = () => {
   const { isPending, isError, error, mutate } = useSupabaseMutation(loginUser, {
     onSuccess: () => {
       methods.reset();
+      localStorage.removeItem("resetEmail");
+      localStorage.removeItem("otpSentAt");
+      localStorage.removeItem("coolDown");
       navigate("/dashboard");
       NiceModal.show(QUOTE_MODAL);
     },
