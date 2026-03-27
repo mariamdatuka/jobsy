@@ -8,8 +8,6 @@ export const useTasks = (
   userID: string,
   params?: { search?: string; filters?: FiltersState },
 ) => {
-  // const setJobsData = useJobActionsStore((s) => s.setJobsData);
-
   const { data, error, isPending, isLoading, refetch, isSuccess, isFetching } =
     useSupabaseQuery(
       [QKEY_TASKS, userID, params?.search, params?.filters],

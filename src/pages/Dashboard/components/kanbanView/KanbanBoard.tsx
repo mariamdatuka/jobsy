@@ -56,12 +56,7 @@ const KanbanBoard = () => {
   const { mutate: updateTaskPositionMutate } = useSupabaseMutation(
     updateTaskPosition,
     {
-      onSuccess: async (data) => {
-        if (data?.rebalanced) {
-          console.log("✨ Column auto-rebalanced");
-          console.log("Min gap was:", data.min_gap);
-        }
-
+      onSuccess: async () => {
         await queryClient.invalidateQueries({
           queryKey: [QKEY_TASKS, session?.user?.id],
         });
@@ -141,19 +136,7 @@ const KanbanBoard = () => {
 
         return;
       }
-      // setJobsData((tasks) =>
-      //   tasks.map((t) =>
-      //     t.id === activeTask.id
-      //       ? { ...t, index_number: newIndex, status: overTask.status }
-      //       : t,
-      //   ),
-      // );
 
-      // updateTaskPositionMutate({
-      //   id: activeTask.id,
-      //   status: overTask.status,
-      //   index_number: newIndex,
-      // });
       const updatedTask = applyBusinessRules(activeTask, overTask.status);
 
       setJobsData((tasks) =>
@@ -238,7 +221,7 @@ const KanbanBoard = () => {
             <ColumnContainer
               key={col.id}
               column={col}
-              tasks={tasksByStatus[col.id] || []}
+              tasks={[...(tasksByStatus[col.id] || [])].reverse()}
               isLoading={showSkeleton}
             />
           ))}
