@@ -39,6 +39,8 @@ const CustomizedTables = () => {
     search,
   } = useTasksViewState();
 
+  const tasks = [...tasksData].reverse();
+
   const handleChangePage = (_: any, newPage: number) => {
     setPage(newPage);
   };
@@ -77,7 +79,7 @@ const CustomizedTables = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tasksData
+            {tasks
               ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
                 <StyledTableRow key={row.id}>
