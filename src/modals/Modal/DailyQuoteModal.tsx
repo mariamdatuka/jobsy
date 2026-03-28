@@ -13,12 +13,23 @@ const DailyQuoteModal = NiceModal.create(() => {
   const { visible, hide } = useModal();
   const { data, isLoading } = useSupabaseQuery([QKEY_QUOTE], getDailyQuote);
 
+  const handleDoNotShowAgain = () => {
+    localStorage.setItem("hide_quote_today", new Date().toDateString());
+    hide();
+  };
+
   return (
     <PopUp
       title="Your Daily Quote"
       open={visible}
       onClose={hide}
-      children={<Content data={data} isLoading={isLoading} />}
+      children={
+        <Content
+          data={data}
+          isLoading={isLoading}
+          handleDoNotShowAgain={handleDoNotShowAgain}
+        />
+      }
       showActionSection={false}
     />
   );
@@ -29,9 +40,11 @@ export default DailyQuoteModal;
 export const Content = ({
   data,
   isLoading,
+  handleDoNotShowAgain,
 }: {
   data: any;
   isLoading: boolean;
+  handleDoNotShowAgain: () => void;
 }) => {
   return (
     <>
@@ -50,6 +63,14 @@ export const Content = ({
             </Text>
           </Stack>
           <img src={octobus} alt="octobus" width="120px" height="120px" />
+          <Text
+            variant="body2"
+            color="secondary.light"
+            sx={{ cursor: "pointer" }}
+            onClick={handleDoNotShowAgain}
+          >
+            Do not show again today
+          </Text>
         </Stack>
       )}
     </>

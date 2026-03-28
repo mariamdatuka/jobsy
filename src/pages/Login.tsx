@@ -35,7 +35,12 @@ const Login = () => {
       localStorage.removeItem("otpSentAt");
       localStorage.removeItem("coolDown");
       navigate("/dashboard");
-      NiceModal.show(QUOTE_MODAL);
+      const hideToday = localStorage.getItem("hide_quote_today");
+      const shouldHide = hideToday === new Date().toDateString();
+
+      if (!shouldHide) {
+        NiceModal.show(QUOTE_MODAL);
+      }
     },
   });
 
